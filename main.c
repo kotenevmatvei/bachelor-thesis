@@ -150,9 +150,28 @@ int *histogram(double array[], int array_len, int n_bins, double *bin_bounds) {
         bin_bounds[i] = min + i*bin_size;
     }
 
-    printf("\nmax = %f, bin_bounds[n_bins] = %f\n", max, bin_bounds[n_bins]);
-
     return counts;
+
+}
+
+void write_hist_and_bounds(int time, double **v_data, int N, int n_bins, char *hist_fname, char *bd_fname) {
+    double *time_0 = calloc(N, sizeof(double));
+
+    for (int i = 0; i < N; i++) {
+        time_0[i] = v_data[i][time];
+    }
+
+    double *bin_bounds = calloc(n_bins+2, sizeof(double));
+
+    int *counts = histogram(time_0, N, n_bins, bin_bounds);
+
+    write_int_array_to_file(counts, n_bins, hist_fname);
+
+    write_double_array_to_file(bin_bounds, n_bins+1, bd_fname);
+
+    free(time_0);
+    free(counts);
+    free(bin_bounds);
 
 }
 
@@ -180,38 +199,10 @@ int main(void) {
 
     write_double_matrix_to_file(v_data, N, N_t, "v_values.txt");
 
-    int times[6] = {30, 50, 100, 200, 300, 400};
-    char *times_str[] = {"30", "50", "100", "200", "300", "400"};
-
-    for (int i = 0; i < 6; i++) {
-
-        int time = times[i];
-        double *time_0 = calloc(N, sizeof(double));
-
-        for (int i = 0; i < N; i++) {
-            time_0[i] = v_data[i][time];
-        }
-
-        double *bin_bounds = calloc(n_bins+2, sizeof(double));
-
-        int *counts = histogram(time_0, N, n_bins, bin_bounds);
-
-        /*
-        char *hist_fname;
-        char *bin_bounds_fname;
-        sprintf(hist_fname, "histogram_t%d.txt", time);
-        sprintf(bin_bounds_fname, "bin_bounds_t%d.txt", time);
-        */
-
-        char *hist_fname = "histogram_t";
-
-        write_int_array_to_file(counts, n_bins, "histogram_t30.txt");
-
-        write_double_array_to_file(bin_bounds, n_bins+1, "bin_bounds_t30.txt");
-
-        free(counts);
-        free(bin_bounds);
-    }
+    write_hist_and_bounds(30, v_data, N, n_bins, "counts_t30.txt", "bounds_t30.txt");
+    write_hist_and_bounds(50, v_data, N, n_bins, "counts_t50.txt", "bounds_t50.txt");
+    write_hist_and_bounds(100, v_data, N, n_bins, "counts_t100.txt", "bounds_t100.txt");
+    write_hist_and_bounds(400, v_data, N, n_bins, "counts_t400.txt", "bounds_t400.txt");
 
     free_matrix_memory(v_data, N);
     gsl_rng_free(r);
