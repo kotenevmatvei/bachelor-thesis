@@ -1,7 +1,7 @@
 # TODOs
 
 - [ ] refactor-0 - modularize
-    - [ ] separate data directory
+    - [x] separate data and results directories
     - [ ] separate utils
     - [ ] separate v_values generation from histogram building
 

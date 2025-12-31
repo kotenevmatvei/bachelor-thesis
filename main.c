@@ -197,12 +197,12 @@ int main(void) {
 
     double **v_data = calculate_V_values(D, gamma, N, N_t, delta_t, r);
 
-    write_double_matrix_to_file(v_data, N, N_t, "v_values.txt");
+    write_double_matrix_to_file(v_data, N, N_t, "data/v_values.txt");
 
-    write_hist_and_bounds(30, v_data, N, n_bins, "counts_t30.txt", "bounds_t30.txt");
-    write_hist_and_bounds(50, v_data, N, n_bins, "counts_t50.txt", "bounds_t50.txt");
-    write_hist_and_bounds(100, v_data, N, n_bins, "counts_t100.txt", "bounds_t100.txt");
-    write_hist_and_bounds(400, v_data, N, n_bins, "counts_t400.txt", "bounds_t400.txt");
+    write_hist_and_bounds(30, v_data, N, n_bins, "data/counts_t30.txt", "data/bounds_t30.txt");
+    write_hist_and_bounds(50, v_data, N, n_bins, "data/counts_t50.txt", "data/bounds_t50.txt");
+    write_hist_and_bounds(100, v_data, N, n_bins, "data/counts_t100.txt", "data/bounds_t100.txt");
+    write_hist_and_bounds(400, v_data, N, n_bins, "data/counts_t400.txt", "data/bounds_t400.txt");
 
     free_matrix_memory(v_data, N);
     gsl_rng_free(r);
