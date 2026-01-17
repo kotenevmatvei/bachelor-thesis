@@ -15,7 +15,7 @@ with open("data/v_values.txt") as file:
 fig = plt.figure(figsize=(18, 8))
 # Create a grid: 4 rows, 2 columns.
 # The left column (trajectories) is slightly wider (width_ratios).
-gs = gridspec.GridSpec(4, 2, width_ratios=[1.5, 1], wspace=0.15, hspace=0.1)
+gs = gridspec.GridSpec(4, 2, width_ratios=[2, 1], wspace=0.15, hspace=0.1)
 
 # --- Left Panel: Trajectories (a) ---
 # This subplot spans all 4 rows (:) in the first column (0)
@@ -34,7 +34,7 @@ ax_traj.set_xlabel("t", fontsize=14)
 ax_traj.set_ylabel("v", fontsize=14)
 ax_traj.set_xlim(0, 5)
 ax_traj.set_ylim(-1.5, 1.8)
-ax_traj.text(-0.05, 1.15, "(a)", transform=ax_traj.transAxes, fontsize=16, fontweight='bold')
+ax_traj.text(-0.05, 1.02, "(a)", transform=ax_traj.transAxes, fontsize=16, fontweight='bold')
 
 
 # --- Right Panel: Stacked Histograms (b) ---
