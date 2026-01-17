@@ -69,7 +69,7 @@ for i, (time_step, label) in enumerate(zip(times, labels)):
     centers = [(bin_bounds[j] + bin_bounds[j+1])/2 for j in range(len(counts))]
 
     # Plot bars
-    ax_hist.bar(centers, density, width=bin_width, edgecolor="black", color="white", linewidth=1)
+    ax_hist.bar(centers, density, width=bin_width, edgecolor="blue", color="grey", linewidth=1)
 
     # Styling
     # Add the yellow label
