@@ -136,11 +136,16 @@ int *histogram(double array[], int array_len, int n_bins, double *bin_bounds) {
     int current_bin = 1;
 
     for (int i = 0; i < array_len; i++) {
-        if (array[i] <= current_bin * bin_size)
+        if (array[i] <= min + current_bin * bin_size)
             counts[current_bin-1]++;
         else {
             current_bin++;
-            i--;
+            if (current_bin > n_bins) {
+                // if we ran out of bins, put the remaining max values in the last one
+                counts[n_bins - 1]++;
+            } else {
+                i--;
+            }
         }
     }
 
