@@ -3,9 +3,9 @@ project(bachelor_thesis C)
 
 set(CMAKE_C_STANDARD 17)
 
-add_executable(bachelor_thesis main.c)
+add_executable(simulation simulation.c)
 
-target_link_libraries(bachelor_thesis
+target_link_libraries(simulation
         PRIVATE
         gsl
         gslcblas
