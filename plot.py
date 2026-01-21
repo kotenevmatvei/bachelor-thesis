@@ -71,3 +71,13 @@ for i, (time_step, label) in enumerate(zip(times, labels)):
         ax_hist.text(-0.1, 1.15, "(b)", transform=ax_hist.transAxes, fontsize=16, fontweight='bold')
 
 plt.savefig("figures/combined_figure.png", dpi=150)
+
+
+P_vals = [];
+with open("data/P_vals.txt") as file:
+    for line in file:
+        P_vals.append(float(line))
+
+fig, ax = plt.subplots()
+ax.plot(P_vals)
+fig.savefig("figures/thory_t30")
