@@ -10,7 +10,7 @@ with open("data/v_values.txt") as file:
             # Append to the last dataset added
             datasets[-1].append(float(line))
 
-fig = plt.figure(figsize=(18, 8))
+fig = plt.figure(figsize=(22, 8))
 
 gs = gridspec.GridSpec(4, 2, width_ratios=[2, 1], wspace=0.15, hspace=0.1)
 
@@ -70,4 +70,4 @@ for i, (time_step, label) in enumerate(zip(times, labels)):
     if i == 0:
         ax_hist.text(-0.1, 1.15, "(b)", transform=ax_hist.transAxes, fontsize=16, fontweight='bold')
 
-plt.savefig("plots/combined_figure.png", dpi=150)
+plt.savefig("figures/combined_figure.png", dpi=150)
