@@ -1,6 +1,13 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
+P_vals = []
+V_Axis = []
+# fill P_vals and V_Axis
+with open("data/P_vals.txt") as file:
+    for line in file:
+        exec(line)
+
 datasets = []
 with open("data/v_values.txt") as file:
     for line in file:
@@ -40,7 +47,8 @@ for i, (time_step, label) in enumerate(zip(times, labels)):
     bin_bounds = []
     with open(f"data/bounds_t{time_step}.txt") as file:
         for line in file:
-            bin_bounds.append(float(line))
+            # bin_bounds.append(float(line))
+            exec(line)
 
     counts = []
     with open(f"data/counts_t{time_step}.txt") as file:
@@ -60,6 +68,8 @@ for i, (time_step, label) in enumerate(zip(times, labels)):
     ax_hist.set_ylabel("P(v,t)", fontsize=10)
     ax_hist.set_xlim(-1.5, 1.8)
 
+    plt.plot(V_Axis, P_vals, c="red", label="theory")
+
     # remove x-axis tick labels for the top 3 plots to avoid clutter
     if i < len(times) - 1:
         ax_hist.set_xticklabels([])
@@ -71,13 +81,3 @@ for i, (time_step, label) in enumerate(zip(times, labels)):
         ax_hist.text(-0.1, 1.15, "(b)", transform=ax_hist.transAxes, fontsize=16, fontweight='bold')
 
 plt.savefig("figures/combined_figure.png", dpi=150)
-
-
-P_vals = [];
-with open("data/P_vals.txt") as file:
-    for line in file:
-        P_vals.append(float(line))
-
-fig, ax = plt.subplots()
-ax.plot(P_vals)
-fig.savefig("figures/thory_t30")

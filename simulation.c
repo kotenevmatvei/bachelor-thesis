@@ -7,6 +7,8 @@
 #include <string.h>
 #include <time.h>
 
+#include "io.h"
+
 double simulate_next_V(double last_v, double delta_t, double gamma, double D, gsl_rng *r) {
     double eta = gsl_ran_gaussian(r, 1);
     double next_v = last_v * (1 - gamma * delta_t) + sqrt(2 * D * delta_t) * eta;
@@ -26,7 +28,7 @@ double **simulate_V_values(double D, double gamma, int N, int N_t, double delta_
         v_data[i] = malloc(N_t * sizeof(double));
     }
 
-    // calculate and save V values
+    // simulate and save V values
     for (i = 0; i < N; ++i) {
         v_current = 1;
         v_data[i][0] = v_current;
@@ -59,57 +61,23 @@ double calculate_transition_probability(double V, double t, double D, double gam
 	return P;
 }
 
-double *calculate_P_values(double D, double gamma, double t, double v_0, double *V_axis) {
+double *calculate_P_values(double D, double gamma, double t, double v_0, double *V_Axis) {
     double V_step = 3. / 100.;
     printf("V_step = %f\n", V_step);
 
     for (int i = 0; i < 100; i++) {
-        V_axis[i] = -1.5 + i * V_step;
-        printf("V_axis[%i] = %f\n", i, V_axis[i]);
+        V_Axis[i] = -1.5 + i * V_step;
     }
-        
 
     double *P_vals = malloc(100 * sizeof(double));
 
     for (int i = 0; i < 100; i++) {
-        P_vals[i] = calculate_transition_probability(V_axis[i], t, D, gamma, v_0);
-        printf("P_vals[%d] = %f\n", i, P_vals[i]);
+        P_vals[i] = calculate_transition_probability(V_Axis[i], t, D, gamma, v_0);
     }
 
-    free(V_axis);
-	
     return P_vals;
 }
 
-
-void write_double_matrix_to_file(double **matrix, int n_rows, int n_cols, char fname[]) {
-    int i, j;
-
-    FILE *fptr = fopen(fname, "w");
-
-    for (i = 0; i < n_rows; ++i) {
-        fprintf(fptr, "row %d\n", i);
-        for (j = 0; j < n_cols; ++j) {
-            fprintf(fptr, "%lf\n", matrix[i][j]);
-        }
-    }
-}
-
-void write_int_array_to_file(const int *array, const int array_len, const char fname[]) {
-    FILE *fptr = fopen(fname, "w");
-
-    for (int i = 0; i < array_len; ++i) {
-        fprintf(fptr, "%d\n", array[i]);
-    }
-}
-
-void write_double_array_to_file(const double *array, const int array_len, const char fname[]) {
-    FILE *fptr = fopen(fname, "w");
-
-    for (int i = 0; i < array_len; ++i) {
-        fprintf(fptr, "%f\n", array[i]);
-    }
-}
 
 void free_matrix_memory(double **matrix, int n_rows) {
     int i;
@@ -190,7 +158,6 @@ int *histogram(double array[], int array_len, int n_bins, double *bin_bounds) {
     }
 
     return counts;
-
 }
 
 void write_hist_and_bounds(int time, double **v_data, int N, int n_bins, char *hist_fname, char *bd_fname) {
@@ -206,13 +173,14 @@ void write_hist_and_bounds(int time, double **v_data, int N, int n_bins, char *h
 
     write_int_array_to_file(counts, n_bins, hist_fname);
 
-    write_double_array_to_file(bin_bounds, n_bins+1, bd_fname);
+    write_double_array_to_file(bin_bounds, n_bins+1, bd_fname, "bin_bounds", "w");
 
     free(time_0);
     free(counts);
     free(bin_bounds);
 
 }
+
 
 int main(void) {
 
@@ -244,18 +212,21 @@ int main(void) {
     write_hist_and_bounds(400, v_data, N, n_bins, "../data/counts_t400.txt", "../data/bounds_t400.txt");
 
     double v_0 = 1;
-    double t = 0.3;
+    double times[4] = {0.3, 0.5, 1, 4};
+    char *array_P_names[4] = {"P_vals03", "P_vals05", "P_vals1", "P_vals43"};
+    char *array_V_names[4] = {"V_vals03", "V_vals05", "V_vals1", "V_vals43"};
+
     double *V_axis = malloc(100 * sizeof(double));
-    double *P_vals = calculate_P_values(D, gamma, t, v_0, V_axis);
+    for (int i = 0; i < 3; i++) {
+        double *P_vals = calculate_P_values(D, gamma, times[i], v_0, V_axis);
 
-    for (int i = 0; i < 100; i++)
-        printf("P[V[%d]=%f] = %f\n", i, V_axis[i], P_vals[i]);
+        write_double_array_to_file(P_vals, 100, "../data/P_vals.txt", array_P_names[i], "w");
+        write_double_array_to_file(V_axis, 100, "../data/P_vals.txt", array_V_names[i], "a");
 
-    write_double_array_to_file(P_vals, 100, "../data/P_vals.txt");
+        free(P_vals);
+    }
 
-    double test = calculate_transition_probability(-1.5, t, D, gamma, v_0);
-    printf("This is my test: %f\n", test);
-
+    free(V_axis);
     free_matrix_memory(v_data, N);
     gsl_rng_free(r);
 }
