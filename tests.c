@@ -1,9 +1,7 @@
 #include "simulation.h"
 #include "testing.h"
-#include "io.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 int test_count = 0;
 int passed_count = 0;
