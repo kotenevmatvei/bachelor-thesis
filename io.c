@@ -40,18 +40,18 @@ void write_double_array_to_file(const double *array, const int array_len, const 
 }
 
 void print_double_array(double *a, int len_a, char *name) {
-    printf("\n%s = [", name);
+    printf("%s: {", name);
     for (int i = 0; i < len_a - 1; i++) {
         printf("%f, ", a[i]);
     }
-    printf("%f]\n", a[len_a - 1]);
+    printf("%f}\n", a[len_a - 1]);
 }
 
 void print_int_array(int *a, int len_a, char *name) {
-    printf("\n%s = [", name);
+    printf("%s: {", name);
     for (int i = 0; i < len_a - 1; i++) {
         printf("%d, ", a[i]);
     }
-    printf("%d]\n", a[len_a - 1]);
+    printf("%d}\n", a[len_a - 1]);
 }
 
