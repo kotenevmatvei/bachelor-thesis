@@ -134,7 +134,7 @@ void quicksort(double array[], int left, int right) {
     quicksort(array, last + 1, right);
 }
 
-int *smart_histogram(double *array, int array_len, int n_bins,
+int *histogram(double *array, int array_len, int n_bins,
                      double *bin_bounds) {
     double min, max;
     find_min_and_max(array, array_len, &min, &max);
@@ -155,57 +155,3 @@ int *smart_histogram(double *array, int array_len, int n_bins,
     return counts;
 }
 
-int *histogram(double array[], int array_len, int n_bins, double *bin_bounds) {
-    quicksort(array, 0, array_len - 1);
-
-    const double min = array[0];
-    const double max = array[array_len - 1];
-    double bin_size = (max - min) / n_bins;
-
-    int *counts = calloc(n_bins, sizeof(int));
-    int current_bin = 1;
-
-    for (int i = 0; i < array_len; i++) {
-        if (array[i] <= min + current_bin * bin_size)
-            counts[current_bin - 1]++;
-        else {
-            current_bin++;
-            if (current_bin > n_bins) {
-                // if we ran out of bins, put the remaining max values in the last one
-                counts[n_bins - 1]++;
-            } else {
-                i--;
-            }
-        }
-    }
-
-    // calculate bin bounds
-    bin_bounds[0] = min;
-    for (int i = 1; i <= n_bins + 1; i++) {
-        bin_bounds[i] = min + i * bin_size;
-    }
-
-    return counts;
-}
-
-void write_hist_and_bounds(int time, double **v_data, int N, int n_bins,
-                           char *hist_fname, char *bd_fname) {
-    double *time_0 = calloc(N, sizeof(double));
-
-    for (int i = 0; i < N; i++) {
-        time_0[i] = v_data[i][time];
-    }
-
-    double *bin_bounds = calloc(n_bins + 2, sizeof(double));
-
-    int *counts = smart_histogram(time_0, N, n_bins, bin_bounds);
-
-    write_int_array_to_file(counts, n_bins, hist_fname);
-
-    write_double_array_to_file(bin_bounds, n_bins + 1, bd_fname, "bin_bounds",
-                               "w");
-
-    free(time_0);
-    free(counts);
-    free(bin_bounds);
-}
