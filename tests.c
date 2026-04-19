@@ -2,6 +2,7 @@
 #include "testing.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "io.h"
 
 #define MAX_ARRAY_LENGTH 1000
 #define MAX_COUNTS 100
@@ -27,7 +28,7 @@ histogram_test_case test_cases[] = {
     }
 };
 
-int handle_histogram_test_case(histogram_test_case *tc) {
+void handle_histogram_test_case(histogram_test_case *tc) {
     double *bin_bounds = calloc(tc->n_bins + 1, sizeof(double));
     int *counts = histogram(tc->array, tc->n_array, tc->n_bins, bin_bounds);
     int counts_equal = compare_int_arrays(tc->expected_counts, counts, tc->n_bins);
