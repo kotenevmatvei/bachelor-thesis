@@ -1,27 +1,20 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-P_vals30 = []
-P_vals50 = []
-P_vals100 = []
-P_vals400 = []
-V_axis = []
+P_vals = []
+with open("data/theor_curves.txt") as file:
+    for i, line in enumerate(file):
+        if "V_axis" in line:
+            V_axis = [float(v) for v in next(file).split(" ")]
+            continue
+        if line.startswith("#"): continue
+        P_vals.append([float(p) for p in line.split(" ")])
 
-# fill P_vals and V_Axis
-with open("data/P_vals.txt") as file:
-    for line in file:
-        exec(line)
-
-P_vals = [P_vals30, P_vals50, P_vals100, P_vals400]
 
 datasets = []
-with open("data/v_values.txt") as file:
+with open("data/v_values_simple.txt") as file:
     for line in file:
-        if line.startswith("row"):
-            datasets.append([])
-        else:
-            # Append to the last dataset added
-            datasets[-1].append(float(line))
+        datasets.append([float(v_ij) for v_ij in line.split(" ")])
 
 fig = plt.figure(figsize=(22, 8))
 
@@ -47,19 +40,25 @@ ax_traj.text(-0.05, 1.02, "(a)", transform=ax_traj.transAxes, fontsize=16,
 times = [30, 50, 100, 400]
 labels = ["t=0.3", "t=0.5", "t=1.0", "t=4.0"]
 
-for i, (time_step, label) in enumerate(zip(times, labels)):
+# read counts and bin bounds
+hist_data = []
+with open("data/hist_data.txt") as file:
+    for line in file:
+        if line.startswith("#"):
+            hist_data.append({})
+            hist_data[-1]["label"] = line[2:]
+            continue
+        hist_data[-1]["counts"] = [float(count) for count in line.split(" ")]
+        next_line = next(file)
+        hist_data[-1]["bin_bounds"] = [float(bin_bound) for bin_bound in next_line.split(" ")]
+
+
+for i, hist in enumerate(hist_data):
     ax_hist = fig.add_subplot(gs[i, 1])
 
-    bin_bounds = []
-    with open(f"data/bounds_t{time_step}.txt") as file:
-        for line in file:
-            # bin_bounds.append(float(line))
-            exec(line)
-
-    counts = []
-    with open(f"data/counts_t{time_step}.txt") as file:
-        for line in file:
-            counts.append(int(line))
+    label = hist["label"]
+    bin_bounds = hist["bin_bounds"]
+    counts = hist["counts"]
 
     total_count = sum(counts)
     bin_width = bin_bounds[1] - bin_bounds[0]
