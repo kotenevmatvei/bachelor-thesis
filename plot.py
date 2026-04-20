@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+import numpy as np
 
 P_vals = []
 with open("data/theor_curves.txt") as file:
@@ -36,6 +37,10 @@ ax_traj.set_xlim(0, 5)
 ax_traj.set_ylim(-1.5, 1.8)
 ax_traj.text(-0.05, 1.02, "(a)", transform=ax_traj.transAxes, fontsize=16,
              fontweight='bold')
+ax_traj.axvline(x = 0.3, color = "grey", linestyle="dashed",  label = "t=0.3s")
+ax_traj.axvline(x = 0.5, color = "grey", linestyle="dashed",  label = "t=0.5s")
+ax_traj.axvline(x = 1, color = "grey", linestyle="dashed",  label = "t=1s")
+ax_traj.axvline(x = 4, color = "grey", linestyle="dashed", label = "t=4s")
 
 times = [30, 50, 100, 400]
 labels = ["t=0.3", "t=0.5", "t=1.0", "t=4.0"]
@@ -67,7 +72,7 @@ for i, hist in enumerate(hist_data):
     centers = [(bin_bounds[j] + bin_bounds[j + 1]) / 2 for j in range(len(counts))]
 
     ax_hist.bar(centers, density, width=bin_width, edgecolor="blue", color="grey",
-                linewidth=1)
+                linewidth=1, label="Ensemble average")
 
     ax_hist.text(0.1, 0.7, label, transform=ax_hist.transAxes, fontweight='bold',
                  backgroundcolor='yellow')
@@ -88,4 +93,17 @@ for i, hist in enumerate(hist_data):
         ax_hist.text(-0.1, 1.15, "(b)", transform=ax_hist.transAxes, fontsize=16,
                      fontweight='bold')
 
+    # add long time average to the bottom histogram
+    if i == 3:
+        with open("data/long_time_average.txt") as file:
+            counts = [float(count) for count in next(file).split(" ")]
+            bin_bounds = [float(bb) for bb in next(file).split(" ")]
+        total_count = sum(counts)
+        bin_width = bin_bounds[1] - bin_bounds[0]
+        density = [c / (total_count * bin_width) for c in counts]
+        sparse_v_axis = np.linspace(-1.5, 1.5, 30)
+        ax_hist.scatter(sparse_v_axis, density, label="Long time average")
+
+
+plt.legend()
 plt.savefig("figures/combined_figure.png", dpi=150)

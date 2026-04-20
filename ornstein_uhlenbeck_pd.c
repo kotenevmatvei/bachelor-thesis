@@ -16,8 +16,8 @@ int main(void) {
     // simulation paramteres
     const double D = 0.1;
     const double gamma = 1;
-    const int N = 10000; // number of realizations (ensembles)
-    const int N_t = 500; // number of time steps of length delta_t
+    int N = 10000; // number of realizations (ensembles)
+    long N_t = 500; // number of time steps of length delta_t
     const double delta_t = 0.01; // timestep length in seconds
     const int n_hist_datapoints = 100;
     const double hist_range[2] = {-1.5, 1.5};
@@ -46,6 +46,8 @@ int main(void) {
         sprintf(comment, "# t=%.1fs\n", (double) time_ * delta_t);
         write_int_array_to_file(counts, n_bins, hist_fname, mode, comment);
         write_double_array_to_file(bin_bounds, n_bins + 1, hist_fname, "a", "");
+        free(counts);
+        free(bin_bounds);
     }
 
     // calculate theoretical curves and write to files
@@ -69,6 +71,20 @@ int main(void) {
         free(P_vals);
         free(comment);
     }
+
+    // calculate long time average
+    N = 1;
+    N_t = 1e7;
+    v_data = simulate_V_values(D, gamma, N, N_t, delta_t, r);
+    double *bin_bounds = malloc(n_bins * sizeof(int));
+    int *counts = histogram(v_data[0], N_t, n_bins, bin_bounds);
+    write_int_array_to_file(counts, n_bins, "../data/long_time_average.txt", "w",
+                            "");
+    write_double_array_to_file(bin_bounds, n_bins + 1, "../data/long_time_average.txt",
+                               "a", "");
+
+    free(counts);
+    free(bin_bounds);
 
     free(V_Axis->points);
     free_matrix_memory(v_data, N);
