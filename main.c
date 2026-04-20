@@ -27,7 +27,8 @@ int main(void) {
     // simulate and write to files
     double **v_data = simulate_V_values(D, gamma, N, N_t, delta_t, r);
 
-    write_double_matrix_to_file((const double *const *)v_data, N, N_t, "../data/v_values.txt");
+    write_double_matrix_to_file((const double *const *) v_data, N, N_t,
+                                "../data/v_values.txt");
 
     // calculate histograms and write to file
     const int times[] = {30, 50, 100, 400};
@@ -42,7 +43,7 @@ int main(void) {
         int *counts = histogram(v_time_snapshot, N, n_bins, bin_bounds);
         char *mode = i == 0 ? "w" : "a";
         char *comment = malloc(20 * sizeof(char));
-        sprintf(comment, "# t=%.1fs\n", (double)time_ * delta_t);
+        sprintf(comment, "# t=%.1fs\n", (double) time_ * delta_t);
         write_int_array_to_file(counts, n_bins, hist_fname, mode, comment);
         write_double_array_to_file(bin_bounds, n_bins + 1, hist_fname, "a", "");
     }
@@ -52,7 +53,8 @@ int main(void) {
 
     LinearAxis *V_Axis = malloc((4 + n_hist_datapoints) * sizeof(double) + sizeof(int));
     fill_linear_axis(V_Axis, hist_range[0], hist_range[1], n_hist_datapoints);
-    write_double_array_to_file(V_Axis->points, n_hist_datapoints, "../data/theor_curves.txt",
+    write_double_array_to_file(V_Axis->points, n_hist_datapoints,
+                               "../data/theor_curves.txt",
                                "w", "# V_axis\n");
 
     for (int i = 0; i < 4; i++) {
