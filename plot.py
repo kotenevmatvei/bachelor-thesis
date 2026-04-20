@@ -12,7 +12,7 @@ with open("data/theor_curves.txt") as file:
 
 
 datasets = []
-with open("data/v_values_simple.txt") as file:
+with open("data/v_values.txt") as file:
     for line in file:
         datasets.append([float(v_ij) for v_ij in line.split(" ")])
 

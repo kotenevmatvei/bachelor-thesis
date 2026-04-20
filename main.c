@@ -3,16 +3,15 @@
 
 #define COMMENT_LENGTH 50
 
+
 int main(void) {
     // Simulate V values
     // setup gsl
-    const gsl_rng_type *T;
-    gsl_rng *r;
 
     gsl_rng_env_setup();
 
-    T = gsl_rng_default;
-    r = gsl_rng_alloc(T);
+    const gsl_rng_type *T = gsl_rng_default;
+    gsl_rng *r = gsl_rng_alloc(T);
 
     // simulation paramteres
     const double D = 0.1;
@@ -28,13 +27,14 @@ int main(void) {
     // simulate and write to files
     double **v_data = simulate_V_values(D, gamma, N, N_t, delta_t, r);
 
-    simple_write_double_matrix_to_file(v_data, N, N_t, "data/v_values_simple.txt");
+    simple_write_double_matrix_to_file(v_data, N, N_t, "data/v_values.txt");
 
-    int times_[] = {30, 50, 100, 400};
+    // calculate histograms and write to file
+    int times[] = {30, 50, 100, 400};
     char *hist_fname = "data/hist_data.txt";
-    int n_times = sizeof(times_) / sizeof(int);
+    int n_times = sizeof(times) / sizeof(int);
     for (int i = 0; i < n_times; i++) {
-        int time_ = times_[i];
+        int time_ = times[i];
         double *v_time_snapshot = malloc(N * sizeof(double));
         for (int j = 0; j < N; j++) {
             v_time_snapshot[j] = v_data[j][time_];
@@ -57,7 +57,7 @@ int main(void) {
                                "w", "# V_axis\n");
 
     for (int i = 0; i < 4; i++) {
-        double time_ = (double) times_[i] * delta_t;
+        double time_ = (double) times[i] * delta_t;
         double *P_vals = calculate_P_values(D, gamma, time_, v_0, V_Axis);
 
         char *comment = malloc(COMMENT_LENGTH * sizeof(char));
