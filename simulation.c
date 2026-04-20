@@ -2,10 +2,8 @@
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_rng.h>
 #include <math.h>
-#include <stdio.h>
 #include <stdlib.h>
 
-#include "io.h"
 #include "simulation.h"
 
 double simulate_next_V(double last_v, double delta_t, double gamma, double D,
@@ -17,8 +15,6 @@ double simulate_next_V(double last_v, double delta_t, double gamma, double D,
 
 double **simulate_V_values(double D, double gamma, int N, int N_t,
                            double delta_t, gsl_rng *r) {
-    double v_current;
-    double v_min;
     double v_max;
 
     int i, j;
@@ -32,10 +28,10 @@ double **simulate_V_values(double D, double gamma, int N, int N_t,
 
     // simulate and save V values
     for (i = 0; i < N; ++i) {
-        v_current = 1;
+        double v_current = 1;
         v_data[i][0] = v_current;
 
-        v_min = v_max = v_current;
+        double v_min = v_max = v_current;
 
         for (j = 1; j < N_t; ++j) {
             v_current = simulate_next_V(v_current, delta_t, gamma, D, r);
@@ -97,9 +93,8 @@ void free_matrix_memory(double **matrix, int n_rows) {
 }
 
 void find_min_and_max(double *array, int array_len, double *min, double *max) {
-    double max_, min_;
-    min_ = array[0];
-    max_ = min_ = array[0];
+    double min_ = array[0];
+    double max_ = min_ = array[0];
     for (int i = 0; i < array_len; i++) {
         if (array[i] < min_)
             min_ = array[i];

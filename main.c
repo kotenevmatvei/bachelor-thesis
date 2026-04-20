@@ -27,11 +27,11 @@ int main(void) {
     // simulate and write to files
     double **v_data = simulate_V_values(D, gamma, N, N_t, delta_t, r);
 
-    simple_write_double_matrix_to_file(v_data, N, N_t, "../data/v_values.txt");
+    write_double_matrix_to_file((const double *const *)v_data, N, N_t, "../data/v_values.txt");
 
     // calculate histograms and write to file
-    int times[] = {30, 50, 100, 400};
-    char *hist_fname = "../data/hist_data.txt";
+    const int times[] = {30, 50, 100, 400};
+    const char *hist_fname = "../data/hist_data.txt";
     int n_times = sizeof(times) / sizeof(int);
     for (int i = 0; i < n_times; i++) {
         int time_ = times[i];
@@ -44,8 +44,8 @@ int main(void) {
         char *mode = i == 0 ? "w" : "a";
         char *comment = malloc(20 * sizeof(char));
         sprintf(comment, "# t=%.1fs\n", (double)time_ * delta_t);
-        write_simple_int_array_to_file(counts, n_bins, hist_fname, mode, comment);
-        write_simple_double_array_to_file(bin_bounds, n_bins + 1, hist_fname, "a", "");
+        write_int_array_to_file(counts, n_bins, hist_fname, mode, comment);
+        write_double_array_to_file(bin_bounds, n_bins + 1, hist_fname, "a", "");
     }
 
     // calculate theoretical curves and write to files
@@ -53,7 +53,7 @@ int main(void) {
 
     LinearAxis *V_Axis = malloc((4 + n_hist_datapoints) * sizeof(double) + sizeof(int));
     fill_linear_axis(V_Axis, hist_range[0], hist_range[1], n_hist_datapoints);
-    write_simple_double_array_to_file(V_Axis->points, n_hist_datapoints, "../data/theor_curves.txt",
+    write_double_array_to_file(V_Axis->points, n_hist_datapoints, "../data/theor_curves.txt",
                                "w", "# V_axis\n");
 
     for (int i = 0; i < 4; i++) {
@@ -62,7 +62,7 @@ int main(void) {
 
         char *comment = malloc(COMMENT_LENGTH * sizeof(char));
         sprintf(comment, "# P values for time %.1fs\n", time_);
-        write_simple_double_array_to_file(P_vals, n_hist_datapoints, "../data/theor_curves.txt",
+        write_double_array_to_file(P_vals, n_hist_datapoints, "../data/theor_curves.txt",
                                    "a", comment);
 
         free(P_vals);

@@ -1,21 +1,8 @@
 #include <stdio.h>
+#include "io.h"
 
-void write_double_matrix_to_file(double **matrix, int n_rows, int n_cols, char fname[]) {
-    int i, j;
-
-    FILE *fptr = fopen(fname, "w");
-
-    for (i = 0; i < n_rows; ++i) {
-        fprintf(fptr, "row %d\n", i);
-        for (j = 0; j < n_cols; ++j) {
-            fprintf(fptr, "%lf\n", matrix[i][j]);
-        }
-    }
-
-    fclose(fptr);
-}
-
-void simple_write_double_matrix_to_file(double **matrix, int n_rows, int n_cols, char fname[]) {
+void write_double_matrix_to_file(const double *const *matrix, const int n_rows,
+                                 const int n_cols, const char fname[]) {
     FILE *fptr = fopen(fname, "w");
     for (int i = 0; i < n_rows; i++) {
         for (int j = 0; j < n_cols - 1; j++) {
@@ -26,17 +13,9 @@ void simple_write_double_matrix_to_file(double **matrix, int n_rows, int n_cols,
     fclose(fptr);
 }
 
-void write_int_array_to_file(const int *array, const int array_len, const char fname[]) {
-    FILE *fptr = fopen(fname, "w");
-
-    for (int i = 0; i < array_len; ++i) {
-        fprintf(fptr, "%d\n", array[i]);
-    }
-
-    fclose(fptr);
-}
-
-void write_simple_int_array_to_file(int *array, int array_len, char *fname, char *mode, char *comment) {
+void write_int_array_to_file(const int *array, const int array_len,
+                             const char *fname, const char *mode,
+                             const char *comment) {
     FILE *fptr = fopen(fname, mode);
 
     fprintf(fptr, "%s", comment);
@@ -49,7 +28,9 @@ void write_simple_int_array_to_file(int *array, int array_len, char *fname, char
     fclose(fptr);
 }
 
-void write_simple_double_array_to_file(double *array, int array_len, char *fname, char *mode, char *comment) {
+void write_double_array_to_file(const double *array, const int array_len,
+                                const char *fname, const char *mode,
+                                const char *comment) {
     FILE *fptr = fopen(fname, mode);
 
     fprintf(fptr, "%s", comment);
@@ -62,22 +43,7 @@ void write_simple_double_array_to_file(double *array, int array_len, char *fname
     fclose(fptr);
 }
 
-void write_double_array_to_file(const double *array, const int array_len,
-                                const char *fname, char *array_name, char *mode) {
-    FILE *fptr = fopen(fname, mode);
-
-    fprintf(fptr, "%s = [", array_name);
-
-    for (int i = 0; i < array_len - 1; ++i) {
-        fprintf(fptr, "%f, ", array[i]);
-    }
-
-    fprintf(fptr, "%f]\n", array[array_len - 1]); // last element without a trailing space
-
-    fclose(fptr);
-}
-
-void print_double_array(double *a, int len_a, char *name) {
+void print_double_array(const double *a, const int len_a, const char *name) {
     printf("%s: {", name);
     for (int i = 0; i < len_a - 1; i++) {
         printf("%f, ", a[i]);
@@ -85,7 +51,7 @@ void print_double_array(double *a, int len_a, char *name) {
     printf("%f}\n", a[len_a - 1]);
 }
 
-void print_int_array(int *a, int len_a, char *name) {
+void print_int_array(const int *a, const int len_a, const char *name) {
     printf("%s: {", name);
     for (int i = 0; i < len_a - 1; i++) {
         printf("%d, ", a[i]);

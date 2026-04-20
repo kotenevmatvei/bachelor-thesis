@@ -1,25 +1,17 @@
 #ifndef IO_H
 #define IO_H
-#include <stdio.h>
 
-void write_double_matrix_to_file(double **matrix, int n_rows, int n_cols,
-                                 char fname[]);
+void write_double_matrix_to_file(const double *const *matrix, int n_rows,
+                                 int n_cols, const char fname[]);
 
-void simple_write_double_matrix_to_file(double **matrix, int n_rows, int n_cols, char fname[]);
+void write_int_array_to_file(const int *array, int array_len, const char *fname,
+                             const char *mode, const char *comment);
 
-void write_int_array_to_file(const int *array, const int array_len,
-                             const char fname[]);
+void write_double_array_to_file(const double *array, int array_len, const char *fname,
+                                const char *mode, const char *comment);
 
-void write_simple_int_array_to_file(int *array, int array_len, char *fname, char *mode, char *comment);
+void print_double_array(const double *a, int len_a, const char *name);
 
-void write_simple_double_array_to_file(double *array, int array_len, char *fname, char *mode, char *comment);
-
-void write_double_array_to_file(const double *array, const int array_len,
-                                const char *fname, char *array_name,
-                                char *mode);
-
-void print_double_array(double *a, int len_a, char *name);
-
-void print_int_array(int *a, int len_a, char *name);
+void print_int_array(const int *a, int len_a, const char *name);
 
 #endif // IO_H
