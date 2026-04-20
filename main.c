@@ -21,7 +21,7 @@ int main(void) {
     const double delta_t = 0.01; // timestep length in seconds
     const int n_hist_datapoints = 100;
     const double hist_range[2] = {-1.5, 1.5};
-
+    const char *hist_fname = "../data/hist_data.txt";
     const int n_bins = 30;
 
     // simulate and write to files
@@ -31,7 +31,6 @@ int main(void) {
 
     // calculate histograms and write to file
     const int times[] = {30, 50, 100, 400};
-    const char *hist_fname = "../data/hist_data.txt";
     int n_times = sizeof(times) / sizeof(int);
     for (int i = 0; i < n_times; i++) {
         int time_ = times[i];
