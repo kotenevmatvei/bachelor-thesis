@@ -15,7 +15,7 @@ void fill_linear_axis(LinearAxis *axis, double start, double end, int n_points);
 
 double simulate_next_V(double last_v, double delta_t, double gamma, double D, gsl_rng *r);
 
-double **simulate_V_values(double D, double gamma, long N, int N_t, double delta_t, gsl_rng *r);
+double **simulate_V_values(double D, double gamma, int N, int N_t, double delta_t, gsl_rng *r);
 
 double calculate_transition_probability(double V, double t, double D, double gamma, double v_0);
 

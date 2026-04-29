@@ -15,8 +15,8 @@ find_library(MATH_LIB m)
 # link_directories(/path/to/gsl/lib)
 
 # 1. Build the main app
-add_executable(run_ornstein_uhlenbeck_pd ornstein_uhlenbeck_pd.c io.c simulation.c)
-target_link_libraries(run_ornstein_uhlenbeck_pd ${MATH_LIB} gsl gslcblas)
+add_executable(main main.c io.c simulation.c)
+target_link_libraries(main ${MATH_LIB} gsl gslcblas)
 
 # 2. Build the tests
 add_executable(run_tests testing.c io.c tests.c simulation.c)

@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_rng.h>
 #include <math.h>
@@ -13,7 +12,7 @@ double simulate_next_V(double last_v, double delta_t, double gamma, double D,
     return next_v;
 }
 
-double **simulate_V_values(double D, double gamma, long N, int N_t,
+double **simulate_V_values(double D, double gamma, int N, int N_t,
                            double delta_t, gsl_rng *r) {
     double v_max;
 
@@ -149,4 +148,3 @@ int *histogram(double *array, int array_len, int n_bins,
     }
     return counts;
 }
-
