@@ -82,4 +82,3 @@ ax_ps.text(0.6, 0.5, "Power spectrum", transform=ax_ps.transAxes, fontsize=12, f
 # Final layout adjustments and save
 plt.tight_layout()
 plt.savefig("figures/second_order.png", dpi=300)
-plt.show()
