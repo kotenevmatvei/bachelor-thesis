@@ -1,23 +1,16 @@
-#include "simulation.h"
 #include "io.h"
-#include <gsl/gsl_fft_real.h>
+#include "simulation.h"
 #include <gsl/gsl_fft_halfcomplex.h>
+#include <gsl/gsl_fft_real.h>
 
 #define COMMENT_LENGTH 50
-
 
 #include <stdio.h>
 #include <stdlib.h>
 
-void calculate_and_save_correlation(
-    int N_realizations,
-    int N_t,
-    double delta_t,
-    const char* filename,
-    gsl_rng *r,
-    double D,
-    double gamma)
-{
+void calculate_and_save_correlation(int N_realizations, int N_t, double delta_t,
+                                    const char *filename, gsl_rng *r, double D,
+                                    double gamma) {
     int max_k = N_t / 2;
 
     // Accumulator for the correlation function
@@ -53,12 +46,12 @@ void calculate_and_save_correlation(
             double imag_part = v_data[i][imag_idx];
             double mag_squared = (real_part * real_part) + (imag_part * imag_part);
 
-            v_data[i][real_idx] = mag_squared;      // Power goes back into the Real slot
-            v_data[i][imag_idx] = 0.0;              // Imaginary slot is zeroed
+            v_data[i][real_idx] = mag_squared; // Power goes back into the Real slot
+            v_data[i][imag_idx] = 0.0;         // Imaginary slot is zeroed
         }
 
         if (N_t % 2 == 0) {
-            double nyquist = v_data[i][N_t - 1];    // Nyquist is the very last element
+            double nyquist = v_data[i][N_t - 1]; // Nyquist is the very last element
             v_data[i][N_t - 1] = nyquist * nyquist;
         }
 
@@ -101,15 +94,11 @@ void calculate_and_save_correlation(
 
     printf("Correlation function successfully written to %s\n", filename);
 }
-double *calculate_and_save_power_spectrum(
-    int N_realizations, // e.g., 1000
-    int N_t,            // e.g., 100000
-    double delta_t,     // e.g., 0.01
-    const char* filename,
-    gsl_rng *r,
-    double D,
-    double gamma)
-{
+double *calculate_and_save_power_spectrum(int N_realizations, // e.g., 1000
+                                          int N_t,            // e.g., 100000
+                                          double delta_t,     // e.g., 0.01
+                                          const char *filename, gsl_rng *r, double D,
+                                          double gamma) {
     double T = N_t * delta_t;
     int max_k = N_t / 2;
 
@@ -150,9 +139,7 @@ double *calculate_and_save_power_spectrum(
             double real_nyquist = v_data[i][N_t - 1];
             power_accumulator[max_k] += (real_nyquist * real_nyquist);
         }
-
     }
-
 
     // 3. Average the accumulated power and write to file
     FILE *fp = fopen(filename, "w");
@@ -197,8 +184,8 @@ int main(void) {
     // simulation paramteres
     const double D = 0.1;
     const double gamma = 1;
-    int N = 10000; // number of realizations (ensembles)
-    int N_t = 500; // number of time steps of length delta_t
+    int N = 10000;               // number of realizations (ensembles)
+    int N_t = 500;               // number of time steps of length delta_t
     const double delta_t = 0.01; // timestep length in seconds
     const int n_hist_datapoints = 100;
     const double hist_range[2] = {-1.5, 1.5};
@@ -208,7 +195,7 @@ int main(void) {
     // simulate and write to files
     double **v_data = simulate_V_values(D, gamma, N, N_t, delta_t, r);
 
-    write_double_matrix_to_file((const double *const *) v_data, N, N_t,
+    write_double_matrix_to_file((const double *const *)v_data, N, N_t,
                                 "../data/v_values.txt");
 
     // calculate histograms and write to file
@@ -224,7 +211,7 @@ int main(void) {
         int *counts = histogram(v_time_snapshot, N, n_bins, bin_bounds);
         char *mode = i == 0 ? "w" : "a";
         char *comment = malloc(20 * sizeof(char));
-        sprintf(comment, "# t=%.1fs\n", (double) time_ * delta_t);
+        sprintf(comment, "# t=%.1fs\n", (double)time_ * delta_t);
         write_int_array_to_file(counts, n_bins, hist_fname, mode, comment);
         write_double_array_to_file(bin_bounds, n_bins + 1, hist_fname, "a", "");
         free(counts);
@@ -237,11 +224,10 @@ int main(void) {
     LinearAxis *V_Axis = malloc((4 + n_hist_datapoints) * sizeof(double) + sizeof(int));
     fill_linear_axis(V_Axis, hist_range[0], hist_range[1], n_hist_datapoints);
     write_double_array_to_file(V_Axis->points, n_hist_datapoints,
-                               "../data/theor_curves.txt",
-                               "w", "# V_axis\n");
+                               "../data/theor_curves.txt", "w", "# V_axis\n");
 
     for (int i = 0; i < 4; i++) {
-        double time_ = (double) times[i] * delta_t;
+        double time_ = (double)times[i] * delta_t;
         double *P_vals = calculate_P_values(D, gamma, time_, v_0, V_Axis);
 
         char *comment = malloc(COMMENT_LENGTH * sizeof(char));
@@ -257,12 +243,11 @@ int main(void) {
 
     // calculate long time average
     N = 1;
-    N_t = (int) 1e7;
+    N_t = (int)1e7;
     v_data = simulate_V_values(D, gamma, N, N_t, delta_t, r);
     double *bin_bounds = malloc(n_bins * sizeof(int));
     int *counts = histogram(v_data[0], N_t, n_bins, bin_bounds);
-    write_int_array_to_file(counts, n_bins, "../data/long_time_average.txt", "w",
-                            "");
+    write_int_array_to_file(counts, n_bins, "../data/long_time_average.txt", "w", "");
     write_double_array_to_file(bin_bounds, n_bins + 1, "../data/long_time_average.txt",
                                "a", "");
 
@@ -309,11 +294,12 @@ int main(void) {
     free(real_transform);
 
     // compute the power spectrum
-    // double *ps = calculate_and_save_power_spectrum(10000, N_t, delta_t, "../data/ps.txt", r, D, gamma);
+    // double *ps = calculate_and_save_power_spectrum(10000, N_t, delta_t,
+    // "../data/ps.txt", r, D, gamma);
 
-    // fft-transform the power spectrum back to time domain to get the correlation function
+    // fft-transform the power spectrum back to time domain to get the correlation
+    // function
     calculate_and_save_correlation(10000, N_t, delta_t, "../data/corr.txt", r, D, gamma);
-
 
     free_matrix_memory(v_data, N);
     gsl_rng_free(r);
