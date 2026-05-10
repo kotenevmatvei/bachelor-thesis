@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include "io.h"
+#include <stdio.h>
 
 void write_double_matrix_to_file(const double *const *matrix, const int n_rows,
                                  const int n_cols, const char fname[]) {
@@ -13,9 +13,8 @@ void write_double_matrix_to_file(const double *const *matrix, const int n_rows,
     fclose(fptr);
 }
 
-void write_int_array_to_file(const int *array, const int array_len,
-                             const char *fname, const char *mode,
-                             const char *comment) {
+void write_int_array_to_file(const int *array, const int array_len, const char *fname,
+                             const char *mode, const char *comment) {
     FILE *fptr = fopen(fname, mode);
 
     fprintf(fptr, "%s", comment);
