@@ -12,8 +12,8 @@ double simulate_next_V(double last_v, double delta_t, double gamma, double D,
     return next_v;
 }
 
-double **simulate_V_values(double D, double gamma, int N, int N_t,
-                           double delta_t, gsl_rng *r) {
+double **simulate_V_values(double D, double gamma, int N, int N_t, double delta_t,
+                           gsl_rng *r) {
     double v_max;
 
     int i, j;
@@ -47,8 +47,8 @@ double **simulate_V_values(double D, double gamma, int N, int N_t,
     return v_data;
 }
 
-double calculate_transition_probability(double V, double t, double D,
-                                        double gamma, double v_0) {
+double calculate_transition_probability(double V, double t, double D, double gamma,
+                                        double v_0) {
     double v_mean = v_0 * exp(-gamma * t);
     double v_variance = (D / gamma) * (1 - exp(-2 * gamma * t));
     double factor_1 = 1 / sqrt(2 * M_PI * v_variance);
@@ -128,15 +128,14 @@ void quicksort(double array[], int left, int right) {
     quicksort(array, last + 1, right);
 }
 
-int *histogram(double *array, int array_len, int n_bins,
-                     double *bin_bounds) {
+int *histogram(double *array, int array_len, int n_bins, double *bin_bounds) {
     double min, max;
     find_min_and_max(array, array_len, &min, &max);
     double range = max - min;
     double bin_size = range / n_bins;
     int *counts = calloc(n_bins, sizeof(int));
     for (int i = 0; i < array_len; i++) {
-        int bin = (int) ((array[i] - min) / bin_size);
+        int bin = (int)((array[i] - min) / bin_size);
         if (bin >= n_bins)
             bin = n_bins - 1;
         if (bin < 0)
@@ -147,4 +146,10 @@ int *histogram(double *array, int array_len, int n_bins,
         bin_bounds[i] = min + i * bin_size;
     }
     return counts;
+}
+
+double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng *r) {
+    double eta = gsl_ran_gaussian(r, 1);
+    double next_coordinate = last_coordinate + sqrt(2 * D * delta_t) * eta;
+    return next_coordinate;
 }

@@ -31,4 +31,6 @@ void quicksort(double array[], int left, int right);
 
 int *histogram(double *array, int array_len, int n_bins, double *bin_bounds);
 
+double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng *r);
+
 #endif // SIMULATION_H
