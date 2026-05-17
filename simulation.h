@@ -33,4 +33,6 @@ int *histogram(double *array, int array_len, int n_bins, double *bin_bounds);
 
 double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng *r);
 
+double reflective_boundary(double coordinate, double lower_bound, double upper_bound);
+
 #endif // SIMULATION_H

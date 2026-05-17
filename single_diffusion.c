@@ -5,8 +5,11 @@
 
 #define DELTA_T 0.01
 #define START 0
+#define LOWER_BOUND -1
+#define UPPER_BOUND 1
 #define N_T 1000
-#define D 0.01
+#define N_REALIZATIONS 10
+#define D 0.1
 
 void diffuse_one_particle(double start, double delta_t, int n_t) {
 
@@ -14,13 +17,15 @@ void diffuse_one_particle(double start, double delta_t, int n_t) {
     const gsl_rng_type *T = gsl_rng_default;
     gsl_rng *r = gsl_rng_alloc(T);
 
-    for (int j = 0; j < 20; j++) {
+    for (int j = 0; j < N_REALIZATIONS; j++) {
 
         double coordinate = start;
         double *trajectory = malloc(n_t * sizeof(double));
 
         for (int j = 0; j < n_t; j++) {
-            trajectory[j] = coordinate = simple_diffuse(coordinate, D, delta_t, r);
+            coordinate = simple_diffuse(coordinate, D, delta_t, r);
+            coordinate = reflective_boundary(coordinate, LOWER_BOUND, UPPER_BOUND);
+            trajectory[j] = coordinate;
         }
 
         write_double_array_to_file(trajectory, n_t, "../data/diffusion_trajectories.txt",

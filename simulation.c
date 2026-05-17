@@ -153,3 +153,12 @@ double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng 
     double next_coordinate = last_coordinate + sqrt(2 * D * delta_t) * eta;
     return next_coordinate;
 }
+
+double reflective_boundary(double coordinate, double lower_bound, double upper_bound) {
+    if (coordinate > upper_bound)
+        return 2 * upper_bound - coordinate;
+
+    if (coordinate < lower_bound)
+        return 2 * lower_bound - coordinate;
+    return coordinate;
+}
