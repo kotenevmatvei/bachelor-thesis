@@ -13,4 +13,9 @@ for traj in diffusion_trajectries:
 
 plt.title("this is new plot with TITLE")
 
-plt.savefig("figures/diffusion_trajectories.png")
+temp_path = "figures/diffusion_trajectories_tmp.png"
+final_path = "figures/diffusion_trajectories.png"
+
+plt.savefig(temp_path)
+
+os.replace(temp_path, final_path)
