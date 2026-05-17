@@ -7,38 +7,12 @@ fig, ax = plt.subplots(figsize=(25, 10), dpi=300)
 with open("data/diffusion_hist_refl.txt", "r") as f:
     lines = f.readlines()
 
-print(f"lines_length = {len(lines)}")
 counts_list = [np.fromstring(line, sep=" ") for line in lines[0::100]]
 bin_bounds_list = [np.fromstring(line, sep=" ") for line in lines[1::100]]
+
+print(f"lines_length = {len(lines)}")
 print(f"counts_list length = {len(counts_list)}")
 print(f"bin_bounds_list length = {len(bin_bounds_list)}")
-
-# density = []
-# for c in counts_:
-#     if total_count * bin_width != 0:
-#         density.append(c / (total_count * bin_width))
-#     else:
-#         continue
-#
-# density = [c / (total_count * bin_width) for c in counts_]
-# # print(total_count, bin_width, density)
-#
-# centers = [(bin_bounds_[j] + bin_bounds_[j + 1]) / 2 for j in range(len(counts_))]
-
-# ax.bar(centers, density, width=bin_width, edgecolor="blue", color="grey",
-#                 linewidth=1)
-
-# for i, (counts, bin_bounds_) in enumerate(counts_list):
-#     for c in counts_list:
-#         if total_count * bin_width != 0:
-#             continue
-#         else:
-#             print(f"index: {i}")
-#             print(f"total_count: {total_count}")
-#             print(f"bin_width: {bin_width}")
-#             print(f"counts: {counts}")
-#             print(f"bin_bounds: {bin_bounds_list}")
-#
 
 for i, (counts, bin_bounds) in enumerate(zip(counts_list, bin_bounds_list)):
     # ax.plot(np.linspace(-1,1,100), counts)
@@ -46,13 +20,6 @@ for i, (counts, bin_bounds) in enumerate(zip(counts_list, bin_bounds_list)):
     total_count = sum(counts)
     bin_width = bin_bounds[1] - bin_bounds[0]
     density = [c / (total_count * bin_width) for c in counts]
-    # for c in counts:
-    #     if total_count * bin_width != 0:
-    #         density.append(c / (total_count * bin_width))
-    #     else:
-    #         continue
-
-    # print(total_count, bin_width, density)
 
     centers = [(bin_bounds[j] + bin_bounds[j + 1]) / 2 for j in range(len(counts))]
 

@@ -21,14 +21,6 @@ void diffuse_one_particle(double start, double lower_bound, double upper_bound,
     gsl_rng *r = gsl_rng_alloc(T);
 
     double *coordinates = alloc_fill_double_array(start, n_realizations);
-    double *bin_bounds = malloc((n_bins + 1) * sizeof(double));
-    int *counts = histogram(coordinates, bin_bounds, n_realizations, n_bins);
-    write_int_array_to_file(counts, n_bins, "../data/diffusion_hist_refl.txt",
-                            "a", "");
-    write_double_array_to_file(bin_bounds, n_bins + 1,
-                               "../data/diffusion_hist_refl.txt", "a", "");
-    free(bin_bounds);
-    free(counts);
     for (int j = 0; j < n_t; j++) {
         for (int j = 0; j < n_realizations; j++) {
             double coordinate = simple_diffuse(coordinates[j], D, delta_t, r);
