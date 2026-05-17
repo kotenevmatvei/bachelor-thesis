@@ -1,7 +1,10 @@
 import numpy as np
+import os
 from matplotlib import pyplot as plt
 
-fig, axes = plt.subplots(figsize=(16, 9), dpi=500)
+fig, axes = plt.subplots(figsize=(25, 10), dpi=300)
+
+print(os.getcwd())
 
 diffusion_trajectries = np.loadtxt("data/diffusion_trajectories.txt")
 
