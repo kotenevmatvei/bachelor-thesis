@@ -29,7 +29,7 @@ void swap_double_elements(double array[], int i, int j);
 
 void quicksort(double array[], int left, int right);
 
-int *histogram(double *array, int array_len, int n_bins, double *bin_bounds);
+int *histogram(double *array, double *bin_bounds, int array_len, int n_bins);
 
 double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng *r);
 

@@ -22,7 +22,7 @@ add_executable(uop uop.c io.c simulation.c)
 target_link_libraries(uop ${MATH_LIB} gsl gslcblas)
 
 # build single diffusion
-add_executable(single_diffusion single_diffusion.c io.c simulation.c)
+add_executable(single_diffusion single_diffusion.c io.c simulation.c utils.c)
 target_link_libraries(single_diffusion ${MATH_LIB} gsl gslcblas)
 
 # Build the tests

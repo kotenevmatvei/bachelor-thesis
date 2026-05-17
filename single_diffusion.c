@@ -1,5 +1,6 @@
 #include "io.h"
 #include "simulation.h"
+#include "utils.h"
 
 // simulate 1 particle and record trajectory
 
@@ -7,31 +8,45 @@
 #define START 0
 #define LOWER_BOUND -1
 #define UPPER_BOUND 1
-#define N_T 1000
-#define N_REALIZATIONS 10
-#define D 0.1
+#define N_T 10000
+#define N_REALIZATIONS 1000
+#define D 0.01
+#define N_BINS 100
 
-void diffuse_one_particle(double start, double delta_t, int n_t) {
+void diffuse_one_particle(double start, double lower_bound, double upper_bound,
+                          double delta_t, int n_t, int n_realizations, int n_bins) {
 
     gsl_rng_env_setup();
     const gsl_rng_type *T = gsl_rng_default;
     gsl_rng *r = gsl_rng_alloc(T);
 
-    for (int j = 0; j < N_REALIZATIONS; j++) {
-
-        double coordinate = start;
-        double *trajectory = malloc(n_t * sizeof(double));
-
-        for (int j = 0; j < n_t; j++) {
-            coordinate = simple_diffuse(coordinate, D, delta_t, r);
-            coordinate = reflective_boundary(coordinate, LOWER_BOUND, UPPER_BOUND);
-            trajectory[j] = coordinate;
+    double *coordinates = alloc_fill_double_array(start, n_realizations);
+    double *bin_bounds = malloc((n_bins + 1) * sizeof(double));
+    int *counts = histogram(coordinates, bin_bounds, n_realizations, n_bins);
+    write_int_array_to_file(counts, n_bins, "../data/diffusion_hist_refl.txt",
+                            "a", "");
+    write_double_array_to_file(bin_bounds, n_bins + 1,
+                               "../data/diffusion_hist_refl.txt", "a", "");
+    free(bin_bounds);
+    free(counts);
+    for (int j = 0; j < n_t; j++) {
+        for (int j = 0; j < n_realizations; j++) {
+            double coordinate = simple_diffuse(coordinates[j], D, delta_t, r);
+            coordinates[j] = reflective_boundary(coordinate, lower_bound, upper_bound);
         }
-
-        write_double_array_to_file(trajectory, n_t, "../data/diffusion_trajectories.txt",
-                                   "a", "");
-        free(trajectory);
+        double *bin_bounds = malloc((n_bins + 1) * sizeof(double));
+        int *counts = histogram(coordinates, bin_bounds, n_realizations, n_bins);
+        write_int_array_to_file(counts, n_bins, "../data/diffusion_hist_refl.txt", "a",
+                                "");
+        write_double_array_to_file(bin_bounds, n_bins + 1,
+                                   "../data/diffusion_hist_refl.txt", "a", "");
+        free(bin_bounds);
+        free(counts);
     }
+    free(coordinates);
 }
 
-int main() { diffuse_one_particle(START, DELTA_T, N_T); }
+int main() {
+    diffuse_one_particle(START, LOWER_BOUND, UPPER_BOUND, DELTA_T, N_T, N_REALIZATIONS,
+                         N_BINS);
+}

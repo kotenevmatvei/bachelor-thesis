@@ -128,7 +128,7 @@ void quicksort(double array[], int left, int right) {
     quicksort(array, last + 1, right);
 }
 
-int *histogram(double *array, int array_len, int n_bins, double *bin_bounds) {
+int *histogram(double *array, double *bin_bounds, int array_len, int n_bins) {
     double min, max;
     find_min_and_max(array, array_len, &min, &max);
     double range = max - min;

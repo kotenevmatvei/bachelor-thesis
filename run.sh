@@ -1,5 +1,8 @@
+#!/bin/bash
+set -e
+
 echo "removing old data..."
-rm data/diffusion_trajectories.txt
+rm data/diffusion_hist_refl.txt
 echo "building the project..."
 make
 cd cmake-build-debug/
