@@ -22,7 +22,7 @@ void diffuse_save_histograms(double start, double lower_bound, double upper_boun
     gsl_rng *r = gsl_rng_alloc(T);
 
     double *coordinates = alloc_fill_double_array(start, n_realizations);
-    for (int j = 0; j < n_t; j++) {
+    for (int i = 0; i < n_t; i++) {
         for (int j = 0; j < n_realizations; j++) {
             double coordinate = simple_diffuse(coordinates[j], d, delta_t, r);
             coordinates[j] = reflective_boundary(coordinate, lower_bound, upper_bound);
@@ -34,6 +34,10 @@ void diffuse_save_histograms(double start, double lower_bound, double upper_boun
                                 "");
         write_double_array_to_file(bin_bounds, n_bins + 1,
                                    "../data/diffusion_hist_refl.txt", "a", "");
+        if (i < 4)
+            write_double_array_to_file(coordinates, n_realizations,
+                                       "../data/diffusion_trajectories.txt", "a", "");
+
         free(bin_bounds);
         free(counts);
     }
