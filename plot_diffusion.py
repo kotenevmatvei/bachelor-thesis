@@ -11,7 +11,7 @@ def draw_trajectories():
 
     print(os.getcwd())
 
-    diffusion_trajectries = np.loadtxt("data/diffusion_trajectories.txt")
+    diffusion_trajectries = np.loadtxt("data/diffusion_trajectories_refl.txt")
 
     plt.grid()
 
@@ -20,8 +20,8 @@ def draw_trajectories():
 
     plt.title("this is new plot with TITLE")
 
-    temp_path = "figures/diffusion_trajectories_tmp.png"
-    final_path = "figures/diffusion_trajectories.png"
+    temp_path = "figures/diffusion_trajectories_refl_tmp.png"
+    final_path = "figures/diffusion_trajectories_refl.png"
 
     plt.savefig(temp_path)
     plt.close()
@@ -54,13 +54,6 @@ def draw_histogram(style: str = "line"):
     ax.set_xlim(-1, 1)
     ax.grid()
 
-    if style == "line":
-        (line,) = ax.plot(centers, density)
-    elif style == "bars":
-        bars = ax.bar(centers, density, width=bin_width, linewidth=1)
-    else:
-        raise ValueError(f"Unknown style: {style}. Available options'line' and 'bars'")
-
     def run_hist(data, bars):
         # update the data
         counts, _ = data
@@ -77,10 +70,14 @@ def draw_histogram(style: str = "line"):
         line.set_data(centers, density)
         return (line,)
 
-    run_line_partial = functools.partial(run_line, line=line)
-    run_hist_partial = functools.partial(run_hist, bars=bars)
-
-    run = run_line_partial if style == "line" else run_hist_partial
+    if style == "line":
+        (line,) = ax.plot(centers, density)
+        run = functools.partial(run_line, line=line)
+    elif style == "bars":
+        bars = ax.bar(centers, density, width=bin_width, linewidth=1)
+        run = functools.partial(run_hist, bars=bars)
+    else:
+        raise ValueError(f"Unknown style: {style}. Available options'line' and 'bars'")
 
     total_frames = len(counts_list)
 
@@ -106,10 +103,11 @@ def draw_histogram(style: str = "line"):
             progress_callback=update_progress,
         )
 
+
 def main():
     draw_trajectories()
     draw_histogram(style="line")
 
+
 if __name__ == "__main__":
     main()
-
