@@ -8,9 +8,9 @@
 #define START 0
 #define LOWER_BOUND -1
 #define UPPER_BOUND 1
-#define N_T 10000
-#define N_REALIZATIONS 1000
-#define D 0.01
+#define N_T 200
+#define N_REALIZATIONS 10000
+#define D 0.1
 #define N_BINS 100
 
 void diffuse_one_particle(double start, double lower_bound, double upper_bound,
@@ -27,7 +27,8 @@ void diffuse_one_particle(double start, double lower_bound, double upper_bound,
             coordinates[j] = reflective_boundary(coordinate, lower_bound, upper_bound);
         }
         double *bin_bounds = malloc((n_bins + 1) * sizeof(double));
-        int *counts = histogram(coordinates, bin_bounds, n_realizations, n_bins);
+        int *counts = histogram_fixed_bins(coordinates, bin_bounds, n_realizations,
+                                           n_bins, lower_bound, upper_bound);
         write_int_array_to_file(counts, n_bins, "../data/diffusion_hist_refl.txt", "a",
                                 "");
         write_double_array_to_file(bin_bounds, n_bins + 1,

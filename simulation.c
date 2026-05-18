@@ -148,6 +148,25 @@ int *histogram(double *array, double *bin_bounds, int array_len, int n_bins) {
     return counts;
 }
 
+int *histogram_fixed_bins(double *array, double *bin_bounds, int array_len, int n_bins,
+                          double lower_bound, double upper_bound) {
+    double range = upper_bound - lower_bound;
+    double bin_size = range / n_bins;
+    int *counts = calloc(n_bins, sizeof(int));
+    for (int i = 0; i < array_len; i++) {
+        int bin = (int)((array[i] - lower_bound) / bin_size);
+        if (bin >= n_bins)
+            bin = n_bins - 1;
+        if (bin < 0)
+            bin = 0;
+        counts[bin]++;
+    }
+    for (int i = 0; i < n_bins + 1; i++) {
+        bin_bounds[i] = lower_bound + i * bin_size;
+    }
+    return counts;
+}
+
 double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng *r) {
     double eta = gsl_ran_gaussian(r, 1);
     double next_coordinate = last_coordinate + sqrt(2 * D * delta_t) * eta;

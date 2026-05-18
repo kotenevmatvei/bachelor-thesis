@@ -15,11 +15,14 @@ void fill_linear_axis(LinearAxis *axis, double start, double end, int n_points);
 
 double simulate_next_V(double last_v, double delta_t, double gamma, double D, gsl_rng *r);
 
-double **simulate_V_values(double D, double gamma, int N, int N_t, double delta_t, gsl_rng *r);
+double **simulate_V_values(double D, double gamma, int N, int N_t, double delta_t,
+                           gsl_rng *r);
 
-double calculate_transition_probability(double V, double t, double D, double gamma, double v_0);
+double calculate_transition_probability(double V, double t, double D, double gamma,
+                                        double v_0);
 
-double *calculate_P_values(double D, double gamma, double t, double v_0, LinearAxis *V_Axis);
+double *calculate_P_values(double D, double gamma, double t, double v_0,
+                           LinearAxis *V_Axis);
 
 void free_matrix_memory(double **matrix, int n_rows);
 
@@ -30,6 +33,9 @@ void swap_double_elements(double array[], int i, int j);
 void quicksort(double array[], int left, int right);
 
 int *histogram(double *array, double *bin_bounds, int array_len, int n_bins);
+
+int *histogram_fixed_bins(double *array, double *bin_bounds, int array_len, int n_bins,
+                          double lower_bound, double upper_bound);
 
 double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng *r);
 
