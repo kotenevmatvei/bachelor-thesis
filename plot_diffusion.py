@@ -47,7 +47,12 @@ run_with_bars = functools.partial(run, bars=bars)
 total_frames = len(counts_list)
 
 ani = animation.FuncAnimation(
-    fig, run_with_bars, data_gen, blit=True, save_count=total_frames
+    fig,
+    run_with_bars,
+    data_gen,
+    blit=True,
+    save_count=total_frames,
+    cache_frame_data=False,
 )
 
 writer = animation.FFMpegWriter(fps=10, metadata=dict(artist="Matvei"))
