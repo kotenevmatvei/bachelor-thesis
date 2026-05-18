@@ -28,10 +28,10 @@ centers = [
 fig, ax = plt.subplots()
 ax.set_xlim(-1, 1)
 ax.grid()
-bars = ax.bar(centers, density, width=bin_width, linewidth=1)
+# bars = ax.bar(centers, density, width=bin_width, linewidth=1)
+line, = ax.plot(centers, density)
 
-
-def run(data, bars):
+def run_hist(data, bars):
     # update the data
     counts, _ = data
     density = [c / (total_count * bin_width) for c in counts]
@@ -41,14 +41,21 @@ def run(data, bars):
 
     return bars.patches
 
+def run_line(data, line):
+    counts, _ = data
+    density = [c / (total_count * bin_width) for c in counts]
+    line.set_data(centers, density)
+    return line,
 
-run_with_bars = functools.partial(run, bars=bars)
+
+run_line_partial = functools.partial(run_line, line=line)
+# run_hist_partial = functools.partial(run_hist, bars=bars)
 
 total_frames = len(counts_list)
 
 ani = animation.FuncAnimation(
     fig,
-    run_with_bars,
+    run_line_partial,
     data_gen,
     blit=True,
     save_count=total_frames,
@@ -63,7 +70,7 @@ with tqdm(total=total_frames, desc="Saving animation") as pbar:
         pbar.update(1)
 
     ani.save(
-        "figures/diffusion_refl.mp4",
+        "figures/diffusion_line_refl.mp4",
         writer=writer,
         progress_callback=update_progress,
     )
