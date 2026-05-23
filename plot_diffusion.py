@@ -5,23 +5,30 @@ import matplotlib.animation as animation
 import functools
 from tqdm import tqdm
 
+BOUNDARY = "reflective"
+DELTA_T = 0.01
 
 def draw_trajectories():
     plt.subplots(figsize=(25, 10), dpi=300)
 
     print(os.getcwd())
 
-    diffusion_trajectries = np.loadtxt("data/diffusion_trajectories_refl.txt")
+    diffusion_trajectries = np.loadtxt(f"data/diffusion_trajectories_{BOUNDARY}.txt")
 
     plt.grid()
+    
+    x_axis = np.linspace(0, 10, 1000)
 
     for traj in diffusion_trajectries:
-        plt.plot(traj)
+        plt.plot(x_axis, traj)
 
-    plt.title("this is new plot with TITLE")
+    plt.title(f"Trajectories: {BOUNDARY} boundaries")
 
-    temp_path = "figures/diffusion_trajectories_refl_tmp.png"
-    final_path = "figures/diffusion_trajectories_refl.png"
+    temp_path = f"figures/diffusion_trajectories_{BOUNDARY}_tmp.png"
+    final_path = f"figures/diffusion_trajectories_{BOUNDARY}.png"
+
+    plt.ylabel("Coordinate x")
+    plt.xlabel("Time t")
 
     plt.savefig(temp_path)
     plt.close()
@@ -30,7 +37,7 @@ def draw_trajectories():
 
 
 def draw_histogram(style: str = "line"):
-    with open("data/diffusion_hist_refl.txt", "r") as f:
+    with open(f"data/diffusion_hist_{BOUNDARY}.txt", "r") as f:
         lines = f.readlines()
 
     counts_list = list([np.fromstring(line, sep=" ") for line in lines[0::2]])
@@ -52,6 +59,9 @@ def draw_histogram(style: str = "line"):
     ]
     fig, ax = plt.subplots()
     ax.set_xlim(-1, 1)
+    ax.set_xlabel("Coordinate x")
+    ax.set_ylabel("Counts")
+    ax.set_title(f"Particle diffusion, {BOUNDARY} boundaries")
     ax.grid()
 
     def run_hist(data, bars):
@@ -98,7 +108,7 @@ def draw_histogram(style: str = "line"):
             pbar.update(1)
 
         ani.save(
-            "figures/diffusion_line_refl.mp4",
+            f"figures/diffusion_line_{BOUNDARY}.mp4",
             writer=writer,
             progress_callback=update_progress,
         )

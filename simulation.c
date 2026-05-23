@@ -181,3 +181,13 @@ double reflective_boundary(double coordinate, double lower_bound, double upper_b
         return 2 * lower_bound - coordinate;
     return coordinate;
 }
+
+double periodic_boundary(double coordinate, double lower_bound, double upper_bound) {
+    if (coordinate > upper_bound)
+        return lower_bound + coordinate - upper_bound;
+
+    if (coordinate < lower_bound)
+        return upper_bound - coordinate + lower_bound;
+
+    return coordinate;
+}

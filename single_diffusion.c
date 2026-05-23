@@ -30,10 +30,10 @@ void diffuse_save_histograms(double start, double lower_bound, double upper_boun
         double *bin_bounds = malloc((n_bins + 1) * sizeof(double));
         int *counts = histogram_fixed_bins(coordinates, bin_bounds, n_realizations,
                                            n_bins, lower_bound, upper_bound);
-        write_int_array_to_file(counts, n_bins, "../data/diffusion_hist_refl.txt", "a",
+        write_int_array_to_file(counts, n_bins, "../data/diffusion_hist_reflective.txt", "a",
                                 "");
         write_double_array_to_file(bin_bounds, n_bins + 1,
-                                   "../data/diffusion_hist_refl.txt", "a", "");
+                                   "../data/diffusion_hist_reflective.txt", "a", "");
         free(bin_bounds);
         free(counts);
     }
@@ -58,7 +58,7 @@ void diffuse_save_trajectories(double start, double lower_bound, double upper_bo
             trajectory[j] = coordinate;
         }
 
-        write_double_array_to_file(trajectory, n_t, "../data/diffusion_trajectories_refl.txt",
+        write_double_array_to_file(trajectory, n_t, "../data/diffusion_trajectories_reflective.txt",
                                    "a", "");
         free(trajectory);
     }

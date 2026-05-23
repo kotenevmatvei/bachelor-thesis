@@ -2,7 +2,8 @@
 set -e
 
 echo "removing old data..."
-rm data/diffusion_hist_refl.txt
+# rm data/diffusion_hist_periodic.txt
+# rm data/diffusion_hist_reflective.txt
 echo "building the project..."
 make
 cd cmake-build-debug/

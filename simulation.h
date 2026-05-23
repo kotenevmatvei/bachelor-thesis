@@ -41,4 +41,6 @@ double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng 
 
 double reflective_boundary(double coordinate, double lower_bound, double upper_bound);
 
+double periodic_boundary(double coordinate, double lower_bound, double upper_bound);
+
 #endif // SIMULATION_H
