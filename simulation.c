@@ -191,3 +191,14 @@ double periodic_boundary(double coordinate, double lower_bound, double upper_bou
 
     return coordinate;
 }
+
+double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
+                                       double upper_bound) {
+    if (coordinate >= upper_bound)
+        return upper_bound;
+
+    if (coordinate < lower_bound)
+        return 2 * lower_bound - coordinate;
+
+    return coordinate;
+}

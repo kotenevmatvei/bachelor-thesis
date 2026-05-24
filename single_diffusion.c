@@ -8,9 +8,9 @@
 #define START 0
 #define LOWER_BOUND -1
 #define UPPER_BOUND 1
-#define N_T 200
-#define N_REALIZATIONS 10000
-#define D 0.1
+#define N_T 2000
+#define N_REALIZATIONS 1000
+#define D 0.2
 #define N_BINS 100
 
 void diffuse_save_histograms(double start, double lower_bound, double upper_bound,
@@ -24,16 +24,24 @@ void diffuse_save_histograms(double start, double lower_bound, double upper_boun
     double *coordinates = alloc_fill_double_array(start, n_realizations);
     for (int i = 0; i < n_t; i++) {
         for (int j = 0; j < n_realizations; j++) {
+            // stick to the top if reached the upper bound
+            if (coordinates[j] >= upper_bound) {
+                coordinates[j] = upper_bound;
+                continue;
+            }
+            // otherwise reflective_boundary
             double coordinate = simple_diffuse(coordinates[j], d, delta_t, r);
-            coordinates[j] = reflective_boundary(coordinate, lower_bound, upper_bound);
+            coordinates[j] =
+                sticky_top_refl_bottom_boundary(coordinate, lower_bound, upper_bound);
         }
         double *bin_bounds = malloc((n_bins + 1) * sizeof(double));
         int *counts = histogram_fixed_bins(coordinates, bin_bounds, n_realizations,
                                            n_bins, lower_bound, upper_bound);
-        write_int_array_to_file(counts, n_bins, "../data/diffusion_hist_reflective.txt", "a",
-                                "");
+        write_int_array_to_file(
+            counts, n_bins, "../data/diffusion_hist_sticky_top_refl_bottom.txt", "a", "");
         write_double_array_to_file(bin_bounds, n_bins + 1,
-                                   "../data/diffusion_hist_reflective.txt", "a", "");
+                                   "../data/diffusion_hist_sticky_top_refl_bottom.txt",
+                                   "a", "");
         free(bin_bounds);
         free(counts);
     }
@@ -53,13 +61,21 @@ void diffuse_save_trajectories(double start, double lower_bound, double upper_bo
         double *trajectory = malloc(n_t * sizeof(double));
 
         for (int j = 0; j < n_t; j++) {
+            // stick to the top if reached the upper bound
+            if (trajectory[j] >= upper_bound) {
+                trajectory[j] = upper_bound;
+                continue;
+            }
+            // otherwise reflective_boundary
             coordinate = simple_diffuse(coordinate, d, delta_t, r);
-            coordinate = reflective_boundary(coordinate, lower_bound, upper_bound);
+            coordinate =
+                sticky_top_refl_bottom_boundary(coordinate, lower_bound, upper_bound);
             trajectory[j] = coordinate;
         }
 
-        write_double_array_to_file(trajectory, n_t, "../data/diffusion_trajectories_reflective.txt",
-                                   "a", "");
+        write_double_array_to_file(
+            trajectory, n_t, "../data/diffusion_trajectories_sticky_top_refl_bottom.txt",
+            "a", "");
         free(trajectory);
     }
 }

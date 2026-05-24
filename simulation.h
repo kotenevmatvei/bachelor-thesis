@@ -43,4 +43,6 @@ double reflective_boundary(double coordinate, double lower_bound, double upper_b
 
 double periodic_boundary(double coordinate, double lower_bound, double upper_bound);
 
+double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound, double upper_bound);
+
 #endif // SIMULATION_H
