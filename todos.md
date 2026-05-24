@@ -10,8 +10,8 @@
 - [x] calculate histogram on the fly
 
 ### animation
-- [ ] initial rough check if the results make sense
-- [ ] rawdog ffmpeg??
+- [x] initial rough check if the results make sense
+- [x] rawdog ffmpeg??
 
 ### IO
 - [ ] cache intermediate results (histograms) and the write to file in chunks
