@@ -1,8 +1,8 @@
 # TODOs
 
 ## bugs
-- [ ] what is wrong with the reflective bottom boundary in sticky_top_refl_bottom animation? some particles are reflected to early.
-- [ ] why is the video file not fully written?
+- [x] what is wrong with the reflective bottom boundary in sticky_top_refl_bottom animation? some particles are reflected to early.
+- [x] why is the video file not fully written?
 
 ## speedup
 ### algorithms and data structures
