@@ -62,7 +62,7 @@ void diffuse_save_trajectories(double start, double lower_bound, double upper_bo
 
         for (int j = 0; j < n_t; j++) {
             // stick to the top if reached the upper bound
-            if (trajectory[j] >= upper_bound) {
+            if (coordinate >= upper_bound) {
                 trajectory[j] = upper_bound;
                 continue;
             }

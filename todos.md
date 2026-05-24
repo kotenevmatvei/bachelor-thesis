@@ -13,10 +13,10 @@
 - [x] initial rough check if the results make sense
 - [x] rawdog ffmpeg??
 
-### IO
+### IO (not necessary just yet)
 - [ ] cache intermediate results (histograms) and the write to file in chunks
 - [ ] do not close and reopen the file every time but keep an open pointer until throughout the loop
 
-## cosmetics
+## cosmetics (not necessary yet)
 - [ ] bigger font on the plots
 - [ ] current timestep in the animation
