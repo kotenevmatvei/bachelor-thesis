@@ -8,7 +8,7 @@
 #define START 0
 #define LOWER_BOUND -1
 #define UPPER_BOUND 1
-#define N_T 2000
+#define N_T 10000
 #define N_REALIZATIONS 1000
 #define D 0.2
 #define N_BINS 100

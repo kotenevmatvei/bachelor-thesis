@@ -1,6 +1,8 @@
 import numpy as np
+import shutil
 import concurrent.futures
 import os
+import subprocess
 from matplotlib import pyplot as plt
 import matplotlib.animation as animation
 import functools
@@ -108,8 +110,36 @@ def draw_histogram(style: str = "line"):
         )
 
 
-def ffmpeg_direct_hist(style: str):
+# 1. Define render_frame at the TOP LEVEL of the file!
+def render_frame(i, counts_list, total_count, bin_width, centers, style, boundary):
+    fig, ax = plt.subplots(
+        figsize=(8, 6), dpi=100
+    )  # Fresh figure for the separate CPU core
+    ax.set_xlim(-1, 1)
+    ax.set_ylim(0, 7)
+    ax.set_xlabel("Coordinate x")
+    ax.set_ylabel("Counts")
+    ax.set_title(f"Particle diffusion, {boundary} boundaries")
+    ax.grid()
 
+    counts = counts_list[i]
+    density = [c / (total_count * bin_width) for c in counts]
+
+    if style == "line":
+        ax.plot(centers, density)
+    else:
+        ax.bar(centers, density, width=bin_width, linewidth=1)
+
+    filename = f"tmp_frames/frame_{i:05d}.png"
+    fig.savefig(filename)
+    plt.close(fig)  # Prevent memory leaks
+
+
+# 2. Your main function
+def ffmpeg_direct_hist(style="bars"):
+    BOUNDARY = "sticky_top_refl_bottom"
+
+    # ... (Your existing data reading logic here) ...
     with open(f"data/diffusion_hist_{BOUNDARY}.txt", "r") as f:
         lines = f.readlines()
 
@@ -120,7 +150,6 @@ def ffmpeg_direct_hist(style: str):
     bin_bounds_init = bin_bounds_list[0]
     total_count = sum(counts_init)
     bin_width = bin_bounds_init[1] - bin_bounds_init[0]
-
     centers = [
         (bin_bounds_init[j] + bin_bounds_init[j + 1]) / 2
         for j in range(len(counts_init))
@@ -129,50 +158,60 @@ def ffmpeg_direct_hist(style: str):
     total_frames = len(counts_list)
     os.makedirs("tmp_frames", exist_ok=True)
 
-    # 1. Define a function that draws and saves exactly ONE frame
-    def render_frame(i):
-        fig, ax = plt.subplots(
-            figsize=(8, 6), dpi=100
-        )  # Use a fresh figure for thread safety
-        ax.set_xlim(-1, 1)
-        ax.set_ylim(0, 7)
-        ax.set_xlabel("Coordinate x")
-        ax.set_ylabel("Counts")
-        ax.set_title(f"Particle diffusion, {BOUNDARY} boundaries")
-        ax.grid()
+    # 3. Bind all the constant data to the top-level function so only 'i' needs to change
+    worker_func = functools.partial(
+        render_frame,
+        counts_list=counts_list,
+        total_count=total_count,
+        bin_width=bin_width,
+        centers=centers,
+        style=style,
+        boundary=BOUNDARY,
+    )
 
-        counts = counts_list[i]
-        density = [c / (total_count * bin_width) for c in counts]
-
-        if style == "line":
-            ax.plot(centers, density)
-        else:
-            ax.bar(centers, density, width=bin_width, linewidth=1)
-
-        filename = f"tmp_frames/frame_{i:05d}.png"
-        fig.savefig(filename)
-        plt.close(fig)  # Prevent memory leaks!
-
-    # 2. Render all frames in parallel using all available CPU cores
-    print("\\nRendering frames in parallel...")
+    print(f"\nRendering {total_frames} frames in parallel...")
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        list(tqdm(executor.map(render_frame, range(total_frames)), total=total_frames))
+        print(f"\nNumber of cores we will now use: {executor._max_workers}\n")
+        list(tqdm(executor.map(worker_func, range(total_frames)), total=total_frames))
 
-    # 3. Stitch them together instantly using ffmpeg directly
     print("Stitching video...")
     mp4_path = f"figures/diffusion_line_{BOUNDARY}.mp4"
-    os.system(
-        f"ffmpeg -y -framerate 10 -i tmp_frames/frame_%05d.png "
-        f"-c:v libx264 -pix_fmt yuv420p {mp4_path}"
-    )
+    ffmpeg_command = [
+        "ffmpeg",
+        "-y",
+        "-framerate",
+        "10",
+        "-i",
+        "tmp_frames/frame_%05d.png",
+        "-r",
+        "10",
+        "-c:v",
+        "libx264",
+        "-pix_fmt",
+        "yuv420p",
+        mp4_path,
+    ]
+
+    try:
+        result = subprocess.run(
+            ffmpeg_command, capture_output=True, text=True, check=True
+        )
+        print("Done!")
+
+    except subprocess.CalledProcessError as e:
+        print(f"Error during video stitching! FFmpeg failed with code {e.returncode}.")
+        print(f"FFmpeg Error Output:\\n{e.stderr}")
+
+    print("Removing temp files")
+    shutil.rmtree("tmp_frames")
 
     print("Done!")
 
 
 def main():
     draw_trajectories()
-    draw_histogram(style="bars")
-    # ffmpeg_direct_hist(style="bars")
+    # draw_histogram(style="bars")
+    ffmpeg_direct_hist(style="bars")
 
 
 if __name__ == "__main__":

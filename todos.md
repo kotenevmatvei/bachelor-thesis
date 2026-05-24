@@ -19,3 +19,4 @@
 
 ## cosmetics
 - [ ] bigger font on the plots
+- [ ] current timestep in the animation
