@@ -8,7 +8,7 @@
 #define START 0
 #define LOWER_BOUND -1
 #define UPPER_BOUND 1
-#define N_T 10000
+#define N_T 5000
 #define N_REALIZATIONS 1000
 #define D 0.2
 #define N_BINS 100
@@ -29,7 +29,7 @@ void diffuse_save_histograms(double start, double lower_bound, double upper_boun
                 coordinates[j] = upper_bound;
                 continue;
             }
-            // otherwise reflective_boundary
+            // otherwise apply the boundary condition function
             double coordinate = simple_diffuse(coordinates[j], d, delta_t, r);
             coordinates[j] =
                 sticky_top_refl_bottom_boundary(coordinate, lower_bound, upper_bound);

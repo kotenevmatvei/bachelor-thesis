@@ -179,12 +179,8 @@ def ffmpeg_direct_hist(style="bars"):
     ffmpeg_command = [
         "ffmpeg",
         "-y",
-        "-framerate",
-        "10",
         "-i",
         "tmp_frames/frame_%05d.png",
-        "-r",
-        "10",
         "-c:v",
         "libx264",
         "-pix_fmt",
@@ -196,16 +192,12 @@ def ffmpeg_direct_hist(style="bars"):
         result = subprocess.run(
             ffmpeg_command, capture_output=True, text=True, check=True
         )
-        print("Done!")
+        print("Animation done!")
 
     except subprocess.CalledProcessError as e:
         print(f"Error during video stitching! FFmpeg failed with code {e.returncode}.")
         print(f"FFmpeg Error Output:\\n{e.stderr}")
 
-    print("Removing temp files")
-    shutil.rmtree("tmp_frames")
-
-    print("Done!")
 
 
 def main():

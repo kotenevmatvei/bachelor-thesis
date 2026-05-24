@@ -14,4 +14,4 @@ echo "running the simulation..."
 cd ..
 echo "running the visualizations..."
 python plot_diffusion.py
-echo "done!"
+echo "the run done!"
