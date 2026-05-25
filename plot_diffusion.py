@@ -10,7 +10,6 @@ from tqdm import tqdm
 
 BOUNDARY = "sticky_top_refl_bottom"
 
-
 def draw_trajectories():
     plt.subplots(figsize=(25, 10), dpi=300)
 
@@ -110,11 +109,10 @@ def draw_histogram(style: str = "line"):
         )
 
 
-# 1. Define render_frame at the TOP LEVEL of the file!
 def render_frame(i, counts_list, total_count, bin_width, centers, style, boundary):
     fig, ax = plt.subplots(
         figsize=(8, 6), dpi=100
-    )  # Fresh figure for the separate CPU core
+    )
     ax.set_xlim(-1, 1)
     ax.set_ylim(0, 7)
     ax.set_xlabel("Coordinate x")
@@ -132,14 +130,11 @@ def render_frame(i, counts_list, total_count, bin_width, centers, style, boundar
 
     filename = f"tmp_frames/frame_{i:05d}.png"
     fig.savefig(filename)
-    plt.close(fig)  # Prevent memory leaks
+    plt.close(fig)
 
 
-# 2. Your main function
 def ffmpeg_direct_hist(style="bars"):
-    BOUNDARY = "sticky_top_refl_bottom"
 
-    # ... (Your existing data reading logic here) ...
     with open(f"data/diffusion_hist_{BOUNDARY}.txt", "r") as f:
         lines = f.readlines()
 
@@ -158,7 +153,6 @@ def ffmpeg_direct_hist(style="bars"):
     total_frames = len(counts_list)
     os.makedirs("tmp_frames", exist_ok=True)
 
-    # 3. Bind all the constant data to the top-level function so only 'i' needs to change
     worker_func = functools.partial(
         render_frame,
         counts_list=counts_list,
