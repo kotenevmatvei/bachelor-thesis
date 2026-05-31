@@ -18,5 +18,4 @@
 - [ ] do not close and reopen the file every time but keep an open pointer until throughout the loop
 
 ## cosmetics (not necessary yet)
-- [ ] bigger font on the plots
-- [ ] current timestep in the animation
+
