@@ -167,13 +167,30 @@ int *histogram_fixed_bins(double *array, double *bin_bounds, int array_len, int 
     return counts;
 }
 
+void histogram_no_alloc(double *array, int *counts, double *bin_bounds, int array_len,
+                        int n_bins, double lower_bound, double upper_bound) {
+    double range = upper_bound - lower_bound;
+    double bin_size = range / n_bins;
+    for (int i = 0; i < array_len; i++) {
+        int bin = (int)((array[i] - lower_bound) / bin_size);
+        if (bin >= n_bins)
+            bin = n_bins - 1;
+        if (bin < 0)
+            bin = 0;
+        counts[bin]++;
+    }
+    for (int i = 0; i < n_bins + 1; i++) {
+        bin_bounds[i] = lower_bound + i * bin_size;
+    }
+}
+
 double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng *r) {
     double eta = gsl_ran_gaussian(r, 1);
     double next_coordinate = last_coordinate + sqrt(2 * D * delta_t) * eta;
     return next_coordinate;
 }
 
-double reflective_boundary(double coordinate, double lower_bound, double upper_bound) {
+double reflecting_boundary(double coordinate, double lower_bound, double upper_bound) {
     if (coordinate > upper_bound)
         return 2 * upper_bound - coordinate;
 
@@ -201,4 +218,13 @@ double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
         return 2 * lower_bound - coordinate;
 
     return coordinate;
+}
+
+double double_dependent_diffuse(double coordinate, double D, double c, int q,
+                                double delta_t, double density, gsl_rng *r) {
+
+    double eta = gsl_ran_gaussian(r, 1);
+    double new_coordinate =
+        coordinate + sqrt((2 * D * (1 + c * pow(density, q)) * delta_t)) * eta;
+    return new_coordinate;
 }

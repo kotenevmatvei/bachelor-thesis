@@ -8,10 +8,10 @@ echo "removing old data..."
 # rm data/diffusion_trajectories_sticky_top_refl_bottom.txt
 echo "building the project..."
 make
-cd cmake-build-debug/
+cd build/
 echo "running the simulation..."
-./single_diffusion
+./double_diffusion
 cd ..
 echo "running the visualizations..."
-python plot_diffusion.py
+# python plot_diffusion.py
 echo "the run done!"

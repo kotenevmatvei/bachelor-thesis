@@ -15,7 +15,6 @@
 
 ### IO (not necessary just yet)
 - [ ] cache intermediate results (histograms) and the write to file in chunks
-- [ ] do not close and reopen the file every time but keep an open pointer until throughout the loop
+- [x] do not close and reopen the file every time but keep an open pointer until throughout the loop
 
 ## cosmetics (not necessary yet)
-

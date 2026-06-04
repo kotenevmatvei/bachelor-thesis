@@ -39,10 +39,16 @@ int *histogram_fixed_bins(double *array, double *bin_bounds, int array_len, int 
 
 double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng *r);
 
-double reflective_boundary(double coordinate, double lower_bound, double upper_bound);
+double reflecting_boundary(double coordinate, double lower_bound, double upper_bound);
 
 double periodic_boundary(double coordinate, double lower_bound, double upper_bound);
 
-double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound, double upper_bound);
+double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
+                                       double upper_bound);
 
+double double_dependent_diffuse(double coordinate, double D, double c, int q,
+                                double delta_t, double density, gsl_rng *r);
+
+void histogram_no_alloc(double *array, int *counts, double *bin_bounds, int array_len,
+                        int n_bins, double lower_bound, double upper_bound);
 #endif // SIMULATION_H

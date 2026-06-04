@@ -27,6 +27,16 @@ void write_int_array_to_file(const int *array, const int array_len, const char *
     fclose(fptr);
 }
 
+void write_int_array(FILE *fptr, const int *array, const int array_len,
+                     const char *comment) {
+    fprintf(fptr, "%s", comment);
+
+    for (int i = 0; i < array_len - 1; ++i) {
+        fprintf(fptr, "%d ", array[i]);
+    }
+    fprintf(fptr, "%d\n", array[array_len - 1]);
+}
+
 void write_double_array_to_file(const double *array, const int array_len,
                                 const char *fname, const char *mode,
                                 const char *comment) {
@@ -40,6 +50,16 @@ void write_double_array_to_file(const double *array, const int array_len,
     fprintf(fptr, "%f\n", array[array_len - 1]);
 
     fclose(fptr);
+}
+
+void write_double_array(FILE *fptr, const double *array, const int array_len,
+                        const char *comment) {
+    fprintf(fptr, "%s", comment);
+
+    for (int i = 0; i < array_len - 1; ++i) {
+        fprintf(fptr, "%f ", array[i]);
+    }
+    fprintf(fptr, "%f\n", array[array_len - 1]);
 }
 
 void print_double_array(const double *a, const int len_a, const char *name) {
