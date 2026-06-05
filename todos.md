@@ -1,5 +1,10 @@
 # TODOs
 
+## content
+- [ ] no need to write bin_bounds when lower and upper bounds are fixed
+    - [ ] simplify plotting correspondingly: no need to calculate the centers every time
+- [ ] normalize density: divide by the bin_width
+
 ## bugs
 - [x] what is wrong with the reflective bottom boundary in sticky_top_refl_bottom animation? some particles are reflected to early.
 - [x] why is the video file not fully written?
