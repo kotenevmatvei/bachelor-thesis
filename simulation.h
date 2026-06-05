@@ -48,9 +48,13 @@ double periodic_boundary(double coordinate, double lower_bound, double upper_bou
 double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
                                        double upper_bound);
 
-double double_diffuse(double coordinate, double D, double c, int q,
-                                double delta_t, double density, gsl_rng *r);
+double double_diffuse(double coordinate, double D, double c, int q, double delta_t,
+                      double density, gsl_rng *r);
 
 void histogram(const double *array, int *counts, const int array_len, const int n_bins,
                const double lower_bound, const double upper_bound);
+
+void distribute_coordinates_uniformly(double *array, int array_len, double lower_bound,
+                                      double upper_bound);
+
 #endif // SIMULATION_H

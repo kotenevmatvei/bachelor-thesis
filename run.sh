@@ -7,8 +7,6 @@ cd build/
 echo "running the simulation..."
 ./double_diffusion
 cd ..
-echo "removing old tmp directory..."
-rm -rf tmp_frames
 echo "running the visualizations..."
 python plot_double_diffusion.py
 echo "the run done!"

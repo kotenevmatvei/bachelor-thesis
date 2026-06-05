@@ -170,7 +170,7 @@ int *histogram_fixed_bins_write_bin_bounds(double *array, double *bin_bounds,
 }
 
 void histogram(const double *array, int *counts, const int array_len, const int n_bins,
-                        const double lower_bound, const double upper_bound) {
+               const double lower_bound, const double upper_bound) {
     // make sure the counts are zero
     for (int i = 0; i < n_bins; i++)
         counts[i] = 0;
@@ -222,11 +222,19 @@ double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
     return coordinate;
 }
 
-double double_diffuse(double coordinate, double D, double c, int q,
-                                double delta_t, double density, gsl_rng *r) {
+double double_diffuse(double coordinate, double D, double c, int q, double delta_t,
+                      double density, gsl_rng *r) {
 
     double eta = gsl_ran_gaussian(r, 1);
     double new_coordinate =
         coordinate + sqrt((2 * D * (1 + c * pow(density, q)) * delta_t)) * eta;
     return new_coordinate;
+}
+
+void distribute_coordinates_uniformly(double *array, int array_len, double lower_bound,
+                                      double upper_bound) {
+    double range = upper_bound - lower_bound;
+    double step = range / array_len;
+    for (int i = 0; i < array_len; i++)
+        array[i] = lower_bound + i * step;
 }

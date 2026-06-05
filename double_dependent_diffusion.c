@@ -3,7 +3,7 @@
 #include "utils.h"
 #include <gsl/gsl_rng.h>
 
-#define DELTA_T 0.01
+#define DELTA_T 0.001
 #define START 0
 #define LOWER_BOUND -1
 #define UPPER_BOUND 1
@@ -14,7 +14,7 @@
 #define C 5
 #define Q 2
 
-void diffuse_and_save_histograms(double start, double lower_bound, double upper_bound,
+void diffuse_and_save_histograms(double lower_bound, double upper_bound,
                                  double delta_t, int n_t, int n_realizations, int n_bins,
                                  double d, double c, int q) {
     gsl_rng_env_setup();
@@ -24,8 +24,15 @@ void diffuse_and_save_histograms(double start, double lower_bound, double upper_
     FILE *counts_file = fopen("../data/double_diffusion_counts.txt", "w");
     FILE *bin_bounds_file = fopen("../data/double_diffusion_bin_bounds.txt", "w");
 
-    double *A_coordinates = alloc_fill_double_array(n_realizations, start);
-    double *B_coordinates = alloc_fill_double_array(n_realizations, start);
+    double *A_coordinates = malloc(n_realizations * sizeof(double));
+    double *B_coordinates = malloc(n_realizations * sizeof(double));
+
+    distribute_coordinates_uniformly(A_coordinates, n_realizations, lower_bound, upper_bound);
+    distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound, upper_bound);
+
+    // print_double_array(A_coordinates, n_realizations, "A_coordinates");
+    // print_double_array(B_coordinates, n_realizations, "B_coordinates");
+
     double *coordinates[2] = {A_coordinates, B_coordinates};
 
     int *A_counts = malloc(n_bins * sizeof(int));
@@ -34,6 +41,9 @@ void diffuse_and_save_histograms(double start, double lower_bound, double upper_
     histogram(B_coordinates, B_counts, n_realizations, n_bins, lower_bound, upper_bound);
     int *counts[2] = {A_counts, B_counts};
 
+    // print_int_array(A_counts, n_bins, "A_counts");
+    // print_int_array(B_counts, n_bins, "B_counts");
+
     write_int_array(counts_file, A_counts, n_bins, "");
     write_int_array(counts_file, B_counts, n_bins, "");
 
@@ -41,7 +51,7 @@ void diffuse_and_save_histograms(double start, double lower_bound, double upper_
     double bin_size = range / n_bins;
     double delta_x = (upper_bound - lower_bound) / n_bins;
 
-    for (int i = 0; i < n_t; i++) {
+    for (int i = 1; i < n_t; i++) {
         for (int k = 0; k <= 1; k++) {
             // increment time for both particla sorts
             for (int j = 0; j < n_realizations - 1; j++) {
@@ -77,7 +87,7 @@ void diffuse_and_save_histograms(double start, double lower_bound, double upper_
 }
 
 int main() {
-    diffuse_and_save_histograms(START, LOWER_BOUND, UPPER_BOUND, DELTA_T, N_T,
+    diffuse_and_save_histograms(LOWER_BOUND, UPPER_BOUND, DELTA_T, N_T,
                                 N_REALIZATIONS, N_BINS, D, C, Q);
     return 0;
 }

@@ -8,6 +8,7 @@
 
 ## structure
 - [ ] config file
+- [ ] automate file naming
 
 ## bugs
 - [x] what is wrong with the reflective bottom boundary in sticky_top_refl_bottom animation? some particles are reflected to early.

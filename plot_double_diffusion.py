@@ -91,7 +91,7 @@ def ffmpeg_direct_hist():
         list(tqdm(executor.map(worker_func, range(total_frames)), total=total_frames))
 
     print("Stitching video...")
-    mp4_path = f"figures/double_diffusion_{BOUNDARY}.mp4"
+    mp4_path = "figures/double_diffusion.mp4"
     ffmpeg_command = [
         "ffmpeg",
         "-y",
