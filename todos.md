@@ -4,7 +4,7 @@
 - [x] no need to write bin_bounds when lower and upper bounds are fixed
     - [x] simplify plotting correspondingly: no need to calculate the centers every time
 - [x] normalize density: divide by the bin_width
-- [ ] start in uniform distribution
+- [x] start in uniform distribution
 
 ## structure
 - [ ] config file
