@@ -1,6 +1,7 @@
 import numpy as np
 import concurrent.futures
 import os
+import shutil
 import subprocess
 from matplotlib import pyplot as plt
 import matplotlib.animation as animation
@@ -42,7 +43,7 @@ def render_frame(i, A_counts_list, B_counts_list, boundary):
         figsize=(8, 6), dpi=100
     )
     ax.set_xlim(-1, 1)
-    ax.set_ylim(0, 40)
+    ax.set_ylim(0, 1)
     ax.set_xlabel("Coordinate x")
     ax.set_ylabel("Counts")
     ax.set_title(f"Particle diffusion, {boundary} boundaries")
@@ -59,7 +60,7 @@ def render_frame(i, A_counts_list, B_counts_list, boundary):
     plt.close(fig)
 
 
-def ffmpeg_direct_hist(style="bars"):
+def ffmpeg_direct_hist():
 
     with open("data/double_diffusion_counts.txt", "r") as f:
         lines = f.readlines()
@@ -67,12 +68,15 @@ def ffmpeg_direct_hist(style="bars"):
     A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::10]]
     B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::10]]
 
-    A_counts_init = A_counts_list[0]
-    B_counts_init = B_counts_list[0]
+    bin_width = 2 / 100
+    
+    A_counts_list = [count / (10000 * bin_width) for count in A_counts_list]
+    B_counts_list = [count / (10000 * bin_width) for count in B_counts_list]
 
     total_frames = len(A_counts_list)
 
-    os.makedirs("tmp_frames", exist_ok=True)
+    shutil.rmtree("tmp_frames", ignore_errors=True)
+    os.makedirs("tmp_frames")
 
     worker_func = functools.partial(
         render_frame,
@@ -115,7 +119,7 @@ def ffmpeg_direct_hist(style="bars"):
 def main():
     # draw_trajectories()
     # draw_histogram(style="bars")
-    ffmpeg_direct_hist(style="bars")
+    ffmpeg_direct_hist()
 
 
 if __name__ == "__main__":

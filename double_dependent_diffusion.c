@@ -8,10 +8,10 @@
 #define LOWER_BOUND -1
 #define UPPER_BOUND 1
 #define N_T 5000
-#define N_REALIZATIONS 1000
-#define D 0.2
+#define N_REALIZATIONS 10000
+#define D 1
 #define N_BINS 100
-#define C 4
+#define C 5
 #define Q 2
 
 void diffuse_and_save_histograms(double start, double lower_bound, double upper_bound,
