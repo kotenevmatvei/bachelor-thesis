@@ -65,8 +65,8 @@ def ffmpeg_direct_hist():
     with open("data/double_diffusion_counts.txt", "r") as f:
         lines = f.readlines()
 
-    A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::10]]
-    B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::10]]
+    A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::1000]]
+    B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::1000]]
 
     bin_width = 2 / 100
     
@@ -91,7 +91,7 @@ def ffmpeg_direct_hist():
         list(tqdm(executor.map(worker_func, range(total_frames)), total=total_frames))
 
     print("Stitching video...")
-    mp4_path = "figures/double_diffusion.mp4"
+    mp4_path = "animations/double_diffusion.mp4"
     ffmpeg_command = [
         "ffmpeg",
         "-y",
