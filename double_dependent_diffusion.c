@@ -23,59 +23,55 @@ void diffuse_and_save_histograms(double start, double lower_bound, double upper_
 
     FILE *counts_file = fopen("../data/double_diffusion_counts.txt", "w");
     FILE *bin_bounds_file = fopen("../data/double_diffusion_bin_bounds.txt", "w");
-    // create & clean the files
-    // fprintf(counts_file, "");
-    // fprintf(bin_bounds_file, "");
 
     double *A_coordinates = alloc_fill_double_array(n_realizations, start);
     double *B_coordinates = alloc_fill_double_array(n_realizations, start);
-
     double *coordinates[2] = {A_coordinates, B_coordinates};
 
-    double *A_bin_bounds = malloc((n_bins + 1) * sizeof(double));
-    int *A_counts = histogram_fixed_bins(A_coordinates, A_bin_bounds, n_realizations,
-                                         n_bins, lower_bound, upper_bound);
-    double *B_bin_bounds = malloc((n_bins + 1) * sizeof(double));
-    int *B_counts = histogram_fixed_bins(B_coordinates, B_bin_bounds, n_realizations,
-                                         n_bins, lower_bound, upper_bound);
-
+    int *A_counts = malloc(n_bins * sizeof(int));
+    int *B_counts = malloc(n_bins * sizeof(int));
+    histogram(A_coordinates, A_counts, n_realizations, n_bins, lower_bound, upper_bound);
+    histogram(B_coordinates, B_counts, n_realizations, n_bins, lower_bound, upper_bound);
     int *counts[2] = {A_counts, B_counts};
-    double *bin_bounds[2] = {A_bin_bounds, B_bin_bounds};
+
+    write_int_array(counts_file, A_counts, n_bins, "");
+    write_int_array(counts_file, B_counts, n_bins, "");
+
+    double range = upper_bound - lower_bound;
+    double bin_size = range / n_bins;
+    double delta_x = (upper_bound - lower_bound) / n_bins;
 
     for (int i = 0; i < n_t; i++) {
         for (int k = 0; k <= 1; k++) {
             // increment time for both particla sorts
             for (int j = 0; j < n_realizations - 1; j++) {
-                // get density of the OTHER particle sort in the current bin
-
-                double range = upper_bound - lower_bound;
-                double bin_size = range / n_bins;
+                // get the bin in which current coordinate falls
                 int bin = (int)((coordinates[k][j] - lower_bound) / bin_size);
                 if (bin >= n_bins)
                     bin = n_bins - 1;
                 if (bin < 0)
                     bin = 0;
+                // get density of the OTHER particle sort in this bin
+                double density = (double)counts[1 - k][bin] / (n_realizations * delta_x);
 
-                double density = (double)counts[1 - k][bin] / n_realizations;
+                double coordinate =
+                    double_diffuse(coordinates[k][j], d, c, q, delta_t, density, r);
 
-                double coordinate = double_dependent_diffuse(coordinates[k][j], d, c, q,
-                                                             delta_t, density, r);
                 coordinate = reflecting_boundary(coordinate, lower_bound, upper_bound);
 
                 coordinates[k][j] = coordinate;
             }
-            histogram_no_alloc(coordinates[k], counts[k], bin_bounds[k], n_realizations,
-                               n_bins, lower_bound, upper_bound);
+
+            histogram(coordinates[k], counts[k], n_realizations, n_bins, lower_bound,
+                      upper_bound);
             write_int_array(counts_file, counts[k], n_bins, "");
-            write_double_array(bin_bounds_file, bin_bounds[k], n_bins + 1, "");
         }
     }
+
     fclose(counts_file);
     fclose(bin_bounds_file);
     free(A_coordinates);
     free(B_coordinates);
-    free(A_bin_bounds);
-    free(B_bin_bounds);
     free(A_counts);
     free(B_counts);
 }

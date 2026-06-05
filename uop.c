@@ -208,7 +208,7 @@ int main(void) {
             v_time_snapshot[j] = v_data[j][time_];
         }
         double *bin_bounds = malloc((n_bins + 2) * sizeof(double));
-        int *counts = histogram(v_time_snapshot, bin_bounds, N, n_bins);
+        int *counts = histogram_flexible_bounds(v_time_snapshot, bin_bounds, N, n_bins);
         char *mode = i == 0 ? "w" : "a";
         char *comment = malloc(20 * sizeof(char));
         sprintf(comment, "# t=%.1fs\n", (double)time_ * delta_t);
@@ -246,7 +246,7 @@ int main(void) {
     N_t = (int)1e7;
     v_data = simulate_V_values(D, gamma, N, N_t, delta_t, r);
     double *bin_bounds = malloc(n_bins * sizeof(int));
-    int *counts = histogram(v_data[0], bin_bounds, N_t, n_bins);
+    int *counts = histogram_flexible_bounds(v_data[0], bin_bounds, N_t, n_bins);
     write_int_array_to_file(counts, n_bins, "../data/long_time_average.txt", "w", "");
     write_double_array_to_file(bin_bounds, n_bins + 1, "../data/long_time_average.txt",
                                "a", "");

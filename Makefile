@@ -25,4 +25,4 @@
 # 	rm -f *.o run_simulation run_tests
 
 all:
-	cmake --build cmake-build-debug
+	cmake --build build

@@ -32,10 +32,12 @@ void swap_double_elements(double array[], int i, int j);
 
 void quicksort(double array[], int left, int right);
 
-int *histogram(double *array, double *bin_bounds, int array_len, int n_bins);
+int *histogram_flexible_bounds(double *array, double *bin_bounds, int array_len,
+                               int n_bins);
 
-int *histogram_fixed_bins(double *array, double *bin_bounds, int array_len, int n_bins,
-                          double lower_bound, double upper_bound);
+int *histogram_fixed_bins_write_bin_bounds(double *array, double *bin_bounds,
+                                           int array_len, int n_bins, double lower_bound,
+                                           double upper_bound);
 
 double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng *r);
 
@@ -46,9 +48,9 @@ double periodic_boundary(double coordinate, double lower_bound, double upper_bou
 double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
                                        double upper_bound);
 
-double double_dependent_diffuse(double coordinate, double D, double c, int q,
+double double_diffuse(double coordinate, double D, double c, int q,
                                 double delta_t, double density, gsl_rng *r);
 
-void histogram_no_alloc(double *array, int *counts, double *bin_bounds, int array_len,
-                        int n_bins, double lower_bound, double upper_bound);
+void histogram(const double *array, int *counts, const int array_len, const int n_bins,
+               const double lower_bound, const double upper_bound);
 #endif // SIMULATION_H

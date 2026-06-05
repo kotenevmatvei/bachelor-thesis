@@ -30,7 +30,7 @@ histogram_test_case test_cases[] = {
 
 void handle_histogram_test_case(histogram_test_case *tc) {
     double *bin_bounds = calloc(tc->n_bins + 1, sizeof(double));
-    int *counts = histogram(tc->array, bin_bounds, tc->n_array, tc->n_bins);
+    int *counts = histogram_flexible_bounds(tc->array, bin_bounds, tc->n_array, tc->n_bins);
     int counts_equal = compare_int_arrays(tc->expected_counts, counts, tc->n_bins);
     double bin_bounds_equal = compare_double_arrays(tc->expected_bin_bounds, bin_bounds,
                                                     tc->n_bins + 1);

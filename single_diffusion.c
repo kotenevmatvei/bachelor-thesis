@@ -35,7 +35,7 @@ void diffuse_save_histograms(double start, double lower_bound, double upper_boun
                 sticky_top_refl_bottom_boundary(coordinate, lower_bound, upper_bound);
         }
         double *bin_bounds = malloc((n_bins + 1) * sizeof(double));
-        int *counts = histogram_fixed_bins(coordinates, bin_bounds, n_realizations,
+        int *counts = histogram_fixed_bins_write_bin_bounds(coordinates, bin_bounds, n_realizations,
                                            n_bins, lower_bound, upper_bound);
         write_int_array_to_file(
             counts, n_bins, "../data/diffusion_hist_sticky_top_refl_bottom.txt", "a", "");

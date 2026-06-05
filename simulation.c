@@ -128,7 +128,8 @@ void quicksort(double array[], int left, int right) {
     quicksort(array, last + 1, right);
 }
 
-int *histogram(double *array, double *bin_bounds, int array_len, int n_bins) {
+int *histogram_flexible_bounds(double *array, double *bin_bounds, int array_len,
+                               int n_bins) {
     double min, max;
     find_min_and_max(array, array_len, &min, &max);
     double range = max - min;
@@ -148,8 +149,9 @@ int *histogram(double *array, double *bin_bounds, int array_len, int n_bins) {
     return counts;
 }
 
-int *histogram_fixed_bins(double *array, double *bin_bounds, int array_len, int n_bins,
-                          double lower_bound, double upper_bound) {
+int *histogram_fixed_bins_write_bin_bounds(double *array, double *bin_bounds,
+                                           int array_len, int n_bins, double lower_bound,
+                                           double upper_bound) {
     double range = upper_bound - lower_bound;
     double bin_size = range / n_bins;
     int *counts = calloc(n_bins, sizeof(int));
@@ -167,8 +169,11 @@ int *histogram_fixed_bins(double *array, double *bin_bounds, int array_len, int 
     return counts;
 }
 
-void histogram_no_alloc(double *array, int *counts, double *bin_bounds, int array_len,
-                        int n_bins, double lower_bound, double upper_bound) {
+void histogram(const double *array, int *counts, const int array_len, const int n_bins,
+                        const double lower_bound, const double upper_bound) {
+    // make sure the counts are zero
+    for (int i = 0; i < n_bins; i++)
+        counts[i] = 0;
     double range = upper_bound - lower_bound;
     double bin_size = range / n_bins;
     for (int i = 0; i < array_len; i++) {
@@ -178,9 +183,6 @@ void histogram_no_alloc(double *array, int *counts, double *bin_bounds, int arra
         if (bin < 0)
             bin = 0;
         counts[bin]++;
-    }
-    for (int i = 0; i < n_bins + 1; i++) {
-        bin_bounds[i] = lower_bound + i * bin_size;
     }
 }
 
@@ -220,7 +222,7 @@ double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
     return coordinate;
 }
 
-double double_dependent_diffuse(double coordinate, double D, double c, int q,
+double double_diffuse(double coordinate, double D, double c, int q,
                                 double delta_t, double density, gsl_rng *r) {
 
     double eta = gsl_ran_gaussian(r, 1);
