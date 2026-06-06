@@ -98,14 +98,13 @@ void diffuse_and_save_histograms(double lower_bound, double upper_bound,
             int pos = bar_width * progress;
 
             printf("\r[");
-            for (int p = 0; p < bar_width; ++p) {
+            for (int p = 0; p < bar_width; p++) {
                 if (p < pos) printf("=");
                 else if (p == pos) printf(">");
                 else printf(" ");
             }
             printf("] %3d%%", (int)(progress * 100.0));
             
-            // Force the terminal to draw it immediately
             fflush(stdout);
         }
     }
