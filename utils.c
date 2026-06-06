@@ -44,7 +44,7 @@ DiffusionConfig read_config(const char *filename) {
             config.n_t = atoi(val_str);
         } else if (strcmp(key, "n_realizations") == 0) {
             config.n_realizations = atoi(val_str);
-        } else if (strcmp(key, "D") == 0 || strcmp(key, "d") == 0) {
+        } else if (strcmp(key, "d") == 0) {
             config.d = atof(val_str);
         } else if (strcmp(key, "n_bins") == 0) {
             config.n_bins = atoi(val_str);

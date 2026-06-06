@@ -3,12 +3,16 @@ import concurrent.futures
 import os
 import shutil
 import subprocess
+import argparse
 from matplotlib import pyplot as plt
 import matplotlib.animation as animation
 import functools
+from numpy._core.numeric import require
 from tqdm import tqdm
 
-BOUNDARY = "sticky_top_refl_bottom"
+from helpers import parse_config
+
+BOUNDARY = "reflective"
 
 centers = np.linspace(-1, 1, 100)
 
@@ -39,14 +43,12 @@ def draw_trajectories():
 
 
 def render_frame(i, A_counts_list, B_counts_list, boundary):
-    fig, ax = plt.subplots(
-        figsize=(8, 6), dpi=100
-    )
+    fig, ax = plt.subplots(figsize=(8, 6), dpi=100)
     ax.set_xlim(-1, 1)
     ax.set_ylim(0, 1)
     ax.set_xlabel("Coordinate x")
     ax.set_ylabel("Counts")
-    ax.set_title(f"Particle diffusion, {boundary} boundaries")
+    # ax.set_title(f"Particle diffusion, {boundary} boundaries")
     ax.grid()
 
     A_counts = A_counts_list[i]
@@ -60,16 +62,20 @@ def render_frame(i, A_counts_list, B_counts_list, boundary):
     plt.close(fig)
 
 
-def ffmpeg_direct_hist():
+def ffmpeg_direct_hist(
+    delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q
+):
+    data_file = f"data/dd_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c}_q{q}.txt"
 
-    with open("data/double_diffusion_counts.txt", "r") as f:
+    with open(data_file, "r") as f:
         lines = f.readlines()
 
-    A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::1000]]
-    B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::1000]]
+    frame_step = int(n_t / 1000)
+    A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::frame_step]]
+    B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::frame_step]]
 
-    bin_width = 2 / 100
-    
+    bin_width = upper_bound - lower_bound / n_bins
+
     A_counts_list = [count / (10000 * bin_width) for count in A_counts_list]
     B_counts_list = [count / (10000 * bin_width) for count in B_counts_list]
 
@@ -115,11 +121,39 @@ def ffmpeg_direct_hist():
         print(f"FFmpeg Error Output:\\n{e.stderr}")
 
 
-
 def main():
+    parser = argparse.ArgumentParser(description="Get config name")
+    parser.add_argument("--config", help="The name of the config file")
+    args = parser.parse_args()
+    if "filename" in args:
+        config_name = args.filename
+    else:
+        config_name = "config"
+    config = parse_config(config_name)
+
+    delta_t = config["delta_t"]
+    start = config["start"]
+    upper_bound = config["upper_bound"]
+    lower_bound = config["lower_bound"]
+    d = config["d"]
+    n_t = config["n_t"]
+    n_realizations = config["n_realizations"]
+    n_bins = config["n_bins"]
+    c = config["c"]
+    q = config["q"]
+
     # draw_trajectories()
     # draw_histogram(style="bars")
-    ffmpeg_direct_hist()
+    ffmpeg_direct_hist(
+        delta_t=delta_t,
+        n_t=n_t,
+        n_bins=n_bins,
+        n_realizations=n_realizations,
+        upper_bound=upper_bound,
+        lower_bound=lower_bound,
+        c=c,
+        q=q,
+    )
 
 
 if __name__ == "__main__":

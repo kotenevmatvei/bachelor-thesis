@@ -34,7 +34,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // construct the file name
     char counts_filename[64];
-    snprintf(counts_filename, 63, "../data/dd_counts_dt-%lf_nt-%d_nr-%d_c-%d_q-%d.txt",
+    snprintf(counts_filename, 63, "../data/dd_counts_dt%g_nt%d_nr%d_c%d_q%d.txt",
              delta_t, n_t, n_realizations, c, q);
 
     FILE *counts_file = fopen(counts_filename, "w");
@@ -46,9 +46,6 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                                      upper_bound);
     distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound,
                                      upper_bound);
-
-    // print_double_array(A_coordinates, n_realizations, "A_coordinates");
-    // print_double_array(B_coordinates, n_realizations, "B_coordinates");
 
     double *coordinates[2] = {A_coordinates, B_coordinates};
 
