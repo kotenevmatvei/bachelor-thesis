@@ -65,19 +65,21 @@ def render_frame(i, A_counts_list, B_counts_list, boundary):
 def ffmpeg_direct_hist(
     delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q
 ):
-    data_file = f"data/dd_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c}_q{q}.txt"
+    name = f"dd_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c}_q{q}"
+    data_filename = f"data/{name}.txt"
 
-    with open(data_file, "r") as f:
+    with open(data_filename, "r") as f:
         lines = f.readlines()
 
     frame_step = int(n_t / 1000)
+
     A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::frame_step]]
     B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::frame_step]]
 
-    bin_width = upper_bound - lower_bound / n_bins
+    bin_width = (upper_bound - lower_bound) / n_bins
 
-    A_counts_list = [count / (10000 * bin_width) for count in A_counts_list]
-    B_counts_list = [count / (10000 * bin_width) for count in B_counts_list]
+    A_counts_list = [count / (n_realizations * bin_width) for count in A_counts_list]
+    B_counts_list = [count / (n_realizations * bin_width) for count in B_counts_list]
 
     total_frames = len(A_counts_list)
 
@@ -97,7 +99,8 @@ def ffmpeg_direct_hist(
         list(tqdm(executor.map(worker_func, range(total_frames)), total=total_frames))
 
     print("Stitching video...")
-    mp4_path = "animations/double_diffusion.mp4"
+    animation_filename = f"animations/{name}.mp4"
+    mp4_path = animation_filename
     ffmpeg_command = [
         "ffmpeg",
         "-y",
@@ -123,12 +126,9 @@ def ffmpeg_direct_hist(
 
 def main():
     parser = argparse.ArgumentParser(description="Get config name")
-    parser.add_argument("--config", help="The name of the config file")
+    parser.add_argument("config_name", help="The name of the config file")
     args = parser.parse_args()
-    if "filename" in args:
-        config_name = args.filename
-    else:
-        config_name = "config"
+    config_name = args.config_name
     config = parse_config(config_name)
 
     delta_t = config["delta_t"]
