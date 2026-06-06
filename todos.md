@@ -20,7 +20,7 @@
 - [x] calculate histogram on the fly
 - [~] cache intermediate results (histograms) and the write to file in chunks --> os already does this for me
 - [x] do not close and reopen the file every time but keep an open pointer until throughout the loop
-- [ ] parallelize
+- [x] parallelize
 
 ### animation
 - [x] initial rough check if the results make sense
