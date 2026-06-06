@@ -34,7 +34,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // construct the file name
     char counts_filename[64];
-    snprintf(counts_filename, 63, "../data/dd_counts_dt-%lf_nt-%d_nr-%d_c-%d_q-%d",
+    snprintf(counts_filename, 63, "../data/dd_counts_dt-%lf_nt-%d_nr-%d_c-%d_q-%d.txt",
              delta_t, n_t, n_realizations, c, q);
 
     FILE *counts_file = fopen(counts_filename, "w");
@@ -69,7 +69,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         // increment time for both particla sorts in parallel
         for (int k = 0; k <= 1; k++) {
 
-            #pragma omp parallel for
+#pragma omp parallel for
             for (int j = 0; j < n_realizations - 1; j++) {
                 int thread_id = omp_get_thread_num();
                 gsl_rng *local_r = thread_rngs[thread_id];
