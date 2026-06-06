@@ -11,6 +11,19 @@ typedef struct {
     double *points;
 } LinearAxis;
 
+typedef struct{
+    double delta_t;
+    double start;
+    double lower_bound;
+    double upper_bound;
+    double d;
+    int n_t;
+    int n_realizations;
+    int n_bins;
+    int c;
+    int q;
+} DiffusionConfig;
+
 void fill_linear_axis(LinearAxis *axis, double start, double end, int n_points);
 
 double simulate_next_V(double last_v, double delta_t, double gamma, double D, gsl_rng *r);
