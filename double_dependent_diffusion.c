@@ -1,5 +1,6 @@
 #include "io.h"
 #include "simulation.h"
+#include "time.h"
 #include "utils.h"
 #include <gsl/gsl_rng.h>
 #include <omp.h>
@@ -7,6 +8,7 @@
 #include <time.h>
 
 void diffuse_and_save_histograms(DiffusionConfig config) {
+    time_t start = time(NULL);
 
     double delta_t = config.delta_t;
     // double start = config.start;
@@ -33,11 +35,22 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     }
 
     // construct the file name
-    char counts_filename[64];
-    snprintf(counts_filename, 63, "../data/dd_counts_dt%g_nt%d_nr%d_c%d_q%d.txt",
-             delta_t, n_t, n_realizations, c, q);
+    char config_name[64];
+    snprintf(config_name, 63, "dt%g_nt%d_nr%d_c%d_q%d", delta_t, n_t, n_realizations, c,
+             q);
+
+    char counts_filename[128];
+    snprintf(counts_filename, 127, "../data/dd_counts_%s.txt", config_name);
+
+    char coordinates_filename[128];
+    snprintf(coordinates_filename, 127, "../data/dd_coordinates_%s.txt", config_name);
+
+    char log_filename[128];
+    snprintf(log_filename, 127, "../data/dd_log_%s.txt", config_name);
 
     FILE *counts_file = fopen(counts_filename, "w");
+    FILE *coordinates_file = fopen(coordinates_filename, "w");
+    FILE *log_file = fopen(log_filename, "w");
 
     double *A_coordinates = malloc(n_realizations * sizeof(double));
     double *B_coordinates = malloc(n_realizations * sizeof(double));
@@ -93,6 +106,14 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
             write_int_array(counts_file, counts[k], n_bins, "");
         }
 
+        // save a snapshot of the simulation state every 10000 timesteps
+        if (i % 1000 == 0 || i == n_t - 1) {
+            fprintf(coordinates_file, "i=%d\n", i);
+            write_double_array(coordinates_file, A_coordinates, n_realizations, "");
+            write_double_array(coordinates_file, B_coordinates, n_realizations, "");
+        }
+
+        // update the progress bar
         if (i % (n_t / 100) == 0 || i == n_t - 1) {
             float progress = (float)i / (n_t - 1);
             int bar_width = 100;
@@ -112,7 +133,16 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
             fflush(stdout);
         }
     }
-    printf("\n");
+
+    time_t end = time(NULL);
+    float timediff_sec = difftime(end, start);
+    int hours = timediff_sec / 3600;
+    int minutes = (timediff_sec - 3600 * hours) / 60;
+    float seconds = timediff_sec - 3600 * hours - 60 * minutes;
+    printf("\nThe simulation took %d hours %d minutes and %f seconds\n", hours, minutes,
+           seconds);
+    fprintf(log_file, "\nThe simulation took %d hours %d minutes and %f seconds\n", hours,
+            minutes, seconds);
 
     fclose(counts_file);
     free(A_coordinates);
@@ -135,5 +165,6 @@ int main(int argc, char *argv[]) {
     }
     DiffusionConfig config = read_config(config_path);
     diffuse_and_save_histograms(config);
+
     return 0;
 }

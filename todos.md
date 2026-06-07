@@ -5,9 +5,10 @@
     - [x] simplify plotting correspondingly: no need to calculate the centers every time
 - [x] normalize density: divide by the bin_width
 - [x] start in uniform distribution
-- [ ] checkpoints: save the state (indices + coordinates) after every thousand timesteps
-- [ ] check before running the simulation if data for this config already exists
-- [ ] time the simulation (write in log?)
+- [x] checkpoints: save the state (indices + coordinates) after every thousand timesteps
+- [ ] check before running the simulation if data for this config already exists and continue
+from the last computed state if so
+- [x] time the simulation (write in log?)
 - [ ] time the visualization (write in log?)
 
 ## structure
