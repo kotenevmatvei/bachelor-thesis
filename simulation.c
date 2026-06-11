@@ -238,3 +238,24 @@ void distribute_coordinates_uniformly(double *array, int array_len, double lower
     for (int i = 0; i < array_len; i++)
         array[i] = lower_bound + i * step;
 }
+
+int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates,
+                    int n_realizations) {
+
+    FILE *file = fopen(filename, "r");
+    if (!file) return 0;
+
+    for (int i = 0; i < n_realizations; i++) {
+        if (fscanf(file, "%lf", &A_coordinates[i]) != 1) {
+            printf("Error reading A_coordinate %d", i);
+            return 0;
+        }
+    }
+    for (int i = 0; i < n_realizations; i++) {
+        if (fscanf(file, "%lf", &B_coordinates[i]) != 1) {
+            printf("Error reading B_coordinate %d", i);
+            return 0;
+        }
+    }
+    return 1;
+}
