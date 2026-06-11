@@ -55,6 +55,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     double *A_coordinates = malloc(n_realizations * sizeof(double));
     double *B_coordinates = malloc(n_realizations * sizeof(double));
 
+
+
     distribute_coordinates_uniformly(A_coordinates, n_realizations, lower_bound,
                                      upper_bound);
     distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound,
@@ -108,9 +110,14 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
         // save a snapshot of the simulation state every 10000 timesteps
         if (i % 1000 == 0 || i == n_t - 1) {
-            fprintf(coordinates_file, "i=%d\n", i);
-            write_double_array(coordinates_file, A_coordinates, n_realizations, "");
-            write_double_array(coordinates_file, B_coordinates, n_realizations, "");
+            fseek(coordinates_file, 0, SEEK_SET);
+            fprintf(coordinates_file, "%d ", i);
+            for (int i = 0; i < n_realizations; i++) {
+                fprintf(coordinates_file, "%lf ", A_coordinates[i]);
+            }
+            for (int i = 0; i < n_realizations; i++) {
+                fprintf(coordinates_file, "%lf ", B_coordinates[i]);
+            }
         }
 
         // update the progress bar
@@ -127,6 +134,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                     printf(">");
                 else
                     printf(" ");
+                fflush(stdout);
             }
             printf("] %3d%%", (int)(progress * 100.0));
 
@@ -135,13 +143,13 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     }
 
     time_t end = time(NULL);
-    float timediff_sec = difftime(end, start);
+    int timediff_sec = difftime(end, start);
     int hours = timediff_sec / 3600;
     int minutes = (timediff_sec - 3600 * hours) / 60;
-    float seconds = timediff_sec - 3600 * hours - 60 * minutes;
-    printf("\nThe simulation took %d hours %d minutes and %f seconds\n", hours, minutes,
+    int seconds = timediff_sec - 3600 * hours - 60 * minutes;
+    printf("\nThe simulation took %d hours %d minutes and %d seconds\n", hours, minutes,
            seconds);
-    fprintf(log_file, "\nThe simulation took %d hours %d minutes and %f seconds\n", hours,
+    fprintf(log_file, "\nThe simulation took %d hours %d minutes and %d seconds\n", hours,
             minutes, seconds);
 
     fclose(counts_file);
