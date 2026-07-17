@@ -10,7 +10,10 @@
 from the last computed state if so
 - [x] time the simulation (write in log?)
 - [ ] time the visualization (write in log?)
-- [ ] implement symmetric dependency for tripple diffusion
+- [x] implement symmetric dependency for tripple diffusion
+- [ ] setup the projext on the on the server
+- [ ] setup the first long runs on the server for curcular and symmetric dependencies
+- [ ] write the number of bins in the filename
 
 ## structure
 - [x] config file
