@@ -10,6 +10,7 @@
 from the last computed state if so
 - [x] time the simulation (write in log?)
 - [ ] time the visualization (write in log?)
+- [ ] implement symmetric dependency for tripple diffusion
 
 ## structure
 - [x] config file
@@ -26,6 +27,8 @@ from the last computed state if so
 - [~] cache intermediate results (histograms) and the write to file in chunks --> os already does this for me
 - [x] do not close and reopen the file every time but keep an open pointer until throughout the loop
 - [x] parallelize
+- [ ] postprocess the counts in c - write normalized histograms (except the checkpoints?)
+- [ ] use gnuplot to directly generate animations from the data files
 
 ### animation
 - [x] initial rough check if the results make sense
