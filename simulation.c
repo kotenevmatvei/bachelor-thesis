@@ -231,6 +231,18 @@ double double_diffuse(double coordinate, double D, double c, int q, double delta
     return new_coordinate;
 }
 
+double symmetric_tripple_diffuse(double coordinate, double D, double c, int q,
+                                 double delta_t, double density1, double density2,
+                                 gsl_rng *r) {
+
+    double eta = gsl_ran_gaussian(r, 1);
+    double new_coordinate =
+        coordinate + sqrt((2 * D * (1 + c * pow(density1, q)) * delta_t) +
+                          (2 * D * (1 + c * pow(density2, q)) * delta_t)) *
+                         eta;
+    return new_coordinate;
+}
+
 void distribute_coordinates_uniformly(double *array, int array_len, double lower_bound,
                                       double upper_bound) {
     double range = upper_bound - lower_bound;
@@ -243,7 +255,8 @@ int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates
                     int n_realizations, int *i) {
 
     FILE *file = fopen(filename, "r");
-    if (!file) return 0;
+    if (!file)
+        return 0;
 
     if (fscanf(file, "%d ", i) != 1)
         printf("Could not read i...\n");

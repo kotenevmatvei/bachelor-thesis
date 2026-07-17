@@ -10,6 +10,7 @@
 void diffuse_and_save_histograms(DiffusionConfig config) {
     time_t start = time(NULL);
 
+    char *type = config.type;
     double delta_t = config.delta_t;
     // double start = config.start;
     double lower_bound = config.lower_bound;
@@ -40,13 +41,13 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
              q);
 
     char counts_filename[128];
-    snprintf(counts_filename, 127, "../data/td_counts_%s.txt", config_name);
+    snprintf(counts_filename, 127, "../data/%s_counts_%s.txt", type, config_name);
 
     char coordinates_filename[128];
-    snprintf(coordinates_filename, 127, "../data/td_coordinates_%s.txt", config_name);
+    snprintf(coordinates_filename, 127, "../data/%s_coordinates_%s.txt", type, config_name);
 
     char log_filename[128];
-    snprintf(log_filename, 127, "../data/td_log_%s.txt", config_name);
+    snprintf(log_filename, 127, "../data/%s_log_%s.txt", type, config_name);
 
     FILE *counts_file = fopen(counts_filename, "w");
     FILE *coordinates_file = fopen(coordinates_filename, "w");
@@ -81,12 +82,15 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     double bin_size = range / n_bins;
     double delta_x = (upper_bound - lower_bound) / n_bins;
 
-    int dependencies_map[3] = {1, 2, 0};
+    // key is the indey of in the array, values are the densities on which the density of
+    // the <key>-particle-sort depends)
+    // int cyclic_dependencies_map[3] = {1, 2, 0};
+    int symmetric_dependencies_map[3][2] = {{1, 2}, {2, 0}, {0, 1}};
 
     for (int i = 1; i < n_t; i++) {
         // increment time for both particla sorts in parallel
         for (int k = 0; k <= 2; k++) {
-            int dependency_ind = dependencies_map[k];
+            int *dependency_ind = symmetric_dependencies_map[k];
 
 #pragma omp parallel for
             for (int j = 0; j < n_realizations - 1; j++) {
@@ -99,11 +103,23 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                     bin = n_bins - 1;
                 if (bin < 0)
                     bin = 0;
+                // ------ this is for double diffusion -------
                 // get density of the OTHER particle sort in this bin
-                double density = (double)counts[dependency_ind][bin] / (n_realizations * delta_x);
+                // double density =
+                //     (double)counts[dependency_ind][bin] / (n_realizations * delta_x);
 
-                double coordinate =
-                    double_diffuse(coordinates[k][j], d, c, q, delta_t, density, local_r);
+                // double coordinate =
+                //     double_diffuse(coordinates[k][j], d, c, q, delta_t, density,
+                //     local_r);
+
+                //-----------this is for tripple diffusion ---------
+                double density1 =
+                    (double)counts[dependency_ind[0]][bin] / (n_realizations * delta_x);
+                double density2 =
+                    (double)counts[dependency_ind[1]][bin] / (n_realizations * delta_x);
+
+                double coordinate = symmetric_tripple_diffuse(
+                    coordinates[k][j], d, c, q, delta_t, density1, density2, local_r);
 
                 coordinate = reflecting_boundary(coordinate, lower_bound, upper_bound);
 

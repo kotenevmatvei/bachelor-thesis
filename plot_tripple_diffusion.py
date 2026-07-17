@@ -63,9 +63,9 @@ def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary):
 
 
 def ffmpeg_direct_hist(
-    delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q
+    type_, delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q
 ):
-    name = f"td_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c}_q{q}"
+    name = f"{type_}_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c}_q{q}"
     print(f"name: {name}")
     data_filename = f"data/{name}.txt"
 
@@ -135,6 +135,7 @@ def main():
     config_name = args.config_name
     config = parse_config(config_name)
 
+    type = config["type"]
     delta_t = config["delta_t"]
     start = config["start"]
     upper_bound = config["upper_bound"]
@@ -149,6 +150,7 @@ def main():
     # draw_trajectories()
     # draw_histogram(style="bars")
     ffmpeg_direct_hist(
+        type_=type,
         delta_t=delta_t,
         n_t=n_t,
         n_bins=n_bins,

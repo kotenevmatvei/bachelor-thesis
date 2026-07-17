@@ -22,6 +22,7 @@ typedef struct{
     int n_bins;
     int c;
     int q;
+    char type[8];
 } DiffusionConfig;
 
 void fill_linear_axis(LinearAxis *axis, double start, double end, int n_points);
@@ -69,5 +70,8 @@ void histogram(const double *array, int *counts, const int array_len, const int 
 
 void distribute_coordinates_uniformly(double *array, int array_len, double lower_bound,
                                       double upper_bound);
+
+double symmetric_tripple_diffuse(double coordinate, double D, double c, int q, double delta_t,
+                      double density1, double density2, gsl_rng *r);
 
 #endif // SIMULATION_H

@@ -16,6 +16,7 @@ def gen_hist_test_cases():
 
 def parse_config(config_name: str):
     config = {}
+    str_keys = ["type"]
     float_keys = ["delta_t", "start", "lower_bound", "upper_bound", "d"]
     int_keys = ["n_t", "n_realizations", "n_bins", "c", "q"]
     with open(f"configs/{config_name}.txt") as file:
@@ -26,6 +27,9 @@ def parse_config(config_name: str):
             config[key] = float(value)
         elif key in int_keys:
             config[key] = int(value)
+        elif key in str_keys:
+            config[key] = value[:-1]
+            print(config[key])
         else:
             raise ValueError(f"Unknown key: {key}")
 

@@ -32,7 +32,9 @@ DiffusionConfig read_config(const char *filename) {
 
     while (fscanf(file, "%63s %63s", key, val_str) == 2) {
 
-        if (strcmp(key, "delta_t") == 0) {
+        if (strcmp(key, "type") == 0) {
+            strcpy(config.type, val_str);
+        } else if (strcmp(key, "delta_t") == 0) {
             config.delta_t = atof(val_str);
         } else if (strcmp(key, "start") == 0) {
             config.start = atof(val_str);
