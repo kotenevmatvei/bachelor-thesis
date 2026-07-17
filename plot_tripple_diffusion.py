@@ -5,16 +5,14 @@ import shutil
 import subprocess
 import argparse
 from matplotlib import pyplot as plt
-import matplotlib.animation as animation
 import functools
-from numpy._core.numeric import require
 from tqdm import tqdm
 
 from helpers import parse_config
 
 BOUNDARY = "reflective"
 
-centers = np.linspace(-1, 1, 50)
+centers = np.linspace(-1, 1, 100)
 
 def draw_trajectories():
     plt.subplots(figsize=(25, 10), dpi=300)
@@ -42,7 +40,7 @@ def draw_trajectories():
     os.replace(temp_path, final_path)
 
 
-def render_frame(i, A_counts_list, B_counts_list, boundary):
+def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary):
     fig, ax = plt.subplots(figsize=(8, 6), dpi=100)
     ax.set_xlim(-1, 1)
     ax.set_ylim(0, 1)
@@ -53,9 +51,11 @@ def render_frame(i, A_counts_list, B_counts_list, boundary):
 
     A_counts = A_counts_list[i]
     B_counts = B_counts_list[i]
+    C_counts = C_counts_list[i]
 
     ax.plot(centers, A_counts)
     ax.plot(centers, B_counts)
+    ax.plot(centers, C_counts)
 
     filename = f"tmp_frames/frame_{i:05d}.png"
     fig.savefig(filename)
@@ -65,21 +65,24 @@ def render_frame(i, A_counts_list, B_counts_list, boundary):
 def ffmpeg_direct_hist(
     delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q
 ):
-    name = f"dd_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c}_q{q}_bins{n_bins}"
+    name = f"td_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c}_q{q}"
+    print(f"name: {name}")
     data_filename = f"data/{name}.txt"
 
     with open(data_filename, "r") as f:
         lines = f.readlines()
 
-    frame_step = int(n_t / 1000)
+    frame_step = int(n_t / 300)
 
     A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::frame_step]]
     B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::frame_step]]
+    C_counts_list = [np.fromstring(line, sep=" ") for line in lines[2::frame_step]]
 
     bin_width = (upper_bound - lower_bound) / n_bins
 
     A_counts_list = [count / (n_realizations * bin_width) for count in A_counts_list]
     B_counts_list = [count / (n_realizations * bin_width) for count in B_counts_list]
+    C_counts_list = [count / (n_realizations * bin_width) for count in C_counts_list]
 
     total_frames = len(A_counts_list)
 
@@ -90,6 +93,7 @@ def ffmpeg_direct_hist(
         render_frame,
         A_counts_list=A_counts_list,
         B_counts_list=B_counts_list,
+        C_counts_list=C_counts_list,
         boundary=BOUNDARY,
     )
 

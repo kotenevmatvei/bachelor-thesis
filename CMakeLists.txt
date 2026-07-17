@@ -31,6 +31,10 @@ target_link_libraries(single_diffusion ${MATH_LIB} gsl gslcblas)
 add_executable(double_diffusion double_dependent_diffusion.c io.c simulation.c utils.c)
 target_link_libraries(double_diffusion PRIVATE OpenMP::OpenMP_C ${MATH_LIB} gsl gslcblas)
 
+# build double diffusion
+add_executable(tripple_diffusion tripple_diffusion.c io.c simulation.c utils.c)
+target_link_libraries(tripple_diffusion PRIVATE OpenMP::OpenMP_C ${MATH_LIB} gsl gslcblas)
+
 # Build the tests
 add_executable(run_tests testing.c io.c tests.c simulation.c)
 target_link_libraries(run_tests ${MATH_LIB} gsl gslcblas)

@@ -240,10 +240,13 @@ void distribute_coordinates_uniformly(double *array, int array_len, double lower
 }
 
 int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates,
-                    int n_realizations) {
+                    int n_realizations, int *i) {
 
     FILE *file = fopen(filename, "r");
     if (!file) return 0;
+
+    if (fscanf(file, "%d ", i) != 1)
+        printf("Could not read i...\n");
 
     for (int i = 0; i < n_realizations; i++) {
         if (fscanf(file, "%lf", &A_coordinates[i]) != 1) {

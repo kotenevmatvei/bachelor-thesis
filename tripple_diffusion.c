@@ -36,17 +36,17 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // construct the file name
     char config_name[64];
-    snprintf(config_name, 63, "dt%g_nt%d_nr%d_c%d_q%d_bins%d", delta_t, n_t,
-             n_realizations, c, q, n_bins);
+    snprintf(config_name, 63, "dt%g_nt%d_nr%d_c%d_q%d", delta_t, n_t, n_realizations, c,
+             q);
 
     char counts_filename[128];
-    snprintf(counts_filename, 127, "../data/dd_counts_%s.txt", config_name);
+    snprintf(counts_filename, 127, "../data/td_counts_%s.txt", config_name);
 
     char coordinates_filename[128];
-    snprintf(coordinates_filename, 127, "../data/dd_coordinates_%s.txt", config_name);
+    snprintf(coordinates_filename, 127, "../data/td_coordinates_%s.txt", config_name);
 
     char log_filename[128];
-    snprintf(log_filename, 127, "../data/dd_log_%s.txt", config_name);
+    snprintf(log_filename, 127, "../data/td_log_%s.txt", config_name);
 
     FILE *counts_file = fopen(counts_filename, "w");
     FILE *coordinates_file = fopen(coordinates_filename, "w");
@@ -54,30 +54,39 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     double *A_coordinates = malloc(n_realizations * sizeof(double));
     double *B_coordinates = malloc(n_realizations * sizeof(double));
+    double *C_coordinates = malloc(n_realizations * sizeof(double));
 
     distribute_coordinates_uniformly(A_coordinates, n_realizations, lower_bound,
                                      upper_bound);
     distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound,
                                      upper_bound);
+    distribute_coordinates_uniformly(C_coordinates, n_realizations, lower_bound,
+                                     upper_bound);
 
-    double *coordinates[2] = {A_coordinates, B_coordinates};
+    double *coordinates[3] = {A_coordinates, B_coordinates, C_coordinates};
 
     int *A_counts = malloc(n_bins * sizeof(int));
     int *B_counts = malloc(n_bins * sizeof(int));
+    int *C_counts = malloc(n_bins * sizeof(int));
     histogram(A_coordinates, A_counts, n_realizations, n_bins, lower_bound, upper_bound);
     histogram(B_coordinates, B_counts, n_realizations, n_bins, lower_bound, upper_bound);
-    int *counts[2] = {A_counts, B_counts};
+    histogram(C_coordinates, C_counts, n_realizations, n_bins, lower_bound, upper_bound);
+    int *counts[3] = {A_counts, B_counts, C_counts};
 
     write_int_array(counts_file, A_counts, n_bins, "");
     write_int_array(counts_file, B_counts, n_bins, "");
+    write_int_array(counts_file, C_counts, n_bins, "");
 
     double range = upper_bound - lower_bound;
     double bin_size = range / n_bins;
     double delta_x = (upper_bound - lower_bound) / n_bins;
 
+    int dependencies_map[3] = {1, 2, 0};
+
     for (int i = 1; i < n_t; i++) {
         // increment time for both particla sorts in parallel
-        for (int k = 0; k <= 1; k++) {
+        for (int k = 0; k <= 2; k++) {
+            int dependency_ind = dependencies_map[k];
 
 #pragma omp parallel for
             for (int j = 0; j < n_realizations - 1; j++) {
@@ -91,7 +100,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 if (bin < 0)
                     bin = 0;
                 // get density of the OTHER particle sort in this bin
-                double density = (double)counts[1 - k][bin] / (n_realizations * delta_x);
+                double density = (double)counts[dependency_ind][bin] / (n_realizations * delta_x);
 
                 double coordinate =
                     double_diffuse(coordinates[k][j], d, c, q, delta_t, density, local_r);
@@ -115,6 +124,9 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
             }
             for (int i = 0; i < n_realizations; i++) {
                 fprintf(coordinates_file, "%lf ", B_coordinates[i]);
+            }
+            for (int i = 0; i < n_realizations; i++) {
+                fprintf(coordinates_file, "%lf ", C_coordinates[i]);
             }
         }
 
@@ -153,8 +165,10 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     fclose(counts_file);
     free(A_coordinates);
     free(B_coordinates);
+    free(C_coordinates);
     free(A_counts);
     free(B_counts);
+    free(C_counts);
     for (int i = 0; i < max_threads; i++) {
         gsl_rng_free(thread_rngs[i]);
     }
