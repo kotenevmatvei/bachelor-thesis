@@ -11,10 +11,13 @@ from the last computed state if so
 - [x] time the simulation (write in log?)
 - [ ] time the visualization (write in log?)
 - [x] implement symmetric dependency for tripple diffusion
-- [ ] setup the projext on the on the server
+- [ ] setup the projext on the on the serveraa
 - [ ] setup the first long runs on the server for curcular and symmetric dependencies
 - [ ] write the number of bins in the filename
 - [x] transfer data (or animation) to local machine via ssh?!
+- [ ] ! generalize the simulation (executable) and move more input to the config (particle dependencies, 
+type of simulation, quadratic/logistic - for the future) Minimize the need to adjust the source code and
+recompile
 
 ## structure
 - [x] config file
@@ -23,9 +26,9 @@ from the last computed state if so
 ## bugs
 - [x] what is wrong with the reflective bottom boundary in sticky_top_refl_bottom animation? some particles are reflected to early.
 - [x] why is the video file not fully written?
-- [ ] fix custom config cli argument on the server!
+- [x] fix custom config cli argument on the server!
 
-## speedup
+## speedup / storage efficiency
 ### algorithms and data structures
 - [x] rewrite histogram
 - [x] calculate histogram on the fly
@@ -34,6 +37,7 @@ from the last computed state if so
 - [x] parallelize
 - [ ] postprocess the counts in c - write normalized histograms (except the checkpoints?)
 - [ ] use gnuplot to directly generate animations from the data files
+- [ ] ! do not store all the counts rows in the first place (not used for animations rendering anyway)
 
 ### animation
 - [x] initial rough check if the results make sense
