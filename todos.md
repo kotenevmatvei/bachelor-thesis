@@ -14,6 +14,7 @@ from the last computed state if so
 - [ ] setup the projext on the on the server
 - [ ] setup the first long runs on the server for curcular and symmetric dependencies
 - [ ] write the number of bins in the filename
+- [x] transfer data (or animation) to local machine via ssh?!
 
 ## structure
 - [x] config file
@@ -22,6 +23,7 @@ from the last computed state if so
 ## bugs
 - [x] what is wrong with the reflective bottom boundary in sticky_top_refl_bottom animation? some particles are reflected to early.
 - [x] why is the video file not fully written?
+- [ ] fix custom config cli argument on the server!
 
 ## speedup
 ### algorithms and data structures
