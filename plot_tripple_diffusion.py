@@ -14,6 +14,14 @@ BOUNDARY = "reflective"
 
 centers = np.linspace(-1, 1, 100)
 
+def allocated_workers():
+    """Return the CPU count allocated to this Slurm task, if known."""
+    num_workers = int(os.environ.get(
+        "SLURM_CPUS_PER_TASK",
+        os.process_cpu_count() or 1,
+    ))
+    print(f"We are using {num_workers} workers")
+
 def draw_trajectories():
     plt.subplots(figsize=(25, 10), dpi=300)
 
@@ -98,7 +106,8 @@ def ffmpeg_direct_hist(
     )
 
     print(f"\nRendering {total_frames} frames in parallel...")
-    with concurrent.futures.ProcessPoolExecutor() as executor:
+    max_workers = allocated_workers()
+    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
         print(f"\nNumber of cores we will now use: {executor._max_workers}\n")
         list(tqdm(executor.map(worker_func, range(total_frames)), total=total_frames))
 
@@ -146,6 +155,8 @@ def main():
     n_bins = config["n_bins"]
     c = config["c"]
     q = config["q"]
+    print("Config: ")
+    print(config)
 
     # draw_trajectories()
     # draw_histogram(style="bars")
