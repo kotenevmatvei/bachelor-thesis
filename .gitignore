@@ -1,4 +1,5 @@
 .idea
+.venv
 build
 .gdb_history
 cmake-build-debug

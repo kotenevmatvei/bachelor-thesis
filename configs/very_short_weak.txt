@@ -1,3 +1,4 @@
+type 3sd
 delta_t 0.001
 start 0
 lower_bound -1

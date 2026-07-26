@@ -196,7 +196,6 @@ int main(int argc, char *argv[]) {
     if (argc == 1) {
         snprintf(config_path, 63, "../configs/%s", "config.txt");
     } else {
-        char config_path[64];
         snprintf(config_path, 63, "../configs/%s.txt", argv[1]);
     }
     DiffusionConfig config = read_config(config_path);
