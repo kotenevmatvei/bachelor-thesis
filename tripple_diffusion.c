@@ -122,14 +122,21 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 double density2 =
                     (double)counts[dependency_ind[1]][bin] / (n_realizations * delta_x);
 
-                // this is executed in non-local case (rs >= 1)
+                // accumulate the densities from neighboring bins in non-local case
+                // (rs >= 1)
                 for (int offset = 1; offset <= rs; offset++) {
-                    density1 += ((double)counts[dependency_ind[0]][bin - offset] +
-                                 (double)counts[dependency_ind[0]][bin + offset]) /
-                                (n_realizations * delta_x);
-                    density2 += ((double)counts[dependency_ind[1]][bin - offset] +
-                                 (double)counts[dependency_ind[1]][bin + offset]) /
-                                (n_realizations * delta_x);
+                    if (bin >= rs) {
+                        density1 += (double)counts[dependency_ind[0]][bin - offset] /
+                                    (n_realizations * delta_x);
+                        density2 += (double)counts[dependency_ind[1]][bin - offset] /
+                                    (n_realizations * delta_x);
+                    }
+                    if (bin <= n_bins - rs - 1) {
+                        density1 += (double)counts[dependency_ind[0]][bin + offset] /
+                                    (n_realizations * delta_x);
+                        density2 += (double)counts[dependency_ind[1]][bin + offset] /
+                                    (n_realizations * delta_x);
+                    }
                 }
 
                 double coordinate = symmetric_tripple_diffuse(

@@ -11,8 +11,8 @@ from the last computed state if so
 - [x] time the simulation (write in log?)
 - [ ] time the visualization (write in log?)
 - [x] implement symmetric dependency for tripple diffusion
-- [ ] setup the projext on the on the serveraa
-- [ ] setup the first long runs on the server for curcular and symmetric dependencies
+- [x] setup the projext on the on the serveraa
+- [x] setup the first long runs on the server for curcular and symmetric dependencies
 - [ ] write the number of bins in the filename
 - [ ] write sensing radius (rs) to the filename
 - [x] transfer data (or animation) to local machine via ssh?!
