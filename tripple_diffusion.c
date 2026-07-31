@@ -44,7 +44,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     snprintf(counts_filename, 127, "../data/%s_counts_%s.txt", type, config_name);
 
     char coordinates_filename[128];
-    snprintf(coordinates_filename, 127, "../data/%s_coordinates_%s.txt", type, config_name);
+    snprintf(coordinates_filename, 127, "../data/%s_coordinates_%s.txt", type,
+             config_name);
 
     char log_filename[128];
     snprintf(log_filename, 127, "../data/%s_log_%s.txt", type, config_name);
@@ -82,10 +83,12 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     double bin_size = range / n_bins;
     double delta_x = (upper_bound - lower_bound) / n_bins;
 
-    // key is the indey of in the array, values are the densities on which the density of
-    // the <key>-particle-sort depends)
-    // int cyclic_dependencies_map[3] = {1, 2, 0};
+    // key is the indey of in the array, values are the densities on which the
+    // density of the <key>-particle-sort depends) int
+    // cyclic_dependencies_map[3] = {1, 2, 0};
     int symmetric_dependencies_map[3][2] = {{1, 2}, {2, 0}, {0, 1}};
+
+    int rs = 2;
 
     for (int i = 1; i < n_t; i++) {
         // increment time for both particla sorts in parallel
@@ -106,17 +109,28 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 // ------ this is for double diffusion -------
                 // get density of the OTHER particle sort in this bin
                 // double density =
-                //     (double)counts[dependency_ind][bin] / (n_realizations * delta_x);
+                //     (double)counts[dependency_ind][bin] / (n_realizations *
+                //     delta_x);
 
                 // double coordinate =
-                //     double_diffuse(coordinates[k][j], d, c, q, delta_t, density,
-                //     local_r);
+                //     double_diffuse(coordinates[k][j], d, c, q, delta_t,
+                //     density, local_r);
 
                 //-----------this is for tripple diffusion ---------
                 double density1 =
                     (double)counts[dependency_ind[0]][bin] / (n_realizations * delta_x);
                 double density2 =
                     (double)counts[dependency_ind[1]][bin] / (n_realizations * delta_x);
+
+                // this is executed in non-local case (rs >= 1)
+                for (int offset = 1; offset <= rs; offset++) {
+                    density1 += ((double)counts[dependency_ind[0]][bin - offset] +
+                                 (double)counts[dependency_ind[0]][bin + offset]) /
+                                (n_realizations * delta_x);
+                    density2 += ((double)counts[dependency_ind[1]][bin - offset] +
+                                 (double)counts[dependency_ind[1]][bin + offset]) /
+                                (n_realizations * delta_x);
+                }
 
                 double coordinate = symmetric_tripple_diffuse(
                     coordinates[k][j], d, c, q, delta_t, density1, density2, local_r);
@@ -135,14 +149,14 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         if (i % 1000 == 0 || i == n_t - 1) {
             fseek(coordinates_file, 0, SEEK_SET);
             fprintf(coordinates_file, "%d ", i);
-            for (int i = 0; i < n_realizations; i++) {
-                fprintf(coordinates_file, "%lf ", A_coordinates[i]);
+            for (int m = 0; m < n_realizations; m++) {
+                fprintf(coordinates_file, "%lf ", A_coordinates[m]);
             }
-            for (int i = 0; i < n_realizations; i++) {
-                fprintf(coordinates_file, "%lf ", B_coordinates[i]);
+            for (int m = 0; m < n_realizations; m++) {
+                fprintf(coordinates_file, "%lf ", B_coordinates[m]);
             }
-            for (int i = 0; i < n_realizations; i++) {
-                fprintf(coordinates_file, "%lf ", C_coordinates[i]);
+            for (int m = 0; m < n_realizations; m++) {
+                fprintf(coordinates_file, "%lf ", C_coordinates[m]);
             }
         }
 

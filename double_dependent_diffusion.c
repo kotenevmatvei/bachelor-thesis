@@ -110,11 +110,11 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         if (i % 1000 == 0 || i == n_t - 1) {
             fseek(coordinates_file, 0, SEEK_SET);
             fprintf(coordinates_file, "%d ", i);
-            for (int i = 0; i < n_realizations; i++) {
-                fprintf(coordinates_file, "%lf ", A_coordinates[i]);
+            for (int j = 0; j < n_realizations; j++) {
+                fprintf(coordinates_file, "%lf ", A_coordinates[j]);
             }
-            for (int i = 0; i < n_realizations; i++) {
-                fprintf(coordinates_file, "%lf ", B_coordinates[i]);
+            for (int j = 0; j < n_realizations; j++) {
+                fprintf(coordinates_file, "%lf ", B_coordinates[j]);
             }
         }
 
@@ -166,7 +166,6 @@ int main(int argc, char *argv[]) {
     if (argc == 1) {
         snprintf(config_path, 63, "../configs/%s", "config.txt");
     } else {
-        char config_path[64];
         snprintf(config_path, 63, "../configs/%s.txt", argv[1]);
     }
     DiffusionConfig config = read_config(config_path);

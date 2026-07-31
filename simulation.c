@@ -261,15 +261,15 @@ int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates
     if (fscanf(file, "%d ", i) != 1)
         printf("Could not read i...\n");
 
-    for (int i = 0; i < n_realizations; i++) {
-        if (fscanf(file, "%lf", &A_coordinates[i]) != 1) {
-            printf("Error reading A_coordinate %d", i);
+    for (int j = 0; j < n_realizations; j++) {
+        if (fscanf(file, "%lf", &A_coordinates[j]) != 1) {
+            printf("Error reading A_coordinate %d", j);
             return 0;
         }
     }
-    for (int i = 0; i < n_realizations; i++) {
-        if (fscanf(file, "%lf", &B_coordinates[i]) != 1) {
-            printf("Error reading B_coordinate %d", i);
+    for (int j = 0; j < n_realizations; j++) {
+        if (fscanf(file, "%lf", &B_coordinates[j]) != 1) {
+            printf("Error reading B_coordinate %d", j);
             return 0;
         }
     }

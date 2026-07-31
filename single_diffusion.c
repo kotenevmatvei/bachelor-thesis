@@ -60,17 +60,17 @@ void diffuse_save_trajectories(double start, double lower_bound, double upper_bo
         double coordinate = start;
         double *trajectory = malloc(n_t * sizeof(double));
 
-        for (int j = 0; j < n_t; j++) {
+        for (int l = 0; l < n_t; l++) {
             // stick to the top if reached the upper bound
             if (coordinate >= upper_bound) {
-                trajectory[j] = upper_bound;
+                trajectory[l] = upper_bound;
                 continue;
             }
             // otherwise reflective_boundary
             coordinate = simple_diffuse(coordinate, d, delta_t, r);
             coordinate =
                 sticky_top_refl_bottom_boundary(coordinate, lower_bound, upper_bound);
-            trajectory[j] = coordinate;
+            trajectory[l] = coordinate;
         }
 
         write_double_array_to_file(

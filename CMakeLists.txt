@@ -9,7 +9,7 @@ set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_EXTENSIONS ON) # Allows gnu17 extensions
 
 # Add compiler flags (-Wall -Werror -Wextra -O3)
-add_compile_options(-Wall -Werror -Wextra -Wpendantic -Wshadow -O3 -g)
+add_compile_options(-Wall -Werror -Wextra -Wpedantic -Wshadow -O3 -g)
 
 # Find math library (libm)
 find_library(MATH_LIB m)

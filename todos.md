@@ -14,10 +14,13 @@ from the last computed state if so
 - [ ] setup the projext on the on the serveraa
 - [ ] setup the first long runs on the server for curcular and symmetric dependencies
 - [ ] write the number of bins in the filename
+- [ ] write sensing radius (rs) to the filename
 - [x] transfer data (or animation) to local machine via ssh?!
 - [ ] ! generalize the simulation (executable) and move more input to the config (particle dependencies, 
 type of simulation, quadratic/logistic - for the future) Minimize the need to adjust the source code and
 recompile
+- [x] ! implement finite sensing radius (non-local case) and setup the run
+- [ ] ! fix normalization
 
 ## structure
 - [x] config file
