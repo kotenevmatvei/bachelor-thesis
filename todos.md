@@ -20,7 +20,7 @@ from the last computed state if so
 type of simulation, quadratic/logistic - for the future) Minimize the need to adjust the source code and
 recompile
 - [x] ! implement finite sensing radius (non-local case) and setup the run
-- [ ] ! fix normalization
+- [x] ! fix normalization - no fix needed, just rescale y-axis, the densities can be greater than 1
 
 ## structure
 - [x] config file

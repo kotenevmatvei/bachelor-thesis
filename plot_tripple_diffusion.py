@@ -51,7 +51,7 @@ def draw_trajectories():
 def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary):
     fig, ax = plt.subplots(figsize=(8, 6), dpi=100)
     ax.set_xlim(-1, 1)
-    ax.set_ylim(0, 1)
+    ax.set_ylim(0, 3)
     ax.set_xlabel("Coordinate x")
     ax.set_ylabel("Counts")
     # ax.set_title(f"Particle diffusion, {boundary} boundaries")
