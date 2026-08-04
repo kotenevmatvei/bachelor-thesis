@@ -80,11 +80,9 @@ def ffmpeg_direct_hist(
     with open(data_filename, "r") as f:
         lines = f.readlines()
 
-    frame_step = int(n_t / 300)
-
-    A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::frame_step]]
-    B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::frame_step]]
-    C_counts_list = [np.fromstring(line, sep=" ") for line in lines[2::frame_step]]
+    A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::3]]
+    B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::3]]
+    C_counts_list = [np.fromstring(line, sep=" ") for line in lines[2::3]]
 
     bin_width = (upper_bound - lower_bound) / n_bins
 
