@@ -22,6 +22,7 @@ typedef struct{
     int n_bins;
     int c;
     int q;
+    int rs;
     char type[8];
 } DiffusionConfig;
 

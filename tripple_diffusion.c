@@ -21,6 +21,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     int n_bins = config.n_bins;
     int c = config.c;
     int q = config.q;
+    int rs = config.rs;
 
     gsl_rng_env_setup();
     const gsl_rng_type *T = gsl_rng_default;
@@ -37,8 +38,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // construct the file name
     char config_name[64];
-    snprintf(config_name, 63, "dt%g_nt%d_nr%d_c%d_q%d", delta_t, n_t, n_realizations, c,
-             q);
+    snprintf(config_name, 63, "dt%g_nt%d_nr%d_c%d_q%d_rs%d_bins%d", delta_t, n_t, n_realizations, c,
+             q, rs, n_bins);
 
     char counts_filename[128];
     snprintf(counts_filename, 127, "../data/%s_counts_%s.txt", type, config_name);
@@ -87,8 +88,6 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     // density of the <key>-particle-sort depends) int
     // cyclic_dependencies_map[3] = {1, 2, 0};
     int symmetric_dependencies_map[3][2] = {{1, 2}, {2, 0}, {0, 1}};
-
-    int rs = 2;
 
     for (int i = 1; i < n_t; i++) {
         // increment time for both particla sorts in parallel

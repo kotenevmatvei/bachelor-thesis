@@ -6,19 +6,22 @@
 - [x] normalize density: divide by the bin_width
 - [x] start in uniform distribution
 - [x] checkpoints: save the state (indices + coordinates) after every thousand timesteps
-- [ ] check before running the simulation if data for this config already exists and continue
+- [ ] ! check before running the simulation if data for this config already exists and continue
 from the last computed state if so
 - [x] time the simulation (write in log?)
 - [ ] time the visualization (write in log?)
 - [x] implement symmetric dependency for tripple diffusion
 - [x] setup the projext on the on the serveraa
 - [x] setup the first long runs on the server for curcular and symmetric dependencies
-- [ ] write the number of bins in the filename
-- [ ] write sensing radius (rs) to the filename
+- [x] write the number of bins in the filename
+- [x] write sensing radius (rs) to the filename
 - [x] transfer data (or animation) to local machine via ssh?!
 - [ ] ! generalize the simulation (executable) and move more input to the config (particle dependencies, 
 type of simulation, quadratic/logistic - for the future) Minimize the need to adjust the source code and
 recompile
+    - [x] type of simulation
+    - [ ] particle dependency
+    - [ ] quadratic / logistic - maybe?
 - [x] ! implement finite sensing radius (non-local case) and setup the run
 - [x] ! fix normalization - no fix needed, just rescale y-axis, the densities can be greater than 1
 

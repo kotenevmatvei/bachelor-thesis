@@ -50,6 +50,8 @@ DiffusionConfig read_config(const char *filename) {
             config.d = atof(val_str);
         } else if (strcmp(key, "n_bins") == 0) {
             config.n_bins = atoi(val_str);
+        } else if (strcmp(key, "rs") == 0) {
+            config.rs = atoi(val_str);
         } else if (strcmp(key, "c") == 0) {
             config.c = atof(val_str);
         } else if (strcmp(key, "q") == 0) {
