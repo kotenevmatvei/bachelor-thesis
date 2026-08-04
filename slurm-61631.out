@@ -1,0 +1,26 @@
+building the project...
+cmake --build build
+gmake[1]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[2]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 16%] Built target uop
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 37%] Built target single_diffusion
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 58%] Built target double_diffusion
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 79%] Built target tripple_diffusion
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+[100%] Built target run_tests
+gmake[2]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[1]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+Using config: q2_c6_long
+running the simulation...
+
+max_threads = 5
+[=>                                                                                                  ]   1%[==>                                                                                                 ]   2%[===>                                                                                                ]   3%[====>                                                                                               ]   4%[=====>                                                                                              ]   5%[======>                                                                                             ]   6%[=======>                                                                                            ]   7%[========>                                                                                           ]   8%[=========>                                                                                          ]   9%[==========>                                                                                         ]  10%[===========>                                                                                        ]  11%[============>                                                                                       ]  12%[=============>                                                                                      ]  13%[==============>                                                                                     ]  14%[===============>                                                                                    ]  15%[================>                                                                                   ]  16%[=================>                                                                                  ]  17%[==================>                                                                                 ]  18%[===================>                                                                                ]  19%[====================>                                                                               ]  20%[=====================>                                                                              ]  21%[======================>                                                                             ]  22%slurmstepd-pool8: error: *** JOB 61631 ON pool8 CANCELLED AT 2026-08-04T13:22:46 ***

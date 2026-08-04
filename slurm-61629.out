@@ -1,0 +1,61 @@
+building the project...
+cmake --build build
+gmake[1]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /users/nph/kotenevm/bachelor-thesis/build
+gmake[2]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+[  4%] Building C object CMakeFiles/uop.dir/uop.c.o
+[  8%] Building C object CMakeFiles/uop.dir/io.c.o
+[ 12%] Building C object CMakeFiles/uop.dir/simulation.c.o
+[ 16%] Linking C executable uop
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 16%] Built target uop
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 20%] Building C object CMakeFiles/single_diffusion.dir/single_diffusion.c.o
+[ 25%] Building C object CMakeFiles/single_diffusion.dir/io.c.o
+[ 29%] Building C object CMakeFiles/single_diffusion.dir/simulation.c.o
+[ 33%] Building C object CMakeFiles/single_diffusion.dir/utils.c.o
+[ 37%] Linking C executable single_diffusion
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 37%] Built target single_diffusion
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 41%] Building C object CMakeFiles/double_diffusion.dir/double_dependent_diffusion.c.o
+[ 45%] Building C object CMakeFiles/double_diffusion.dir/io.c.o
+[ 50%] Building C object CMakeFiles/double_diffusion.dir/simulation.c.o
+[ 54%] Building C object CMakeFiles/double_diffusion.dir/utils.c.o
+[ 58%] Linking C executable double_diffusion
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 58%] Built target double_diffusion
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 62%] Building C object CMakeFiles/tripple_diffusion.dir/tripple_diffusion.c.o
+[ 66%] Building C object CMakeFiles/tripple_diffusion.dir/io.c.o
+[ 70%] Building C object CMakeFiles/tripple_diffusion.dir/simulation.c.o
+[ 75%] Building C object CMakeFiles/tripple_diffusion.dir/utils.c.o
+[ 79%] Linking C executable tripple_diffusion
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 79%] Built target tripple_diffusion
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
+[ 83%] Building C object CMakeFiles/run_tests.dir/testing.c.o
+[ 87%] Building C object CMakeFiles/run_tests.dir/io.c.o
+[ 91%] Building C object CMakeFiles/run_tests.dir/tests.c.o
+[ 95%] Building C object CMakeFiles/run_tests.dir/simulation.c.o
+[100%] Linking C executable run_tests
+gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+[100%] Built target run_tests
+gmake[2]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+gmake[1]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
+Using config: q2_c6_long
+running the simulation...
+Error: Could not open ../configs/q2_c6_long.txt
