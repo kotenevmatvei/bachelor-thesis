@@ -24,6 +24,7 @@ recompile
     - [ ] quadratic / logistic - maybe?
 - [x] ! implement finite sensing radius (non-local case) and setup the run
 - [x] ! fix normalization - no fix needed, just rescale y-axis, the densities can be greater than 1
+- [ ] ! add frame timestep to config and filename
 
 ## structure
 - [x] config file

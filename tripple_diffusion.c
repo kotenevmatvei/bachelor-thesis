@@ -23,6 +23,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     int q = config.q;
     int rs = config.rs;
 
+    int frame_timestep = n_t / 1000;
+
     gsl_rng_env_setup();
     const gsl_rng_type *T = gsl_rng_default;
 
@@ -148,7 +150,9 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
             histogram(coordinates[k], counts[k], n_realizations, n_bins, lower_bound,
                       upper_bound);
-            write_int_array(counts_file, counts[k], n_bins, "");
+
+            if (i % frame_timestep == 0)
+                write_int_array(counts_file, counts[k], n_bins, "");
         }
 
         // save a snapshot of the simulation state every 10000 timesteps

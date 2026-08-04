@@ -7,6 +7,6 @@ d 1
 n_t 10000
 n_realizations 10000
 n_bins 100
-c 20
-q 2
+c 3
+q 3
 rs 0
