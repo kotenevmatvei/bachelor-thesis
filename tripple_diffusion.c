@@ -39,19 +39,19 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     }
 
     // construct the file name
-    char config_name[64];
-    snprintf(config_name, 63, "dt%g_nt%d_nr%d_c%d_q%d_rs%d_bins%d", delta_t, n_t, n_realizations, c,
-             q, rs, n_bins);
+    char config_name[128];
+    snprintf(config_name, 127, "dt%g_nt%d_nr%d_c%d_q%d_rs%d_bins%d", delta_t, n_t,
+             n_realizations, c, q, rs, n_bins);
 
-    char counts_filename[128];
-    snprintf(counts_filename, 127, "../data/%s_counts_%s.txt", type, config_name);
+    char counts_filename[256];
+    snprintf(counts_filename, 255, "../data/%s_counts_%s.txt", type, config_name);
 
-    char coordinates_filename[128];
-    snprintf(coordinates_filename, 127, "../data/%s_coordinates_%s.txt", type,
+    char coordinates_filename[256];
+    snprintf(coordinates_filename, 255, "../data/%s_coordinates_%s.txt", type,
              config_name);
 
-    char log_filename[128];
-    snprintf(log_filename, 127, "../data/%s_log_%s.txt", type, config_name);
+    char log_filename[256];
+    snprintf(log_filename, 255, "../data/%s_log_%s.txt", type, config_name);
 
     FILE *counts_file = fopen(counts_filename, "w");
     FILE *coordinates_file = fopen(coordinates_filename, "w");
@@ -73,6 +73,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     int *A_counts = malloc(n_bins * sizeof(int));
     int *B_counts = malloc(n_bins * sizeof(int));
     int *C_counts = malloc(n_bins * sizeof(int));
+
     histogram(A_coordinates, A_counts, n_realizations, n_bins, lower_bound, upper_bound);
     histogram(B_coordinates, B_counts, n_realizations, n_bins, lower_bound, upper_bound);
     histogram(C_coordinates, C_counts, n_realizations, n_bins, lower_bound, upper_bound);

@@ -23,7 +23,7 @@ typedef struct{
     int c;
     int q;
     int rs;
-    char type[8];
+    char type[64];
 } DiffusionConfig;
 
 void fill_linear_axis(LinearAxis *axis, double start, double end, int n_points);
