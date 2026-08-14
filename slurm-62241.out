@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/users/nph/kotenevm/bachelor-thesis/plot_tripple_diffusion.py", line 1, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'

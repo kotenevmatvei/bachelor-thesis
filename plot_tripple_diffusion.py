@@ -104,9 +104,9 @@ def ffmpeg_direct_hist(
     )
 
     print(f"\nRendering {total_frames} frames in parallel...")
-    max_workers = allocated_workers()
-    with concurrent.futures.ProcessPoolExecutor(max_workers=max_workers) as executor:
-        print(f"\nNumber of cores we will now use: {executor._max_workers}\n")
+    # max_workers = allocated_workers()
+    with concurrent.futures.ProcessPoolExecutor() as executor:
+        # print(f"\nNumber of cores we will now use: {executor._max_workers}\n")
         list(tqdm(executor.map(worker_func, range(total_frames)), total=total_frames))
 
     print("Stitching video...")
