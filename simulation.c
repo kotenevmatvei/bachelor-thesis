@@ -235,11 +235,13 @@ double symmetric_tripple_diffuse(double coordinate, double D, double c, int q,
                                  double delta_t, double density1, double density2,
                                  gsl_rng *r) {
 
-    double eta = gsl_ran_gaussian(r, 1);
-    double new_coordinate =
-        coordinate + sqrt((2 * D * (1 + c * pow(density1, q)) * delta_t) +
-                          (2 * D * (1 + c * pow(density2, q)) * delta_t)) *
-                         eta;
+    const double eta = gsl_ran_gaussian(r, 1);
+    const double competitor_density = density1 + density2;
+
+    const double D_eff = D * (1.0 + c * pow(competitor_density, (double)q));
+
+    double new_coordinate = coordinate + sqrt(2.0 * D_eff * delta_t) * eta;
+
     return new_coordinate;
 }
 
