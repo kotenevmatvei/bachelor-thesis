@@ -25,10 +25,16 @@ recompile
 - [x] ! implement finite sensing radius (non-local case) and setup the run
 - [x] ! fix normalization - no fix needed, just rescale y-axis, the densities can be greater than 1
 - [ ] ! add frame timestep to config and filename
+- [ ] add config to the plot legend?
+- [ ] ! run the simulation with the fixed diffusion function for q=3, c=3; q=3, c=20; q=2, c=20
+
+- [ ] ! implement different initial densities
+- [ ] ! run the simulation with the fixed diffusion function for q=3, c=3 + cos perturbation;
 
 ## structure
 - [x] config file
 - [x] automate file naming
+- [ ] cleanup the structure for slurm (separate folders, proper names for .out and .log files)
 
 ## bugs
 - [x] what is wrong with the reflective bottom boundary in sticky_top_refl_bottom animation? some particles are reflected to early.
