@@ -30,6 +30,8 @@ recompile
 
 - [ ] ! implement different initial densities
 - [ ] ! run the simulation with the fixed diffusion function for q=3, c=3 + cos perturbation;
+- [ ] update python on the server
+- [ ] add timestep to filenames? - what about checkpoints then though - ask whether/which data to use (from which timestep) in case it already exists for the config, which i am attempting to run?
 
 ## structure
 - [x] config file
