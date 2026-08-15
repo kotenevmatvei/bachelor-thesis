@@ -49,9 +49,9 @@ def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary):
     # ax.set_title(f"Particle diffusion, {boundary} boundaries")
     ax.grid()
 
-    A_counts = A_counts_list[i]
-    B_counts = B_counts_list[i]
-    C_counts = C_counts_list[i]
+    A_counts = A_counts_list[i][1:]
+    B_counts = B_counts_list[i][1:]
+    C_counts = C_counts_list[i][1:]
 
     ax.plot(centers, A_counts)
     ax.plot(centers, B_counts)
