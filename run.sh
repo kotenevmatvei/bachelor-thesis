@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-# set the number of omp threads
-# export OMP_NUM_THREADS=10
-
 # cd /home/matvei/Desktop/bachelor-thesis/
 echo "building the project..."
 make
