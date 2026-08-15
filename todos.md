@@ -30,6 +30,7 @@ recompile
 
 - [ ] ! implement different initial densities
 - [ ] ! run the simulation with the fixed diffusion function for q=3, c=3 + cos perturbation;
+- [ ] update python on the server
 
 ## structure
 - [x] config file
