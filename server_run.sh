@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-# for the server we fix the number of OMP threads to the optimal 5
+# for the server we fix the number of OMP threads to the optimal 4
 # (anything bigger results in more communication overhead -> slower)
 
 # set the number of omp threads
-export OMP_NUM_THREADS=10
+export OMP_NUM_THREADS=4
 
 # cd /home/matvei/Desktop/bachelor-thesis/
 echo "building the project..."
@@ -17,7 +17,9 @@ echo "Using config: $CONFIG_NAME"
 
 echo "running the simulation..."
 ./tripple_diffusion "$CONFIG_NAME"
+
 cd ..
+
 echo "running the visualizations..."
-python plot_tripple_diffusion.py "$CONFIG_NAME"
+python server_plot_tripple_diffusion.py "$CONFIG_NAME"
 echo "the run done!"
