@@ -92,13 +92,22 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     // cyclic_dependencies_map[3] = {1, 2, 0};
     int symmetric_dependencies_map[3][2] = {{1, 2}, {2, 0}, {0, 1}};
 
+    int n_bins_within_rs = 1 + 2 * rs;
+
     for (int i = 1; i < n_t; i++) {
+        // first compute all histograms for the current timestep so that every particle
+        // sort sees the same density
+        for (int k = 0; k <= 2; k++) {
+            histogram(coordinates[k], counts[k], n_realizations, n_bins, lower_bound,
+                      upper_bound);
+        }
+
         // increment time for both particla sorts in parallel
         for (int k = 0; k <= 2; k++) {
             int *dependency_ind = symmetric_dependencies_map[k];
 
 #pragma omp parallel for
-            for (int j = 0; j < n_realizations - 1; j++) {
+            for (int j = 0; j < n_realizations; j++) {
                 int thread_id = omp_get_thread_num();
                 gsl_rng *local_r = thread_rngs[thread_id];
 
@@ -119,10 +128,10 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 //     density, local_r);
 
                 //-----------this is for tripple diffusion ---------
-                double density1 =
-                    (double)counts[dependency_ind[0]][bin] / (n_realizations * delta_x);
-                double density2 =
-                    (double)counts[dependency_ind[1]][bin] / (n_realizations * delta_x);
+                double density1 = (double)counts[dependency_ind[0]][bin] /
+                                  (n_realizations * delta_x * n_bins_within_rs);
+                double density2 = (double)counts[dependency_ind[1]][bin] /
+                                  (n_realizations * delta_x * n_bins_within_rs);
 
                 // accumulate the densities from neighboring bins in non-local case
                 // (rs >= 1)
@@ -148,9 +157,6 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
                 coordinates[k][j] = coordinate;
             }
-
-            histogram(coordinates[k], counts[k], n_realizations, n_bins, lower_bound,
-                      upper_bound);
 
             if (i % frame_timestep == 0)
                 write_int_array(counts_file, counts[k], n_bins, "");
