@@ -103,13 +103,23 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     int n_bins_within_rs = 1 + 2 * rs;
 
+    double io_time = 0.0;
+    double progress_bar_time = 0.0;
+    double iloop_time = 0.0;
+    double histogram_time = 0.0;
+
+    time_t start_iloop = time(NULL);
     for (int i = 1; i < n_t; i++) {
         // first compute all histograms for the current timestep so that every particle
         // sort sees the same density
+        time_t start_histogram = time(NULL);
         for (int k = 0; k <= 2; k++) {
             histogram(coordinates[k], counts[k], n_realizations, n_bins, lower_bound,
                       upper_bound);
         }
+        time_t end_histogram = time(NULL);
+        histogram_time += end_histogram - start_histogram;
+
 
         // increment time for both particla sorts in parallel
         for (int k = 0; k <= 2; k++) {
@@ -170,6 +180,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
         // save a snapshot of the simulation (counts/coordinates) state every
         // frame_timestep
+        time_t start_io = time(NULL);
         if (i % frame_timestep == 0) {
             for (int k = 0; k <= 2; k++) {
                 fprintf(counts_file, "%d ", i);
@@ -183,8 +194,11 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 write_double_array(coordinates_file, coordinates[k], n_realizations, "");
             }
         }
+        time_t end_io = time(NULL);
+        io_time += end_io - start_io;
 
         // update the progress bar
+        time_t start_progress_bar = time(NULL);
         if (i % (n_t / 100) == 0 || i == n_t - 1) {
             float progress = (float)i / (n_t - 1);
             int bar_width = 100;
@@ -204,7 +218,19 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
             fflush(stdout);
         }
+        time_t end_progress_bar = time(NULL);
+        progress_bar_time += end_progress_bar - start_progress_bar;
     }
+    time_t end_iloop = time(NULL);
+    iloop_time = end_iloop - start_iloop;
+
+    double io_part = io_time / iloop_time;
+    double progress_bar_part = progress_bar_time / iloop_time;
+    double histogram_part = histogram_time / iloop_time;
+
+    printf("\nio_part = %f\n", io_part);
+    printf("progress_bar_part = %f\n", progress_bar_part);
+    printf("histogram_part = %f\n", histogram_part);
 
     time_t end = time(NULL);
     int timediff_sec = difftime(end, start);
