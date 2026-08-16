@@ -17,10 +17,10 @@ typedef struct{
     double lower_bound;
     double upper_bound;
     double d;
+    double c;
     int n_t;
     int n_realizations;
     int n_bins;
-    int c;
     int q;
     int rs;
     int frame_timestep;

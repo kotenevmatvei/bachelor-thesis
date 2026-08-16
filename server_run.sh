@@ -21,5 +21,5 @@ echo "running the simulation..."
 cd ..
 
 echo "running the visualizations..."
-python server_plot_tripple_diffusion.py "$CONFIG_NAME"
+python plot_tripple_diffusion.py "$CONFIG_NAME"
 echo "the run done!"

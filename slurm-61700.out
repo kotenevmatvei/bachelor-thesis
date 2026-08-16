@@ -1,50 +1,0 @@
-s3d
-Config: 
-{'type': 's3d', 'delta_t': 0.0001, 'start': 0.0, 'lower_bound': -1.0, 'upper_bound': 1.0, 'd': 1.0, 'n_t': 1000000000, 'n_realizations': 10000, 'n_bins': 100, 'c': 3, 'q': 3, 'rs': 0}
-name: s3d_counts_dt0.0001_nt1000000000_nr10000_c3_q3_rs0_bins100
-
-Rendering 218 frames in parallel...
-  0%|          | 0/218 [00:00<?, ?it/s]  0%|          | 1/218 [00:01<03:50,  1.06s/it] 11%|█         | 23/218 [00:01<00:07, 25.38it/s] 17%|█▋        | 36/218 [00:01<00:04, 39.57it/s] 22%|██▏       | 47/218 [00:01<00:03, 46.00it/s] 26%|██▌       | 57/218 [00:01<00:03, 52.74it/s] 30%|███       | 66/218 [00:01<00:02, 54.69it/s] 34%|███▍      | 74/218 [00:01<00:02, 59.02it/s] 40%|███▉      | 87/218 [00:01<00:01, 73.72it/s] 44%|████▍     | 97/218 [00:02<00:01, 60.67it/s] 49%|████▊     | 106/218 [00:02<00:01, 63.03it/s] 54%|█████▍    | 118/218 [00:02<00:01, 63.25it/s] 60%|██████    | 131/218 [00:02<00:01, 74.58it/s] 65%|██████▍   | 141/218 [00:02<00:01, 75.70it/s] 69%|██████▉   | 150/218 [00:02<00:01, 67.87it/s] 74%|███████▍  | 161/218 [00:03<00:00, 67.89it/s] 80%|████████  | 175/218 [00:03<00:00, 75.24it/s] 84%|████████▍ | 183/218 [00:03<00:00, 46.54it/s] 91%|█████████▏| 199/218 [00:03<00:00, 60.43it/s]100%|█████████▉| 217/218 [00:03<00:00, 56.55it/s]
-concurrent.futures.process._RemoteTraceback: 
-"""
-Traceback (most recent call last):
-  File "/usr/lib/python3.11/concurrent/futures/process.py", line 256, in _process_worker
-    r = call_item.fn(*call_item.args, **call_item.kwargs)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.11/concurrent/futures/process.py", line 205, in _process_chunk
-    return [fn(*args) for args in chunk]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.11/concurrent/futures/process.py", line 205, in <listcomp>
-    return [fn(*args) for args in chunk]
-            ^^^^^^^^^
-  File "/users/nph/kotenevm/bachelor-thesis/plot_tripple_diffusion.py", line 62, in render_frame
-    C_counts = C_counts_list[i]
-               ~~~~~~~~~~~~~^^^
-IndexError: list index out of range
-"""
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/users/nph/kotenevm/bachelor-thesis/plot_tripple_diffusion.py", line 176, in <module>
-    main()
-  File "/users/nph/kotenevm/bachelor-thesis/plot_tripple_diffusion.py", line 161, in main
-    ffmpeg_direct_hist(
-  File "/users/nph/kotenevm/bachelor-thesis/plot_tripple_diffusion.py", line 109, in ffmpeg_direct_hist
-    list(tqdm(executor.map(worker_func, range(total_frames)), total=total_frames))
-  File "/users/nph/kotenevm/bachelor-thesis/.venv/lib/python3.11/site-packages/tqdm/std.py", line 1187, in __iter__
-    for obj in iterable:
-  File "/usr/lib/python3.11/concurrent/futures/process.py", line 597, in _chain_from_iterable_of_lists
-    for element in iterable:
-  File "/usr/lib/python3.11/concurrent/futures/_base.py", line 619, in result_iterator
-    yield _result_or_cancel(fs.pop())
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.11/concurrent/futures/_base.py", line 317, in _result_or_cancel
-    return fut.result(timeout)
-           ^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.11/concurrent/futures/_base.py", line 449, in result
-    return self.__get_result()
-           ^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.11/concurrent/futures/_base.py", line 401, in __get_result
-    raise self._exception
-IndexError: list index out of range

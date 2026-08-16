@@ -2,10 +2,12 @@
 #include "simulation.h"
 #include "time.h"
 #include "utils.h"
+#include <fcntl.h>
 #include <gsl/gsl_rng.h>
 #include <omp.h>
 #include <stdio.h>
 #include <time.h>
+#include <unistd.h>
 
 void diffuse_and_save_histograms(DiffusionConfig config) {
     time_t start = time(NULL);
@@ -19,7 +21,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     int n_t = config.n_t;
     int n_realizations = config.n_realizations;
     int n_bins = config.n_bins;
-    int c = config.c;
+    double c = config.c;
     int q = config.q;
     int rs = config.rs;
     int frame_timestep = config.frame_timestep;
@@ -41,7 +43,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // construct the file name
     char config_name[128];
-    snprintf(config_name, 127, "dt%g_nt%d_nr%d_c%d_q%d_rs%d_bins%d_ft%d", delta_t, n_t,
+    snprintf(config_name, 127, "dt%g_nt%d_nr%d_c%g_q%d_rs%d_bins%d_ft%d", delta_t, n_t,
              n_realizations, c, q, rs, n_bins, frame_timestep);
 
     char counts_filename[256];
@@ -82,12 +84,10 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // write the initial counts and coordinates
     for (int k = 0; k <= 2; k++) {
-        printf("writing counts %d\n", k);
         fprintf(counts_file, "0 ");
         write_int_array(counts_file, counts[k], n_bins, "");
     }
     for (int k = 0; k <= 2; k++) {
-        printf("writing coordinates %d\n", k);
         fprintf(coordinates_file, "0 ");
         write_double_array(coordinates_file, coordinates[k], n_realizations, "");
     }
@@ -166,16 +166,18 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
                 coordinates[k][j] = coordinate;
             }
-
         }
 
-        // save a snapshot of the simulation (counts/coordinates) state every 
+        // save a snapshot of the simulation (counts/coordinates) state every
         // frame_timestep
         if (i % frame_timestep == 0) {
             for (int k = 0; k <= 2; k++) {
                 fprintf(counts_file, "%d ", i);
                 write_int_array(counts_file, counts[k], n_bins, "");
             }
+            // overwrite the coordinates
+            fclose(coordinates_file);
+            coordinates_file = fopen(coordinates_filename, "w");
             for (int k = 0; k <= 2; k++) {
                 fprintf(coordinates_file, "%d ", i);
                 write_double_array(coordinates_file, coordinates[k], n_realizations, "");

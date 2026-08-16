@@ -1,26 +1,0 @@
-building the project...
-cmake --build build
-gmake[1]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
-gmake[2]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
-gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
-gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
-[ 16%] Built target uop
-gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
-gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
-[ 37%] Built target single_diffusion
-gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
-gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
-[ 58%] Built target double_diffusion
-gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
-gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
-[ 79%] Built target tripple_diffusion
-gmake[3]: Entering directory '/users/nph/kotenevm/bachelor-thesis/build'
-gmake[3]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
-[100%] Built target run_tests
-gmake[2]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
-gmake[1]: Leaving directory '/users/nph/kotenevm/bachelor-thesis/build'
-Using config: short_very_strong
-running the simulation...
-
-max_threads = 5
-[=>                                                                                                  ]   0%[==>                                                                                                 ]   1%[===>                                                                                                ]   2%[====>                                                                                               ]   3%[=====>                                                                                              ]   5%[======>                                                                                             ]   5%[=======>                                                                                            ]   7%[========>                                                                                           ]   7%[=========>                                                                                          ]   9%[==========>                                                                                         ]  10%[===========>                                                                                        ]  10%[============>                                                                                       ]  11%[=============>                                                                                      ]  12%[==============>                                                                                     ]  14%[===============>                                                                                    ]  15%[================>                                                                                   ]  15%[=================>                                                                                  ]  17%[==================>                                                                                 ]  18%[===================>                                                                                ]  18%[====================>                                                                               ]  20%[=====================>                                                                              ]  20%[======================>                                                                             ]  21%[=======================>                                                                            ]  23%[========================>                                                                           ]  23%[=========================>                                                                          ]  25%[==========================>                                                                         ]  25%slurmstepd-pool8: error: *** JOB 61677 ON pool8 CANCELLED AT 2026-08-06T22:13:54 DUE TO TIME LIMIT ***
