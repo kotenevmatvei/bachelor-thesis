@@ -4,10 +4,10 @@ start 0
 lower_bound -1
 upper_bound 1
 d 1
-n_t 10000
+n_t 100000000
 n_realizations 10000
 n_bins 100
 c 2.01
 q 3
 rs 0
-frame_timestep 100
+frame_timestep 10000
