@@ -56,6 +56,8 @@ DiffusionConfig read_config(const char *filename) {
             config.c = atof(val_str);
         } else if (strcmp(key, "q") == 0) {
             config.q = atoi(val_str);
+        } else if (strcmp(key, "frame_timestep") == 0) {
+            config.frame_timestep = atoi(val_str);
         } else {
             printf("Warning: Unknown config key '%s' ignored.\n", key);
         }

@@ -23,6 +23,7 @@ typedef struct{
     int c;
     int q;
     int rs;
+    int frame_timestep;
     char type[64];
 } DiffusionConfig;
 

@@ -1,4 +1,4 @@
-type s3d
+type s3d_correct
 delta_t 0.0001
 start 0
 lower_bound -1
@@ -7,6 +7,7 @@ d 1
 n_t 100000
 n_realizations 10000
 n_bins 100
-c 20
+c 6
 q 2
 rs 0
+frame_timestep 100

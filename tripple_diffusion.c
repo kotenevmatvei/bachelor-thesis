@@ -22,10 +22,9 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     int c = config.c;
     int q = config.q;
     int rs = config.rs;
+    int frame_timestep = config.frame_timestep;
 
-    int frame_timestep = n_t / 1000;
-
-    printf("\nframe_timestep = %d", frame_timestep);
+    printf("\nframe_timestep = %d\n", frame_timestep);
 
     gsl_rng_env_setup();
     const gsl_rng_type *T = gsl_rng_default;
@@ -42,8 +41,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // construct the file name
     char config_name[128];
-    snprintf(config_name, 127, "dt%g_nt%d_nr%d_c%d_q%d_rs%d_bins%d", delta_t, n_t,
-             n_realizations, c, q, rs, n_bins);
+    snprintf(config_name, 127, "dt%g_nt%d_nr%d_c%d_q%d_rs%d_bins%d_ft%d", delta_t, n_t,
+             n_realizations, c, q, rs, n_bins, frame_timestep);
 
     char counts_filename[256];
     snprintf(counts_filename, 255, "../data/%s_counts_%s.txt", type, config_name);
@@ -91,7 +90,6 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         printf("writing coordinates %d\n", k);
         fprintf(coordinates_file, "0 ");
         write_double_array(coordinates_file, coordinates[k], n_realizations, "");
-        print_double_array(coordinates[k], n_realizations, "coordinates: ");
     }
 
     double range = upper_bound - lower_bound;

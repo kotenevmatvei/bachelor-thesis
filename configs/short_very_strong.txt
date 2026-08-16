@@ -10,3 +10,4 @@ n_bins 100
 c 3
 q 3
 rs 0
+frame_timestep 100
