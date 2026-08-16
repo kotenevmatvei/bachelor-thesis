@@ -65,7 +65,7 @@ def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary):
 def ffmpeg_direct_hist(
     type_, delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q, rs, frame_timestep
 ):
-    name = f"{type_}_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c}_q{q}_rs{rs}_bins{n_bins}_ft{frame_timestep}"
+    name = f"{type_}_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c:g}_q{q}_rs{rs}_bins{n_bins}_ft{frame_timestep}"
     print(f"name: {name}")
     data_filename = f"data/{name}.txt"
 
