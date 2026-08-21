@@ -1,5 +1,5 @@
 type s3d_correct
-run checkpoint_test
+run checkpoint
 delta_t 0.0001
 start 0
 lower_bound -1

@@ -76,8 +76,22 @@ def ffmpeg_direct_hist(
     B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::3]]
     C_counts_list = [np.fromstring(line, sep=" ") for line in lines[2::3]]
 
+    # check if there is more frames in data than should be in one run. In this case we 
+    # are continuing a run and there might be multiple animations for the first stages
+    # already generated. so we add a corresponding suffix to the animation name and only
+    # regenerate the new data
+    n_frames_in_run = int(n_t/frame_timestep)
+    suffix = str(int(len(A_counts_list) / n_frames_in_run))
+
+    A_counts_list = A_counts_list[-n_frames_in_run:]
+    B_counts_list = B_counts_list[-n_frames_in_run:]
+    C_counts_list = C_counts_list[-n_frames_in_run:]
+
+    print("A_counts_list length: ", len(A_counts_list))
+
     bin_width = (upper_bound - lower_bound) / n_bins
 
+    # normalize the histograms
     A_counts_list = [count / (n_realizations * bin_width) for count in A_counts_list]
     B_counts_list = [count / (n_realizations * bin_width) for count in B_counts_list]
     C_counts_list = [count / (n_realizations * bin_width) for count in C_counts_list]
@@ -101,7 +115,7 @@ def ffmpeg_direct_hist(
         list(tqdm(executor.map(worker_func, range(total_frames)), total=total_frames))
 
     print("Stitching video...")
-    animation_filename = f"runs/{run}/animations/{name}.mp4"
+    animation_filename = f"runs/{run}/animations/{name}_iteration{suffix}.mp4"
     mp4_path = animation_filename
     ffmpeg_command = [
         "ffmpeg",
