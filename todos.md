@@ -30,8 +30,8 @@ recompile
 - [x] ! implement finite sensing radius (non-local case) and setup the run
 - [x] ! fix normalization - no fix needed, just rescale y-axis, the densities can be greater than 1
 - [x] ! add frame timestep to config and filename
-- [ ] ! pickup checkpoint (preexisting animation) in visualisation instead of regenerating the entire thing
-- [ ] ! save data/animations to run folders
+- [x] ! pickup checkpoint (preexisting animation) in visualisation instead of regenerating the entire thing
+- [x] ! save data/animations to run folders
 
 - [ ] ! implement different initial densities
 
