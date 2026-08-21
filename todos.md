@@ -1,6 +1,7 @@
 # TODOs
 
 ## runs
+- [x] ! run the simulation with the fixed diffusion function for q=3, c=3; q=3, c=20; q=2, c=20
 - [ ] longer runs for q=2, c=5.4,6 (pick up last checkpoints?) - those should demix!
 - [ ] q=3, c=5 periodic boundaries (to make sure those demix - just to see what it looks like)
 - [ ] cyclic dependency same parameters - see what happens!
@@ -11,10 +12,9 @@
 - [x] normalize density: divide by the bin_width
 - [x] start in uniform distribution
 - [x] checkpoints: save the state (indices + coordinates) after every thousand timesteps
-- [ ] ! check before running the simulation if data for this config already exists and continue
+- [x] ! check before running the simulation if data for this config already exists and continue
 from the last computed state if so
 - [x] time the simulation (write in log?)
-- [ ] time the visualization (write in log?)
 - [x] implement symmetric dependency for tripple diffusion
 - [x] setup the projext on the on the serveraa
 - [x] setup the first long runs on the server for curcular and symmetric dependencies
@@ -29,19 +29,15 @@ recompile
     - [ ] quadratic / logistic - maybe?
 - [x] ! implement finite sensing radius (non-local case) and setup the run
 - [x] ! fix normalization - no fix needed, just rescale y-axis, the densities can be greater than 1
-- [ ] ! add frame timestep to config and filename
-- [ ] add config to the plot legend?
-- [ ] ! run the simulation with the fixed diffusion function for q=3, c=3; q=3, c=20; q=2, c=20
+- [x] ! add frame timestep to config and filename
+- [ ] ! pickup checkpoint (preexisting animation) in visualisation instead of regenerating the entire thing
 
 - [ ] ! implement different initial densities
-- [ ] ! run the simulation with the fixed diffusion function for q=3, c=3 + cos perturbation;
-- [ ] update python on the server
-- [ ] add timestep to filenames? - what about checkpoints then though - ask whether/which data to use (from which timestep) in case it already exists for the config, which i am attempting to run?
 
 ## structure
 - [x] config file
 - [x] automate file naming
-- [ ] cleanup the structure for slurm (separate folders, proper names for .out and .log files)
+- [x] cleanup the structure for slurm (separate folders, proper names for .out and .log files)
 
 ## bugs
 - [x] what is wrong with the reflective bottom boundary in sticky_top_refl_bottom animation? some particles are reflected to early.
@@ -57,7 +53,7 @@ recompile
 - [x] parallelize
 - [ ] postprocess the counts in c - write normalized histograms (except the checkpoints?)
 - [ ] use gnuplot to directly generate animations from the data files
-- [ ] ! do not store all the counts rows in the first place (not used for animations rendering anyway)
+- [x] ! do not store all the counts rows in the first place (not used for animations rendering anyway)
 
 ### animation
 - [x] initial rough check if the results make sense
