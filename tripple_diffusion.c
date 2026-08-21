@@ -73,16 +73,18 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     FILE *log_file;
 
     int i_mb_checkpoint = 0;
+    int continue_offset = 0;
 
     // see if we can load a preexisting checkpoint:
     if (check_for_existing_checkpoint(coordinates_filename)) {
-        if (load_checkpoint(coordinates_filename, A_coordinates, B_coordinates, C_coordinates,
-                            n_realizations, &i_mb_checkpoint)) {
+        if (load_checkpoint(coordinates_filename, A_coordinates, B_coordinates,
+                            C_coordinates, n_realizations, &i_mb_checkpoint)) {
             printf("Since the checkpoint exists, open files in append mode\n");
             file_found = 1;
             counts_file = fopen(counts_filename, "a");
             coordinates_file = fopen(coordinates_filename, "a");
             log_file = fopen(log_filename, "a");
+            continue_offset = 1;
             // fprintf(counts_file, "\n");
             // fprintf(coordinates_file, "\n");
             // fprintf(log_file, "\n");
@@ -132,7 +134,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     double histogram_time = 0.0;
 
     time_t start_iloop = time(NULL);
-    for (int i = i_mb_checkpoint; i < i_mb_checkpoint + n_t; i++) {
+    for (int i = i_mb_checkpoint + 1; i < i_mb_checkpoint + continue_offset + n_t; i++) {
         // first compute all histograms for the current timestep so that every
         // particle sort sees the same density
         time_t start_histogram = time(NULL);
