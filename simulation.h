@@ -25,6 +25,7 @@ typedef struct {
     int rs;
     int frame_timestep;
     char type[64];
+    char run[64];
 } DiffusionConfig;
 
 void fill_linear_axis(LinearAxis *axis, double start, double end, int n_points);

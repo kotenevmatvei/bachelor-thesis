@@ -6,6 +6,7 @@
 #include <gsl/gsl_rng.h>
 #include <omp.h>
 #include <stdio.h>
+#include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -13,6 +14,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     time_t start = time(NULL);
 
     char *type = config.type;
+    char *run = config.run;
     double delta_t = config.delta_t;
     // double start = config.start;
     double lower_bound = config.lower_bound;
@@ -46,15 +48,45 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     snprintf(config_name, 127, "dt%g_nt%d_nr%d_c%g_q%d_rs%d_bins%d_ft%d", delta_t, n_t,
              n_realizations, c, q, rs, n_bins, frame_timestep);
 
-    char counts_filename[256];
-    snprintf(counts_filename, 255, "../data/%s_counts_%s.txt", type, config_name);
-
-    char coordinates_filename[256];
-    snprintf(coordinates_filename, 255, "../data/%s_coordinates_%s.txt", type,
+    char counts_filename[1024];
+    snprintf(counts_filename, 1023, "../runs/%s/data/%s_counts_%s.txt", run, type,
              config_name);
 
-    char log_filename[256];
-    snprintf(log_filename, 255, "../data/%s_log_%s.txt", type, config_name);
+    char coordinates_filename[1024];
+    snprintf(coordinates_filename, 1023, "../runs/%s/data/%s_coordinates_%s.txt", run,
+             type, config_name);
+
+    char log_filename[1024];
+    snprintf(log_filename, 1023, "../runs/%s/data/%s_log_%s.txt", run, type, config_name);
+
+    // if the run directory doesnt exist yet, create it
+    char run_dirname[128];
+    snprintf(run_dirname, 127, "../runs/%s", run);
+    char data_dirname[256];
+    snprintf(data_dirname, 255, "../runs/%s/data", run);
+    char animations_dirname[256];
+    snprintf(animations_dirname, 255, "../runs/%s/animations", run);
+
+    struct stat statbuf;
+    if (stat(run_dirname, &statbuf) == 0) {
+        printf("Run directory already exists.\n");
+    } else {
+        if (mkdir(run_dirname, 0755) == 0) {
+            printf("Run directory created successfully.\n");
+        } else {
+            perror("Error creating run directory");
+        }
+        if (mkdir(data_dirname, 0755) == 0) {
+            printf("Data directory created successfully.\n");
+        } else {
+            perror("Error creating data directory");
+        }
+        if (mkdir(animations_dirname, 0755) == 0) {
+            printf("Animations directory created successfully.\n");
+        } else {
+            perror("Error creating animations directory");
+        }
+    }
 
     double *A_coordinates = malloc(n_realizations * sizeof(double));
     double *B_coordinates = malloc(n_realizations * sizeof(double));

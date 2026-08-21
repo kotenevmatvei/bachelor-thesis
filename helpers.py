@@ -16,7 +16,7 @@ def gen_hist_test_cases():
 
 def parse_config(config_name: str):
     config = {}
-    str_keys = ["type"]
+    str_keys = ["type", "run"]
     float_keys = ["delta_t", "start", "lower_bound", "upper_bound", "d", "c"]
     int_keys = ["n_t", "n_realizations", "n_bins", "q", "rs", "frame_timestep"]
     with open(f"configs/{config_name}.txt") as file:

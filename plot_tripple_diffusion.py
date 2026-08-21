@@ -40,7 +40,7 @@ def draw_trajectories():
     os.replace(temp_path, final_path)
 
 
-def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary):
+def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary, run):
     fig, ax = plt.subplots(figsize=(8, 6), dpi=100)
     ax.set_xlim(-1, 1)
     ax.set_ylim(0, 3)
@@ -57,17 +57,17 @@ def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary):
     ax.plot(centers, B_counts)
     ax.plot(centers, C_counts)
 
-    filename = f"tmp_frames/frame_{i:05d}.png"
+    filename = f"runs/{run}/tmp_frames/frame_{i:05d}.png"
     fig.savefig(filename)
     plt.close(fig)
 
 
 def ffmpeg_direct_hist(
-    type_, delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q, rs, frame_timestep
+    type_, run, delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q, rs, frame_timestep
 ):
     name = f"{type_}_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c:g}_q{q}_rs{rs}_bins{n_bins}_ft{frame_timestep}"
     print(f"name: {name}")
-    data_filename = f"data/{name}.txt"
+    data_filename = f"runs/{run}/data/{name}.txt"
 
     with open(data_filename, "r") as f:
         lines = f.readlines()
@@ -84,8 +84,8 @@ def ffmpeg_direct_hist(
 
     total_frames = len(A_counts_list)
 
-    shutil.rmtree("tmp_frames", ignore_errors=True)
-    os.makedirs("tmp_frames")
+    shutil.rmtree(f"runs/{run}/tmp_frames", ignore_errors=True)
+    os.makedirs(f"runs/{run}/tmp_frames")
 
     worker_func = functools.partial(
         render_frame,
@@ -93,6 +93,7 @@ def ffmpeg_direct_hist(
         B_counts_list=B_counts_list,
         C_counts_list=C_counts_list,
         boundary=BOUNDARY,
+        run=run
     )
 
     print(f"\nRendering {total_frames} frames in parallel...")
@@ -100,13 +101,13 @@ def ffmpeg_direct_hist(
         list(tqdm(executor.map(worker_func, range(total_frames)), total=total_frames))
 
     print("Stitching video...")
-    animation_filename = f"animations/{name}.mp4"
+    animation_filename = f"runs/{run}/animations/{name}.mp4"
     mp4_path = animation_filename
     ffmpeg_command = [
         "ffmpeg",
         "-y",
         "-i",
-        "tmp_frames/frame_%05d.png",
+        f"runs/{run}/tmp_frames/frame_%05d.png",
         "-c:v",
         "libx264",
         "-pix_fmt",
@@ -132,7 +133,8 @@ def main():
     config_name = args.config_name
     config = parse_config(config_name)
 
-    type = config["type"]
+    type_ = config["type"]
+    run = config["run"]
     delta_t = config["delta_t"]
     start = config["start"]
     upper_bound = config["upper_bound"]
@@ -151,7 +153,8 @@ def main():
     # draw_trajectories()
     # draw_histogram(style="bars")
     ffmpeg_direct_hist(
-        type_=type,
+        type_=type_,
+        run=run,
         delta_t=delta_t,
         n_t=n_t,
         n_bins=n_bins,

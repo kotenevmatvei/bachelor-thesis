@@ -34,6 +34,8 @@ DiffusionConfig read_config(const char *filename) {
 
         if (strcmp(key, "type") == 0) {
             strcpy(config.type, val_str);
+        } else if (strcmp(key, "run") == 0) {
+            strcpy(config.run, val_str);
         } else if (strcmp(key, "delta_t") == 0) {
             config.delta_t = atof(val_str);
         } else if (strcmp(key, "start") == 0) {
