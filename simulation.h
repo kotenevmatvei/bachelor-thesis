@@ -11,7 +11,7 @@ typedef struct {
     double *points;
 } LinearAxis;
 
-typedef struct{
+typedef struct {
     double delta_t;
     double start;
     double lower_bound;
@@ -73,7 +73,13 @@ void histogram(const double *array, int *counts, const int array_len, const int 
 void distribute_coordinates_uniformly(double *array, int array_len, double lower_bound,
                                       double upper_bound);
 
-double symmetric_tripple_diffuse(double coordinate, double D, double c, int q, double delta_t,
-                      double density1, double density2, gsl_rng *r);
+double symmetric_tripple_diffuse(double coordinate, double D, double c, int q,
+                                 double delta_t, double density1, double density2,
+                                 gsl_rng *r);
+
+int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates,
+                    double *C_coordinates, int n_realizations, int *i);
+
+int check_for_existing_checkpoint(char *coordinates_filename);
 
 #endif // SIMULATION_H

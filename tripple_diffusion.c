@@ -56,41 +56,64 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     char log_filename[256];
     snprintf(log_filename, 255, "../data/%s_log_%s.txt", type, config_name);
 
-    FILE *counts_file = fopen(counts_filename, "w");
-    FILE *coordinates_file = fopen(coordinates_filename, "w");
-    FILE *log_file = fopen(log_filename, "w");
-
     double *A_coordinates = malloc(n_realizations * sizeof(double));
     double *B_coordinates = malloc(n_realizations * sizeof(double));
     double *C_coordinates = malloc(n_realizations * sizeof(double));
-
-    distribute_coordinates_uniformly(A_coordinates, n_realizations, lower_bound,
-                                     upper_bound);
-    distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound,
-                                     upper_bound);
-    distribute_coordinates_uniformly(C_coordinates, n_realizations, lower_bound,
-                                     upper_bound);
-
     double *coordinates[3] = {A_coordinates, B_coordinates, C_coordinates};
 
     int *A_counts = malloc(n_bins * sizeof(int));
     int *B_counts = malloc(n_bins * sizeof(int));
     int *C_counts = malloc(n_bins * sizeof(int));
+    int *counts[3] = {A_counts, B_counts, C_counts};
+
+    int file_found = 0;
+
+    FILE *counts_file;
+    FILE *coordinates_file;
+    FILE *log_file;
+
+    int i_mb_checkpoint = 0;
+
+    // see if we can load a preexisting checkpoint:
+    if (check_for_existing_checkpoint(coordinates_filename)) {
+        if (load_checkpoint(coordinates_filename, A_coordinates, B_coordinates, C_coordinates,
+                            n_realizations, &i_mb_checkpoint)) {
+            printf("Since the checkpoint exists, open files in append mode\n");
+            file_found = 1;
+            counts_file = fopen(counts_filename, "a");
+            coordinates_file = fopen(coordinates_filename, "a");
+            log_file = fopen(log_filename, "a");
+            // fprintf(counts_file, "\n");
+            // fprintf(coordinates_file, "\n");
+            // fprintf(log_file, "\n");
+        }
+    }
+    if (file_found == 0) {
+        printf("file_found = 0, so we are creating new files to write now\n");
+        counts_file = fopen(counts_filename, "w");
+        coordinates_file = fopen(coordinates_filename, "w");
+        log_file = fopen(log_filename, "w");
+
+        distribute_coordinates_uniformly(A_coordinates, n_realizations, lower_bound,
+                                         upper_bound);
+        distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound,
+                                         upper_bound);
+        distribute_coordinates_uniformly(C_coordinates, n_realizations, lower_bound,
+                                         upper_bound);
+        // write the initial counts and coordinates
+        for (int k = 0; k <= 2; k++) {
+            fprintf(counts_file, "0 ");
+            write_int_array(counts_file, counts[k], n_bins, "");
+        }
+        for (int k = 0; k <= 2; k++) {
+            fprintf(coordinates_file, "0 ");
+            write_double_array(coordinates_file, coordinates[k], n_realizations, "");
+        }
+    }
 
     histogram(A_coordinates, A_counts, n_realizations, n_bins, lower_bound, upper_bound);
     histogram(B_coordinates, B_counts, n_realizations, n_bins, lower_bound, upper_bound);
     histogram(C_coordinates, C_counts, n_realizations, n_bins, lower_bound, upper_bound);
-    int *counts[3] = {A_counts, B_counts, C_counts};
-
-    // write the initial counts and coordinates
-    for (int k = 0; k <= 2; k++) {
-        fprintf(counts_file, "0 ");
-        write_int_array(counts_file, counts[k], n_bins, "");
-    }
-    for (int k = 0; k <= 2; k++) {
-        fprintf(coordinates_file, "0 ");
-        write_double_array(coordinates_file, coordinates[k], n_realizations, "");
-    }
 
     double range = upper_bound - lower_bound;
     double bin_size = range / n_bins;
@@ -109,9 +132,9 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     double histogram_time = 0.0;
 
     time_t start_iloop = time(NULL);
-    for (int i = 1; i < n_t; i++) {
-        // first compute all histograms for the current timestep so that every particle
-        // sort sees the same density
+    for (int i = i_mb_checkpoint; i < i_mb_checkpoint + n_t; i++) {
+        // first compute all histograms for the current timestep so that every
+        // particle sort sees the same density
         time_t start_histogram = time(NULL);
         for (int k = 0; k <= 2; k++) {
             histogram(coordinates[k], counts[k], n_realizations, n_bins, lower_bound,
@@ -119,7 +142,6 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         }
         time_t end_histogram = time(NULL);
         histogram_time += end_histogram - start_histogram;
-
 
         // increment time for both particla sorts in parallel
         for (int k = 0; k <= 2; k++) {

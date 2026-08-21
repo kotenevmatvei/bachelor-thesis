@@ -1,7 +1,9 @@
 #include <gsl/gsl_randist.h>
 #include <gsl/gsl_rng.h>
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "simulation.h"
 
@@ -254,11 +256,14 @@ void distribute_coordinates_uniformly(double *array, int array_len, double lower
 }
 
 int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates,
-                    int n_realizations, int *i) {
+                    double *C_coordinates, int n_realizations, int *i) {
 
+    printf("Loading the found checkpoint!\n");
     FILE *file = fopen(filename, "r");
-    if (!file)
+    if (!file) {
+        printf("Couldn't fine the file %s :(\n", filename);
         return 0;
+    }
 
     if (fscanf(file, "%d ", i) != 1)
         printf("Could not read i...\n");
@@ -275,5 +280,25 @@ int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates
             return 0;
         }
     }
+
+    for (int j = 0; j < n_realizations; j++) {
+        if (fscanf(file, "%lf", &C_coordinates[j]) != 1) {
+            printf("Error reading B_coordinate %d", j);
+            return 0;
+        }
+    }
     return 1;
+}
+
+int check_for_existing_checkpoint(char *coordinates_filename) {
+    printf("Here is the coordinates_filename we are looking for: %s\n",
+           coordinates_filename);
+
+    if (access(coordinates_filename, F_OK) == 0) {
+        printf("Found it!\n");
+        return 1;
+    } else {
+        printf("Couldn't find it :(\n");
+        return 0;
+    }
 }

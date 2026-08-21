@@ -1,5 +1,10 @@
 # TODOs
 
+## runs
+- [ ] longer runs for q=2, c=5.4,6 (pick up last checkpoints?) - those should demix!
+- [ ] q=3, c=5 periodic boundaries (to make sure those demix - just to see what it looks like)
+- [ ] cyclic dependency same parameters - see what happens!
+
 ## content
 - [x] no need to write bin_bounds when lower and upper bounds are fixed
     - [x] simplify plotting correspondingly: no need to calculate the centers every time

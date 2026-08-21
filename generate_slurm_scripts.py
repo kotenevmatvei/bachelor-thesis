@@ -5,12 +5,33 @@ print(f"q3: {len(q3_c)}, q2: {len(q2_c)}")
 
 for c in q3_c:
     c_str = str(c)
-    content = f"#!/bin/bash\n#SBATCH --nodes=1\n#SBATCH --ntasks=1\n#SBATCH --cpus-per-task=4\n#SBATCH --time=200:00:00\n#SBATCH--output=slurm/R-%x.%j.out\n\n#SBATCH--error=slurm/R-%x.%j.err\nexport OMP_NUM_THREADS=4\nexport OMP_PLACES=cores\n\nexport OMP_PROC_BIND=spread\nbash server_run.sh q3_c{c_str}\n"
+    content = (
+        "#!/bin/bash\n"
+        "#SBATCH --nodes=1\n"
+        "#SBATCH --ntasks=1\n"
+        "#SBATCH --cpus-per-task=4\n"
+        "#SBATCH --time=200:00:00\n"
+        "#SBATCH--output=slurm/R-%x.%j.out\n"
+        "#SBATCH--error=slurm/R-%x.%j.err\n\n"
+
+        "bash server_run.sh q3_c{c_str}\n"
+    )
     with open(f"slurm/q3_c{c}.slurm", "w") as f:
         f.write(content)
 
 for c in q2_c:
     c_str = str(c)
-    content = f"#!/bin/bash\n#SBATCH --nodes=1\n#SBATCH --ntasks=1\n#SBATCH --cpus-per-task=4\n#SBATCH --time=200:00:00\n#SBATCH--output=slurm/R-%x.%j.out\n\n#SBATCH--error=slurm/R-%x.%j.err\nexport OMP_NUM_THREADS=4\nexport OMP_PLACES=cores\n\nexport OMP_PROC_BIND=spread\nbash server_run.sh q2_c{c_str}\n"
+    content = f"""
+#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --time=200:00:00
+#SBATCH--output=slurm/R-%x.%j.out
+#SBATCH--error=slurm/R-%x.%j.err
+
+bash server_run.sh q2_c{c_str}
+"""
     with open(f"slurm/q2_c{c}.slurm", "w") as f:
         f.write(content)
