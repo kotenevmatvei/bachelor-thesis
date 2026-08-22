@@ -36,6 +36,12 @@ DiffusionConfig read_config(const char *filename) {
             strcpy(config.type, val_str);
         } else if (strcmp(key, "run") == 0) {
             strcpy(config.run, val_str);
+        } else if (strcmp(key, "dependency") == 0) {
+            strcpy(config.dependency, val_str);
+        } else if (strcmp(key, "boundary") == 0) {
+            strcpy(config.boundary, val_str);
+        } else if (strcmp(key, "init_density") == 0) {
+            strcpy(config.init_density, val_str);
         } else if (strcmp(key, "delta_t") == 0) {
             config.delta_t = atof(val_str);
         } else if (strcmp(key, "start") == 0) {
@@ -60,18 +66,14 @@ DiffusionConfig read_config(const char *filename) {
             config.q = atoi(val_str);
         } else if (strcmp(key, "frame_timestep") == 0) {
             config.frame_timestep = atoi(val_str);
+
+        } else if (strcmp(key, "comments:") == 0) { // from here starts the commensts section
+            break;
         } else {
             printf("Warning: Unknown config key '%s' ignored.\n", key);
         }
     }
-
-    if (!feof(file)) {
-        fprintf(stderr, "FATAL ERROR: Config file formatting is broken or contains "
-                        "non-numeric values.\n");
-        exit(EXIT_FAILURE);
-    }
-
     fclose(file);
-    return config;
 
+    return config;
 }

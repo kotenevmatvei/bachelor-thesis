@@ -16,12 +16,14 @@ def gen_hist_test_cases():
 
 def parse_config(config_name: str):
     config = {}
-    str_keys = ["type", "run"]
+    str_keys = ["type", "run", "dependency", "boundary", "init_density"]
     float_keys = ["delta_t", "start", "lower_bound", "upper_bound", "d", "c"]
     int_keys = ["n_t", "n_realizations", "n_bins", "q", "rs", "frame_timestep"]
     with open(f"configs/{config_name}.txt") as file:
         lines = file.readlines()
     for line in lines:
+        if line == "\n": # from here starts the comments section
+            break
         key, value = line.split(" ")
         if key in float_keys:
             config[key] = float(value)

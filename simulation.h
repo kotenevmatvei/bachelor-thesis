@@ -26,6 +26,9 @@ typedef struct {
     int frame_timestep;
     char type[64];
     char run[64];
+    char dependency[64];
+    char boundary[64];
+    char init_density[64];
 } DiffusionConfig;
 
 void fill_linear_axis(LinearAxis *axis, double start, double end, int n_points);
@@ -65,8 +68,8 @@ double periodic_boundary(double coordinate, double lower_bound, double upper_bou
 double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
                                        double upper_bound);
 
-double double_diffuse(double coordinate, double D, double c, int q, double delta_t,
-                      double density, gsl_rng *r);
+double double_power_diffuse(double coordinate, double D, double c, int q, double delta_t,
+                            double density, gsl_rng *r);
 
 void histogram(const double *array, int *counts, const int array_len, const int n_bins,
                const double lower_bound, const double upper_bound);
@@ -74,9 +77,18 @@ void histogram(const double *array, int *counts, const int array_len, const int 
 void distribute_coordinates_uniformly(double *array, int array_len, double lower_bound,
                                       double upper_bound);
 
-double symmetric_tripple_diffuse(double coordinate, double D, double c, int q,
-                                 double delta_t, double density1, double density2,
-                                 gsl_rng *r);
+void distribute_coordinates_in_one_third(double *array, int array_len, double lower_bound,
+                                         double upper_bound, int n_third);
+
+double symmetric_tripple_power_diffuse(double coordinate, double D, double c, int q,
+                                       double delta_t, double density1, double density2,
+                                       gsl_rng *r);
+
+double double_logistic_diffuse(double coordinate, double D, double delta_t,
+                               double density, gsl_rng *r);
+
+double symmetric_tripple_logistic_diffuse(double coordinate, double D, double delta_t,
+                                          double density1, double density2, gsl_rng *r);
 
 int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates,
                     double *C_coordinates, int n_realizations, int *i);

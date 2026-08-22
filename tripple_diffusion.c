@@ -6,6 +6,8 @@
 #include <gsl/gsl_rng.h>
 #include <omp.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <time.h>
 #include <unistd.h>
@@ -15,6 +17,9 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     char *type = config.type;
     char *run = config.run;
+    char *dependency = config.dependency;
+    char *boundary = config.boundary;
+    char *init_density = config.init_density;
     double delta_t = config.delta_t;
     // double start = config.start;
     double lower_bound = config.lower_bound;
@@ -27,6 +32,44 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     int q = config.q;
     int rs = config.rs;
     int frame_timestep = config.frame_timestep;
+
+    // set dependency index for faster branching later in the main loop
+    int dependency_id = -1;
+    if (strcmp(dependency, "symmetric") == 0)
+        dependency_id = 1;
+    else if (strcmp(dependency, "cyclic") == 0)
+        dependency_id = 0;
+    else {
+        printf("Unknown dependency in config: %s, valid options are 'symmetric' and "
+               "'cyclic'\n",
+               dependency);
+        exit(EXIT_FAILURE);
+    }
+
+    // same for boundary
+    int boundary_id = -1;
+    if (strcmp(boundary, "reflecting") == 0)
+        boundary_id = 1;
+    else if (strcmp(boundary, "periodic") == 0)
+        boundary_id = 0;
+    else {
+        printf("Unknown boundary in config: %s, valid options are 'reflecting' and "
+               "'periodic'\n",
+               boundary);
+        exit(EXIT_FAILURE);
+    }
+
+    // same for type (power or logistic)
+    int type_id = -1;
+    if (strcmp(type, "power") == 0)
+        type_id = 1;
+    else if (strcmp(type, "logistic") == 0)
+        type_id = 0;
+    else {
+        printf("Unknown type in config: %s, valid options are 'power' and 'logistic'\n",
+               type);
+        exit(EXIT_FAILURE);
+    }
 
     printf("\nframe_timestep = %d\n", frame_timestep);
 
@@ -44,20 +87,21 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     }
 
     // construct the file name
-    char config_name[128];
-    snprintf(config_name, 127, "dt%g_nt%d_nr%d_c%g_q%d_rs%d_bins%d_ft%d", delta_t, n_t,
-             n_realizations, c, q, rs, n_bins, frame_timestep);
+    char config_name[256];
+    snprintf(config_name, 255, "%s_%s_q%d_c%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d",
+             dependency, boundary, q, c, delta_t, n_t, n_realizations, rs, n_bins,
+             frame_timestep);
 
     char counts_filename[1024];
-    snprintf(counts_filename, 1023, "../runs/%s/data/%s_counts_%s.txt", run, type,
+    snprintf(counts_filename, 1023, "../runs/%s/data/counts_%s_%s.txt", run, type,
              config_name);
 
     char coordinates_filename[1024];
-    snprintf(coordinates_filename, 1023, "../runs/%s/data/%s_coordinates_%s.txt", run,
+    snprintf(coordinates_filename, 1023, "../runs/%s/data/coordinates_%s_%s.txt", run,
              type, config_name);
 
     char log_filename[1024];
-    snprintf(log_filename, 1023, "../runs/%s/data/%s_log_%s.txt", run, type, config_name);
+    snprintf(log_filename, 1023, "../runs/%s/data/log_%s_%s.txt", run, type, config_name);
 
     // if the run directory doesnt exist yet, create it
     char run_dirname[128];
@@ -72,17 +116,17 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         printf("Run directory already exists.\n");
     } else {
         if (mkdir(run_dirname, 0755) == 0) {
-            printf("Run directory created successfully.\n");
+            printf("Run directory created successfully: %s\n", run_dirname);
         } else {
             perror("Error creating run directory");
         }
         if (mkdir(data_dirname, 0755) == 0) {
-            printf("Data directory created successfully.\n");
+            printf("Data directory created successfully: %s\n", data_dirname);
         } else {
             perror("Error creating data directory");
         }
         if (mkdir(animations_dirname, 0755) == 0) {
-            printf("Animations directory created successfully.\n");
+            printf("Animations directory created successfully: %s\n", animations_dirname);
         } else {
             perror("Error creating animations directory");
         }
@@ -127,13 +171,27 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         counts_file = fopen(counts_filename, "w");
         coordinates_file = fopen(coordinates_filename, "w");
         log_file = fopen(log_filename, "w");
+        if (strcmp(init_density, "uniform") == 0) {
+            distribute_coordinates_uniformly(A_coordinates, n_realizations, lower_bound,
+                                             upper_bound);
+            distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound,
+                                             upper_bound);
+            distribute_coordinates_uniformly(C_coordinates, n_realizations, lower_bound,
+                                             upper_bound);
+        } else if (strcmp(init_density, "demixed") == 0) {
+            distribute_coordinates_in_one_third(A_coordinates, n_realizations,
+                                                lower_bound, upper_bound, 0);
+            distribute_coordinates_in_one_third(B_coordinates, n_realizations,
+                                                lower_bound, upper_bound, 1);
+            distribute_coordinates_in_one_third(C_coordinates, n_realizations,
+                                                lower_bound, upper_bound, 2);
+        } else {
+            printf("Invalid init_density in config: %s, valid options are 'uniform' and "
+                   "'demixed'\n",
+                   init_density);
+            exit(EXIT_FAILURE);
+        }
 
-        distribute_coordinates_uniformly(A_coordinates, n_realizations, lower_bound,
-                                         upper_bound);
-        distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound,
-                                         upper_bound);
-        distribute_coordinates_uniformly(C_coordinates, n_realizations, lower_bound,
-                                         upper_bound);
         // write the initial counts and coordinates
         for (int k = 0; k <= 2; k++) {
             fprintf(counts_file, "0 ");
@@ -155,8 +213,13 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // key is the indey of in the array, values are the densities on which the
     // density of the <key>-particle-sort depends) int
-    // cyclic_dependencies_map[3] = {1, 2, 0};
+
     int symmetric_dependencies_map[3][2] = {{1, 2}, {2, 0}, {0, 1}};
+    int cyclic_dependencies_map[3] = {2, 0, 1};
+
+    printf("Compiler chill, i am using both maps...\n");
+    printf("sdm[0][0] = %d\n", symmetric_dependencies_map[0][0]);
+    printf("cdm[0] = %d\n", cyclic_dependencies_map[0]);
 
     int n_bins_within_rs = 1 + 2 * rs;
 
@@ -179,7 +242,11 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
         // increment time for both particla sorts in parallel
         for (int k = 0; k <= 2; k++) {
-            int *dependency_ind = symmetric_dependencies_map[k];
+            int *dependency_ind;
+            if (dependency_id)
+                dependency_ind = symmetric_dependencies_map[k];
+            else
+                dependency_ind = &cyclic_dependencies_map[k];
 
 #pragma omp parallel for
             for (int j = 0; j < n_realizations; j++) {
@@ -192,43 +259,78 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                     bin = n_bins - 1;
                 if (bin < 0)
                     bin = 0;
-                // ------ this is for double diffusion -------
-                // get density of the OTHER particle sort in this bin
-                // double density =
-                //     (double)counts[dependency_ind][bin] / (n_realizations *
-                //     delta_x);
 
-                // double coordinate =
-                //     double_diffuse(coordinates[k][j], d, c, q, delta_t,
-                //     density, local_r);
+                double coordinate;
 
-                //-----------this is for tripple diffusion ---------
-                double density1 = (double)counts[dependency_ind[0]][bin] /
-                                  (n_realizations * delta_x * n_bins_within_rs);
-                double density2 = (double)counts[dependency_ind[1]][bin] /
-                                  (n_realizations * delta_x * n_bins_within_rs);
+                if (dependency_id) {
+                    // ----------this is for tripple symmetric diffusion ---------
+                    double density1 = (double)counts[dependency_ind[0]][bin] /
+                                      (n_realizations * delta_x);
+                    double density2 = (double)counts[dependency_ind[1]][bin] /
+                                      (n_realizations * delta_x);
 
-                // accumulate the densities from neighboring bins in non-local case
-                // (rs >= 1)
-                for (int offset = 1; offset <= rs; offset++) {
-                    if (bin >= rs) {
-                        density1 += (double)counts[dependency_ind[0]][bin - offset] /
-                                    (n_realizations * delta_x);
-                        density2 += (double)counts[dependency_ind[1]][bin - offset] /
-                                    (n_realizations * delta_x);
+                    // accumulate the densities from neighboring bins in non-local case
+                    // (rs >= 1)
+                    for (int offset = 1; offset <= rs; offset++) {
+                        if (bin >= offset) {
+                            density1 += (double)counts[dependency_ind[0]][bin - offset] /
+                                        (n_realizations * delta_x);
+                            density2 += (double)counts[dependency_ind[1]][bin - offset] /
+                                        (n_realizations * delta_x);
+                        }
+                        if (bin <= n_bins - offset - 1) {
+                            density1 += (double)counts[dependency_ind[0]][bin + offset] /
+                                        (n_realizations * delta_x);
+                            density2 += (double)counts[dependency_ind[1]][bin + offset] /
+                                        (n_realizations * delta_x);
+                        }
                     }
-                    if (bin <= n_bins - rs - 1) {
-                        density1 += (double)counts[dependency_ind[0]][bin + offset] /
-                                    (n_realizations * delta_x);
-                        density2 += (double)counts[dependency_ind[1]][bin + offset] /
-                                    (n_realizations * delta_x);
+                    // normalize to the number of bins within the sensing radius
+                    density1 /= n_bins_within_rs;
+                    density2 /= n_bins_within_rs;
+
+                    if (type_id)
+                        coordinate = symmetric_tripple_power_diffuse(
+                            coordinates[k][j], d, c, q, delta_t, density1, density2,
+                            local_r);
+                    else
+                        coordinate = symmetric_tripple_logistic_diffuse(
+                            coordinates[k][j], d, delta_t, density1, density2, local_r);
+                } else {
+                    // -------------- this is for tripple cyclic diffusion ---------------
+                    double density =
+                        (double)counts[*dependency_ind][bin] / (n_realizations * delta_x);
+
+                    // accumulate the densities from neighboring bins in non-local case
+                    // (rs >= 1)
+                    for (int offset = 1; offset <= rs; offset++) {
+                        if (bin >= offset) {
+                            density += (double)counts[*dependency_ind][bin - offset] /
+                                       (n_realizations * delta_x);
+                        }
+                        if (bin <= n_bins - offset - 1) {
+                            density += (double)counts[*dependency_ind][bin + offset] /
+                                       (n_realizations * delta_x);
+                        }
                     }
+                    density /= n_bins_within_rs;
+                    if (type_id)
+                        coordinate = double_power_diffuse(coordinates[k][j], d, c, q,
+                                                          delta_t, density, local_r);
+                    else
+                        coordinate = double_logistic_diffuse(coordinates[k][j], d,
+                                                             delta_t, density, local_r);
                 }
 
-                double coordinate = symmetric_tripple_diffuse(
-                    coordinates[k][j], d, c, q, delta_t, density1, density2, local_r);
-
-                coordinate = reflecting_boundary(coordinate, lower_bound, upper_bound);
+                if (boundary_id)
+                    coordinate =
+                        reflecting_boundary(coordinate, lower_bound, upper_bound);
+                else if (boundary_id == 0)
+                    coordinate = periodic_boundary(coordinate, lower_bound, upper_bound);
+                else {
+                    printf("Uknown boundary_id: %d", boundary_id);
+                    exit(EXIT_FAILURE);
+                }
 
                 coordinates[k][j] = coordinate;
             }

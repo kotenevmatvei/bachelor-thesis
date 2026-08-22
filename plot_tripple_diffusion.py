@@ -63,9 +63,9 @@ def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary, run):
 
 
 def ffmpeg_direct_hist(
-    type_, run, delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q, rs, frame_timestep
+    type_, dependency, run, boundary, delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q, rs, frame_timestep
 ):
-    name = f"{type_}_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c:g}_q{q}_rs{rs}_bins{n_bins}_ft{frame_timestep}"
+    name = f"counts_{type_}_{dependency}_{boundary}_q{q}_c{c:g}_dt{delta_t}_nt{n_t}_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{frame_timestep}"
     print(f"name: {name}")
     data_filename = f"runs/{run}/data/{name}.txt"
 
@@ -83,9 +83,9 @@ def ffmpeg_direct_hist(
     n_frames_in_run = int(n_t/frame_timestep)
     suffix = str(int(len(A_counts_list) / n_frames_in_run))
 
-    A_counts_list = A_counts_list[-n_frames_in_run:]
-    B_counts_list = B_counts_list[-n_frames_in_run:]
-    C_counts_list = C_counts_list[-n_frames_in_run:]
+    A_counts_list = A_counts_list[-n_frames_in_run::1]
+    B_counts_list = B_counts_list[-n_frames_in_run::1]
+    C_counts_list = C_counts_list[-n_frames_in_run::1]
 
     print("A_counts_list length: ", len(A_counts_list))
 
@@ -161,6 +161,8 @@ def main():
     q = config["q"]
     rs = config["rs"]
     frame_timestep = config["frame_timestep"]
+    dependency = config["dependency"]
+    boundary = config["boundary"]
     print("Config: ")
     print(config)
 
@@ -168,7 +170,9 @@ def main():
     # draw_histogram(style="bars")
     ffmpeg_direct_hist(
         type_=type_,
+        dependency=dependency,
         run=run,
+        boundary=boundary,
         delta_t=delta_t,
         n_t=n_t,
         n_bins=n_bins,

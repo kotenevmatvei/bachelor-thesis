@@ -224,8 +224,8 @@ double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
     return coordinate;
 }
 
-double double_diffuse(double coordinate, double D, double c, int q, double delta_t,
-                      double density, gsl_rng *r) {
+double double_power_diffuse(double coordinate, double D, double c, int q, double delta_t,
+                            double density, gsl_rng *r) {
 
     double eta = gsl_ran_gaussian(r, 1);
     double new_coordinate =
@@ -233,9 +233,9 @@ double double_diffuse(double coordinate, double D, double c, int q, double delta
     return new_coordinate;
 }
 
-double symmetric_tripple_diffuse(double coordinate, double D, double c, int q,
-                                 double delta_t, double density1, double density2,
-                                 gsl_rng *r) {
+double symmetric_tripple_power_diffuse(double coordinate, double D, double c, int q,
+                                       double delta_t, double density1, double density2,
+                                       gsl_rng *r) {
 
     const double eta = gsl_ran_gaussian(r, 1);
     const double competitor_density = density1 + density2;
@@ -247,12 +247,43 @@ double symmetric_tripple_diffuse(double coordinate, double D, double c, int q,
     return new_coordinate;
 }
 
+double double_logistic_diffuse(double coordinate, double D, double delta_t,
+                               double density, gsl_rng *r) {
+    const double p_0 = 0.37;
+    const double alpha = 8.0;
+    const double eta = gsl_ran_gaussian(r, 1);
+    double new_coordinate =
+        coordinate + eta * sqrt(2 * D * delta_t / (1 + exp(-alpha * (density - p_0))));
+    return new_coordinate;
+}
+
+double symmetric_tripple_logistic_diffuse(const double coordinate, const double D, const double delta_t,
+                                          const double density1, const double density2, gsl_rng *r) {
+    const double p_0 = 0;
+    const double alpha = 30;
+    const double eta = gsl_ran_gaussian(r, 1);
+    const double competitor_density = density1 + density2;
+    const double D_eff = D / (1 + exp(-alpha * (competitor_density - p_0)));
+    const double new_coordinate = coordinate + eta * sqrt(2 * D_eff * delta_t);
+    return new_coordinate;
+}
+
 void distribute_coordinates_uniformly(double *array, int array_len, double lower_bound,
                                       double upper_bound) {
     double range = upper_bound - lower_bound;
     double step = range / array_len;
     for (int i = 0; i < array_len; i++)
         array[i] = lower_bound + i * step;
+}
+
+void distribute_coordinates_in_one_third(double *array, int array_len, double lower_bound,
+                                         double upper_bound, int n_third) {
+    const double range = upper_bound - lower_bound;
+    const double third_len = range / 3;
+    const double step = third_len / array_len;
+    for (int i = 0; i < array_len; ++i) {
+        array[i] = lower_bound + n_third * third_len + i * step;
+    }
 }
 
 int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates,

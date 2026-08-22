@@ -12,7 +12,7 @@
 - [x] normalize density: divide by the bin_width
 - [x] start in uniform distribution
 - [x] checkpoints: save the state (indices + coordinates) after every thousand timesteps
-- [x] ! check before running the simulation if data for this config already exists and continue
+- [x] check before running the simulation if data for this config already exists and continue
 from the last computed state if so
 - [x] time the simulation (write in log?)
 - [x] implement symmetric dependency for tripple diffusion
@@ -21,19 +21,19 @@ from the last computed state if so
 - [x] write the number of bins in the filename
 - [x] write sensing radius (rs) to the filename
 - [x] transfer data (or animation) to local machine via ssh?!
-- [ ] ! generalize the simulation (executable) and move more input to the config (particle dependencies, 
+- [x] generalize the simulation (executable) and move more input to the config (particle dependencies, 
 type of simulation, quadratic/logistic - for the future) Minimize the need to adjust the source code and
 recompile
     - [x] type of simulation
-    - [ ] particle dependency
-    - [ ] quadratic / logistic - maybe?
-- [x] ! implement finite sensing radius (non-local case) and setup the run
-- [x] ! fix normalization - no fix needed, just rescale y-axis, the densities can be greater than 1
-- [x] ! add frame timestep to config and filename
-- [x] ! pickup checkpoint (preexisting animation) in visualisation instead of regenerating the entire thing
-- [x] ! save data/animations to run folders
+    - [x] particle dependency
+    - [x] quadratic / logistic - maybe?
+- [x] implement finite sensing radius (non-local case) and setup the run
+- [x] fix normalization - no fix needed, just rescale y-axis, the densities can be greater than 1
+- [x] add frame timestep to config and filename
+- [x] pickup checkpoint (preexisting animation) in visualisation instead of regenerating the entire thing
+- [x] save data/animations to run folders
 
-- [ ] ! implement different initial densities
+- [x] implement different initial densities
 
 ## structure
 - [x] config file
@@ -44,17 +44,18 @@ recompile
 - [x] what is wrong with the reflective bottom boundary in sticky_top_refl_bottom animation? some particles are reflected to early.
 - [x] why is the video file not fully written?
 - [x] fix custom config cli argument on the server!
+- [x] fix sensing radius asymmetry
 
 ## speedup / storage efficiency
 ### algorithms and data structures
 - [x] rewrite histogram
 - [x] calculate histogram on the fly
-- [~] cache intermediate results (histograms) and the write to file in chunks --> os already does this for me
+- [~] cache intermediate results (histograms) and the write to file in chunks --> os already does this for me, no microoptimization needed
 - [x] do not close and reopen the file every time but keep an open pointer until throughout the loop
 - [x] parallelize
-- [ ] postprocess the counts in c - write normalized histograms (except the checkpoints?)
-- [ ] use gnuplot to directly generate animations from the data files
-- [x] ! do not store all the counts rows in the first place (not used for animations rendering anyway)
+- [?] postprocess the counts in c - write normalized histograms (except the checkpoints?)
+- [?] use gnuplot to directly generate animations from the data files
+- [x] do not store all the counts rows in the first place (not used for animations rendering anyway)
 
 ### animation
 - [x] initial rough check if the results make sense

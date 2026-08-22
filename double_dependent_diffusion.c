@@ -94,7 +94,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 double density = (double)counts[1 - k][bin] / (n_realizations * delta_x);
 
                 double coordinate =
-                    double_diffuse(coordinates[k][j], d, c, q, delta_t, density, local_r);
+                    double_power_diffuse(coordinates[k][j], d, c, q, delta_t, density, local_r);
 
                 coordinate = reflecting_boundary(coordinate, lower_bound, upper_bound);
 
