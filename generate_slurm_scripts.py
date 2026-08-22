@@ -39,7 +39,7 @@ run_name = "alpha7-8_p0_sweep_symmetric_init-demixed"
 
 os.makedirs(f"slurm/{run_name}", exist_ok=True)
 
-for alpha in [2, 3]:
+for alpha in [7, 8]:
     for p_0 in p_0_list:
         content = f"""#!/bin/bash
 
