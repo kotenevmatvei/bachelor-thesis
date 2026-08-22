@@ -1,4 +1,6 @@
 #!/bin/bash
-for i in $( ls slurm); do
-    sbatch slurm/$i
+for run in $(ls slurm); do
+    for config in $(ls slurm/$run); do
+        echo slurm/$run/$config
+    done
 done
