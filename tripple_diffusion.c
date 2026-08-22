@@ -423,11 +423,11 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 }
 
 int main(int argc, char *argv[]) {
-    char config_path[64];
+    char config_path[128];
     if (argc == 1) {
-        snprintf(config_path, 63, "../%s", "config.txt");
+        snprintf(config_path, 127, "../%s", "config.txt");
     } else {
-        snprintf(config_path, 63, "../%s", argv[1]);
+        snprintf(config_path, 127, "../%s", argv[1]);
     }
     DiffusionConfig config = read_config(config_path);
     diffuse_and_save_histograms(config);

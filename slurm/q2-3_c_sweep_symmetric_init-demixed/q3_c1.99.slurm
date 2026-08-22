@@ -8,4 +8,4 @@
 #SBATCH--output=slurm/q2-3_c_sweep_symmetric_init-demixed/R-%x.%j.out
 #SBATCH--error=slurm/q2-3_c_sweep_symmetric_init-demixed/R-%x.%j.err
 
-bash server_run.sh configs/q2-3_c_sweep_symmetric_init-demixed/q3_c1.99.txt
+bash server_run.sh "configs/q2-3_c_sweep_symmetric_init-demixed/q3_c1.99.txt"
