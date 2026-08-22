@@ -10,7 +10,7 @@ print(f"q3: {len(q3_c)}, q2: {len(q2_c)}")
 run_name = "q2-3_c_sweep_symmetric_init-uniform"
 
 power_run_names = [
-    "q2-3_c_sweep_symmetric_init-uniform",
+    # "q2-3_c_sweep_symmetric_init-uniform",  # already run
     "q2-3_c_sweep_symmetric_init-demixed",
     "q2-3_c_sweep_cyclic_init-uniform",
 ]
