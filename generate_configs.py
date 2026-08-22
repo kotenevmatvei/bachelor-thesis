@@ -9,12 +9,19 @@ print(f"q3: {len(q3_c)}, q2: {len(q2_c)}")
 
 run_name = "q2-3_c_sweep_symmetric_init-uniform"
 
-os.makedirs(f"configs/{run_name}", exist_ok=True)
+power_run_names = [
+    "q2-3_c_sweep_symmetric_init-uniform",
+    "q2-3_c_sweep_symmetric_init-demixed",
+    "q2-3_c_sweep_cyclic_init-uniform",
+]
 
-for q_val in [2, 3]:
-    c_list = q2_c if q_val == 2 else q3_c
-    for c_val in c_list:
-        content = f"""type s3d_correct
+for run_name in power_run_names:
+    os.makedirs(f"configs/{run_name}", exist_ok=True)
+
+    for q_val in [2, 3]:
+        c_list = q2_c if q_val == 2 else q3_c
+        for c_val in c_list:
+            content = f"""type s3d_correct
 run {run_name}
 dependency symmetric
 init_density uniform
@@ -33,69 +40,8 @@ frame_timestep 10000
 alpha 8
 p_0 0.35
 """
-        with open(f"configs/{run_name}/q{q_val}_c{c_val}.txt", "w") as f:
-            f.write(content)
-
-
-
-run_name = "q2-3_c_sweep_symmetric_init-demixed"
-
-os.makedirs(f"configs/{run_name}", exist_ok=True)
-
-for q_val in [2, 3]:
-    c_list = q2_c if q_val == 2 else q3_c
-    for c_val in c_list:
-        content = f"""type s3d_correct
-run {run_name}
-dependency symmetric
-init_density demixed
-delta_t 0.0001
-start 0
-lower_bound -1
-upper_bound 1
-d 1
-n_t 100000000
-n_realizations 10000
-n_bins 100
-c {c_val}
-q {q_val}
-rs 0
-frame_timestep 10000
-alpha 8
-p_0 0.35
-"""
-        with open(f"configs/{run_name}/q{q_val}_c{c_val}.txt", "w") as f:
-            f.write(content)
-
-
-run_name = "q2-3_c_sweep_cyclic_init-demixed"
-
-os.makedirs(f"configs/{run_name}", exist_ok=True)
-
-for q_val in [2, 3]:
-    c_list = q2_c if q_val == 2 else q3_c
-    for c_val in c_list:
-        content = f"""type s3d_correct
-run {run_name}
-dependency cyclic
-init_density demixed
-delta_t 0.0001
-start 0
-lower_bound -1
-upper_bound 1
-d 1
-n_t 100000000
-n_realizations 10000
-n_bins 100
-c {c_val}
-q {q_val}
-rs 0
-frame_timestep 10000
-alpha 8
-p_0 0.35
-"""
-        with open(f"configs/{run_name}/q{q_val}_c{c_val}.txt", "w") as f:
-            f.write(content)
+            with open(f"configs/{run_name}/q{q_val}_c{c_val}.txt", "w") as f:
+                f.write(content)
 
 
 run_name = "alpha7-8_p0_sweep_symmetric_init-demixed"

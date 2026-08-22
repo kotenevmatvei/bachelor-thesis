@@ -1,7 +1,7 @@
 type s3d_correct
 run q2-3_c_sweep_symmetric_init-demixed
 dependency symmetric
-init_density demixed
+init_density uniform
 delta_t 0.0001
 start 0
 lower_bound -1
