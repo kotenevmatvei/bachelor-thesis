@@ -50,6 +50,8 @@ DiffusionConfig read_config(const char *filename) {
             config.lower_bound = atof(val_str);
         } else if (strcmp(key, "upper_bound") == 0) {
             config.upper_bound = atof(val_str);
+        } else if (strcmp(key, "p_0") == 0) {
+            config.p_0 = atof(val_str);
         } else if (strcmp(key, "n_t") == 0) {
             config.n_t = atoi(val_str);
         } else if (strcmp(key, "n_realizations") == 0) {
@@ -58,6 +60,8 @@ DiffusionConfig read_config(const char *filename) {
             config.d = atof(val_str);
         } else if (strcmp(key, "n_bins") == 0) {
             config.n_bins = atoi(val_str);
+        } else if (strcmp(key, "alpha") == 0) {
+            config.alpha = atoi(val_str);
         } else if (strcmp(key, "rs") == 0) {
             config.rs = atoi(val_str);
         } else if (strcmp(key, "c") == 0) {

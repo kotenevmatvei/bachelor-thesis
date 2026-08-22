@@ -1,0 +1,5 @@
+type: logistic or power
+dependency: symmetric or cyclic
+boundary: reflecting or periodic
+init_density: uniform or demixed
+

@@ -1,12 +1,13 @@
 import numpy as np
 
+
 def gen_hist_test_cases():
     test_cases = [
         ([1.2, 0, -23, 12, 245], 3),
         ([1.44], 3),
         ([1.22, 333, 145, 143, 142, 144, -22], 1),
         ([1.22, 333, 145, 143, 142, 144, -22], 2),
-        ([1.22, 333, 145, 143, 142, 144, -22], 9)
+        ([1.22, 333, 145, 143, 142, 144, -22], 9),
     ]
 
     for test_case in test_cases:
@@ -14,15 +15,25 @@ def gen_hist_test_cases():
         print(counts)
         print(bins)
 
+
 def parse_config(config_name: str):
     config = {}
     str_keys = ["type", "run", "dependency", "boundary", "init_density"]
-    float_keys = ["delta_t", "start", "lower_bound", "upper_bound", "d", "c"]
+    float_keys = [
+        "delta_t",
+        "start",
+        "lower_bound",
+        "upper_bound",
+        "d",
+        "c",
+        "p_0",
+        "alpha",
+    ]
     int_keys = ["n_t", "n_realizations", "n_bins", "q", "rs", "frame_timestep"]
     with open(f"configs/{config_name}.txt") as file:
         lines = file.readlines()
     for line in lines:
-        if line == "\n": # from here starts the comments section
+        if line == "\n":  # from here starts the comments section
             break
         key, value = line.split(" ")
         if key in float_keys:
@@ -36,5 +47,3 @@ def parse_config(config_name: str):
             raise ValueError(f"Unknown key: {key}")
 
     return config
-
-

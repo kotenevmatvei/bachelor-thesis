@@ -247,20 +247,18 @@ double symmetric_tripple_power_diffuse(double coordinate, double D, double c, in
     return new_coordinate;
 }
 
-double double_logistic_diffuse(double coordinate, double D, double delta_t,
-                               double density, gsl_rng *r) {
-    const double p_0 = 0.37;
-    const double alpha = 8.0;
+double double_logistic_diffuse(double coordinate, double D, double p_0, double alpha,
+                               double delta_t, double density, gsl_rng *r) {
     const double eta = gsl_ran_gaussian(r, 1);
     double new_coordinate =
         coordinate + eta * sqrt(2 * D * delta_t / (1 + exp(-alpha * (density - p_0))));
     return new_coordinate;
 }
 
-double symmetric_tripple_logistic_diffuse(const double coordinate, const double D, const double delta_t,
-                                          const double density1, const double density2, gsl_rng *r) {
-    const double p_0 = 0;
-    const double alpha = 30;
+double symmetric_tripple_logistic_diffuse(const double coordinate, const double D,
+                                          double p_0, double alpha, const double delta_t,
+                                          const double density1, const double density2,
+                                          gsl_rng *r) {
     const double eta = gsl_ran_gaussian(r, 1);
     const double competitor_density = density1 + density2;
     const double D_eff = D / (1 + exp(-alpha * (competitor_density - p_0)));

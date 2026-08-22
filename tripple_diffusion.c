@@ -29,6 +29,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     int n_realizations = config.n_realizations;
     int n_bins = config.n_bins;
     double c = config.c;
+    double alpha = config.alpha;
+    double p_0 = config.p_0;
     int q = config.q;
     int rs = config.rs;
     int frame_timestep = config.frame_timestep;
@@ -88,9 +90,15 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // construct the file name
     char config_name[256];
-    snprintf(config_name, 255, "%s_%s_q%d_c%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d",
-             dependency, boundary, q, c, delta_t, n_t, n_realizations, rs, n_bins,
-             frame_timestep);
+    if (type_id)
+        snprintf(config_name, 255, "%s_%s_init-%s_q%d_c%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d",
+                 dependency, boundary, init_density, q, c, delta_t, n_t, n_realizations,
+                 rs, n_bins, frame_timestep);
+    else
+        snprintf(config_name, 255,
+                 "%s_%s_init-%s_p0%g_alpha%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d", dependency,
+                 boundary, init_density, p_0, alpha, delta_t, n_t, n_realizations, rs,
+                 n_bins, frame_timestep);
 
     char counts_filename[1024];
     snprintf(counts_filename, 1023, "../runs/%s/data/counts_%s_%s.txt", run, type,
@@ -295,7 +303,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                             local_r);
                     else
                         coordinate = symmetric_tripple_logistic_diffuse(
-                            coordinates[k][j], d, delta_t, density1, density2, local_r);
+                            coordinates[k][j], d, p_0, alpha, delta_t, density1, density2,
+                            local_r);
                 } else {
                     // -------------- this is for tripple cyclic diffusion ---------------
                     double density =
@@ -318,8 +327,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                         coordinate = double_power_diffuse(coordinates[k][j], d, c, q,
                                                           delta_t, density, local_r);
                     else
-                        coordinate = double_logistic_diffuse(coordinates[k][j], d,
-                                                             delta_t, density, local_r);
+                        coordinate = double_logistic_diffuse(
+                            coordinates[k][j], d, p_0, alpha, delta_t, density, local_r);
                 }
 
                 if (boundary_id)

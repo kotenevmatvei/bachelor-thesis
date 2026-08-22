@@ -18,6 +18,8 @@ typedef struct {
     double upper_bound;
     double d;
     double c;
+    double p_0;
+    double alpha;
     int n_t;
     int n_realizations;
     int n_bins;
@@ -28,7 +30,7 @@ typedef struct {
     char run[64];
     char dependency[64];
     char boundary[64];
-    char init_density[64];
+    char init_density[32];
 } DiffusionConfig;
 
 void fill_linear_axis(LinearAxis *axis, double start, double end, int n_points);
@@ -84,11 +86,13 @@ double symmetric_tripple_power_diffuse(double coordinate, double D, double c, in
                                        double delta_t, double density1, double density2,
                                        gsl_rng *r);
 
-double double_logistic_diffuse(double coordinate, double D, double delta_t,
-                               double density, gsl_rng *r);
+double double_logistic_diffuse(double coordinate, double D, double p_0, double alpha,
+                               double delta_t, double density, gsl_rng *r);
 
-double symmetric_tripple_logistic_diffuse(double coordinate, double D, double delta_t,
-                                          double density1, double density2, gsl_rng *r);
+double symmetric_tripple_logistic_diffuse(const double coordinate, const double D,
+                                          double p_0, double alpha, const double delta_t,
+                                          const double density1, const double density2,
+                                          gsl_rng *r);
 
 int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates,
                     double *C_coordinates, int n_realizations, int *i);

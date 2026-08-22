@@ -14,6 +14,7 @@ BOUNDARY = "reflective"
 
 centers = np.linspace(-1, 1, 100)
 
+
 def draw_trajectories():
     plt.subplots(figsize=(25, 10), dpi=300)
 
@@ -63,9 +64,37 @@ def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary, run):
 
 
 def ffmpeg_direct_hist(
-    type_, dependency, run, boundary, delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q, rs, frame_timestep
+    type_,
+    dependency,
+    run,
+    boundary,
+    init_density,
+    delta_t,
+    n_t,
+    n_realizations,
+    n_bins,
+    upper_bound,
+    lower_bound,
+    c,
+    q,
+    p_0,
+    alpha,
+    rs,
+    frame_timestep,
 ):
-    name = f"counts_{type_}_{dependency}_{boundary}_q{q}_c{c:g}_dt{delta_t}_nt{n_t}_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{frame_timestep}"
+    if type_ == "power":
+        name = (
+            f"counts_{type_}_{dependency}_{boundary}_init-{init_density}_q{q}_c{c:g}_dt{delta_t}_nt{n_t}"
+            f"_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{frame_timestep}"
+        )
+    elif type_ == "logistic":
+        name = (
+            f"counts_{type_}_{dependency}_{boundary}_init-{init_density}_p0{p_0:g}_alpha{alpha:g}_dt{delta_t}"
+            f"_nt{n_t}_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{frame_timestep}"
+        )
+    else:
+        raise ValueError(f"Unknown type {type_}")
+
     print(f"name: {name}")
     data_filename = f"runs/{run}/data/{name}.txt"
 
@@ -76,11 +105,11 @@ def ffmpeg_direct_hist(
     B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::3]]
     C_counts_list = [np.fromstring(line, sep=" ") for line in lines[2::3]]
 
-    # check if there is more frames in data than should be in one run. In this case we 
+    # check if there is more frames in data than should be in one run. In this case we
     # are continuing a run and there might be multiple animations for the first stages
     # already generated. so we add a corresponding suffix to the animation name and only
     # regenerate the new data
-    n_frames_in_run = int(n_t/frame_timestep)
+    n_frames_in_run = int(n_t / frame_timestep)
     suffix = str(int(len(A_counts_list) / n_frames_in_run))
 
     A_counts_list = A_counts_list[-n_frames_in_run::1]
@@ -107,7 +136,7 @@ def ffmpeg_direct_hist(
         B_counts_list=B_counts_list,
         C_counts_list=C_counts_list,
         boundary=BOUNDARY,
-        run=run
+        run=run,
     )
 
     print(f"\nRendering {total_frames} frames in parallel...")
@@ -160,9 +189,12 @@ def main():
     c = config["c"]
     q = config["q"]
     rs = config["rs"]
+    p_0 = config["p_0"]
+    alpha = config["alpha"]
     frame_timestep = config["frame_timestep"]
     dependency = config["dependency"]
     boundary = config["boundary"]
+    init_density = config["init_density"]
     print("Config: ")
     print(config)
 
@@ -173,6 +205,7 @@ def main():
         dependency=dependency,
         run=run,
         boundary=boundary,
+        init_density=init_density,
         delta_t=delta_t,
         n_t=n_t,
         n_bins=n_bins,
@@ -181,8 +214,10 @@ def main():
         lower_bound=lower_bound,
         c=c,
         q=q,
+        p_0=p_0,
+        alpha=alpha,
         rs=rs,
-        frame_timestep=frame_timestep
+        frame_timestep=frame_timestep,
     )
 
 
