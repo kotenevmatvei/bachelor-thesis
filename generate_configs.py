@@ -24,6 +24,7 @@ for run_name in power_run_names:
             content = f"""type s3d_correct
 run {run_name}
 dependency symmetric
+boundary reflecting
 init_density uniform
 delta_t 0.0001
 start 0
@@ -53,6 +54,7 @@ for alpha in [7, 8]:
         content = f"""type s3d_correct
 run {run_name}
 dependency symmetric
+boundary reflecting
 init_density demixed
 delta_t 0.0001
 start 0
