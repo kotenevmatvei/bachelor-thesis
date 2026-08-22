@@ -31,32 +31,10 @@ for run_name in power_run_names:
 #SBATCH--output=slurm/{run_name}/R-%x.%j.out
 #SBATCH--error=slurm/{run_name}/R-%x.%j.err
 
-bash server_run.sh configs/{run_name}/q{q_val}_c{c_val}.txt
+bash server_run.sh "configs/{run_name}/q{q_val}_c{c_val}.txt"
 """
             with open(f"slurm/{run_name}/q{q_val}_c{c_val}.slurm", "w") as f:
                 f.write(content)
-
-
-run_name = "alpha7-8_p0_sweep_symmetric_init-demixed"
-
-os.makedirs(f"slurm/{run_name}", exist_ok=True)
-
-for q_val in [2, 3]:
-    for c_val in q2_c:
-        content = f"""#!/bin/bash
-
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
-#SBATCH --time=48:00:00
-
-#SBATCH--output=slurm/{run_name}/R-%x.%j.out
-#SBATCH--error=slurm/{run_name}/R-%x.%j.err
-
-bash server_run.sh configs/{run_name}/q{q_val}_c{c_val}.txt
-"""
-        with open(f"slurm/{run_name}/q{q_val}_c{c_val}.slurm", "w") as f:
-            f.write(content)
 
 
 run_name = "alpha7-8_p0_sweep_symmetric_init-demixed"
@@ -75,7 +53,7 @@ for alpha in [2, 3]:
 #SBATCH--output=slurm/{run_name}/R-%x.%j.out
 #SBATCH--error=slurm/{run_name}/R-%x.%j.err
 
-bash server_run.sh configs/{run_name}/alpha{alpha}_p0{p_0}.txt
+bash server_run.sh "configs/{run_name}/alpha{alpha}_p0{p_0}.txt"
 """
         with open(f"slurm/{run_name}/alpha{alpha}_p0{p_0}.slurm", "w") as f:
             f.write(content)
