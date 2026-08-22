@@ -21,7 +21,7 @@ for run_name in power_run_names:
     for q_val in [2, 3]:
         c_list = q2_c if q_val == 2 else q3_c
         for c_val in c_list:
-            content = f"""type s3d_correct
+            content = f"""type power
 run {run_name}
 dependency symmetric
 boundary reflecting
@@ -51,7 +51,7 @@ os.makedirs(f"configs/{run_name}", exist_ok=True)
 
 for alpha in [7, 8]:
     for p_0 in p_0_list:
-        content = f"""type s3d_correct
+        content = f"""type logistic
 run {run_name}
 dependency symmetric
 boundary reflecting
