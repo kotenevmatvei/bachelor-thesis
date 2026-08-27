@@ -9,5 +9,3 @@ tmp_frames
 animations
 __pycache__
 runs
-slurm
-configs
