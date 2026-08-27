@@ -30,7 +30,7 @@ def parse_config(config_name: str):
         "alpha",
     ]
     int_keys = ["n_t", "n_realizations", "n_bins", "q", "rs", "frame_timestep"]
-    with open(f"configs/{config_name}.txt") as file:
+    with open(f"configs/{config_name}") as file:
         lines = file.readlines()
     for line in lines:
         if line == "\n":  # from here starts the comments section
