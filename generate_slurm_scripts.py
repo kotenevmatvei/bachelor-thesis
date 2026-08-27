@@ -26,8 +26,8 @@ for run_name in power_run_names:
 #SBATCH --cpus-per-task=4
 #SBATCH --time=48:00:00
 
-#SBATCH--output=slurm/{run_name}/R-%x.%j.out
-#SBATCH--error=slurm/{run_name}/R-%x.%j.err
+#SBATCH --output=slurm/{run_name}/R-%x.%j.out
+#SBATCH --error=slurm/{run_name}/R-%x.%j.err
 
 bash server_run.sh "configs/{run_name}/q{q_val}_c{c_val}.txt"
 """
@@ -48,8 +48,8 @@ for alpha in [7, 8]:
 #SBATCH --cpus-per-task=4
 #SBATCH --time=48:00:00
 
-#SBATCH--output=slurm/{run_name}/R-%x.%j.out
-#SBATCH--error=slurm/{run_name}/R-%x.%j.err
+#SBATCH --output=slurm/{run_name}/R-%x.%j.out
+#SBATCH --error=slurm/{run_name}/R-%x.%j.err
 
 bash server_run.sh "configs/{run_name}/alpha{alpha}_p0{p_0}.txt"
 """
