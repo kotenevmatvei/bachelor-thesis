@@ -348,7 +348,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         // save a snapshot of the simulation (counts/coordinates) state every
         // frame_timestep
         time_t start_io = time(NULL);
-        if (i % 1000 == 0) {
+        if (i % frame_timestep == 0) {
             for (int k = 0; k <= 2; k++) {
                 fprintf(counts_file, "%d ", i);
                 write_int_array(counts_file, counts[k], n_bins, "");
