@@ -8,7 +8,7 @@ p_0_list = [0, 0.2, 0.4, 0.5, 0.6, 0.8, 1]
 print(f"q3: {len(q3_c)}, q2: {len(q2_c)}")
 
 power_run_names = [
-    # "q2-3_c_sweep_symmetric_init-uniform", # already run
+    "q2-3_c_sweep_symmetric_init-uniform", # already run
     "q2-3_c_sweep_symmetric_init-demixed",
     "q2-3_c_sweep_cyclic_init-uniform",
 ]
