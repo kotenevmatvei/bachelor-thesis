@@ -10,4 +10,4 @@ animations
 __pycache__
 runs
 configs
-slurm
+slurm/
