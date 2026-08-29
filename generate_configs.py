@@ -166,7 +166,7 @@ def generate_rs_sweep_power():
 
 
 def generate_rs_sweep_logistic():
-    run_name = "rs-sweep_symmetric_init-demixed_logistic"
+    run_name = "alpha7_p0-0.6_rs-sweep_symmetric_init-demixed_logistic"
     rs_list = [0, 1, 2, 4, 10, 20, 30, 40, 47, 48, 60, 61, 70]
 
     os.makedirs(f"configs/{run_name}", exist_ok=True)
