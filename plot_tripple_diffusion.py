@@ -47,8 +47,10 @@ def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary, run):
     ax.set_ylim(0, 3)
     ax.set_xlabel("Coordinate x")
     ax.set_ylabel("Counts")
+    ax.set_yticks(np.linspace(0,3,30))
     # ax.set_title(f"Particle diffusion, {boundary} boundaries")
-    ax.grid()
+    ax.grid(which="major")
+    ax.grid(which="minor")
 
     A_counts = A_counts_list[i][1:]
     B_counts = B_counts_list[i][1:]
