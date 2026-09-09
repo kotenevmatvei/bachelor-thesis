@@ -90,34 +90,44 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // construct the file name
     char config_name[256];
-    if (type_id)
-        snprintf(config_name, 255, "%s_%s_init-%s_q%d_c%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d",
-                 dependency, boundary, init_density, q, c, delta_t, n_t, n_realizations,
-                 rs, n_bins, frame_timestep);
-    else
+    if (type_id) { // running power model
+        snprintf(config_name, 255,
+                 "%s_%s_init-%s_q%d_c%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d", dependency,
+                 boundary, init_density, q, c, delta_t, n_t, n_realizations, rs, n_bins,
+                 frame_timestep);
+        printf("Built power model config name: %s\n", config_name);
+    } else { // running logistic model
         snprintf(config_name, 255,
                  "%s_%s_init-%s_p0%g_alpha%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d", dependency,
                  boundary, init_density, p_0, alpha, delta_t, n_t, n_realizations, rs,
                  n_bins, frame_timestep);
+        printf("Built logistic model config name: %s\n", config_name);
+    }
 
     char counts_filename[1024];
     snprintf(counts_filename, 1023, "../runs/%s/data/counts_%s_%s.txt", run, type,
              config_name);
+    printf("Counts file name: %s\n", counts_filename);
 
     char coordinates_filename[1024];
     snprintf(coordinates_filename, 1023, "../runs/%s/data/coordinates_%s_%s.txt", run,
              type, config_name);
+    printf("Coordinates file name: %s\n", coordinates_filename);
 
     char log_filename[1024];
     snprintf(log_filename, 1023, "../runs/%s/data/log_%s_%s.txt", run, type, config_name);
+    printf("Log file name: %s\n", log_filename);
 
     // if the run directory doesnt exist yet, create it
     char run_dirname[128];
     snprintf(run_dirname, 127, "../runs/%s", run);
+    printf("Run directory name: %s\n", run_dirname);
     char data_dirname[256];
     snprintf(data_dirname, 255, "../runs/%s/data", run);
+    printf("Data directory name: %s\n", data_dirname);
     char animations_dirname[256];
     snprintf(animations_dirname, 255, "../runs/%s/animations", run);
+    printf("Animations directory name: %s\n", animations_dirname);
 
     struct stat statbuf;
     if (stat(run_dirname, &statbuf) == 0) {
@@ -177,9 +187,26 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     if (file_found == 0) {
         printf("file_found = 0, so we are creating new files to write now\n");
         counts_file = fopen(counts_filename, "w");
+        if (counts_file == NULL) {
+            printf("Error creating counts file :(\n)");
+            exit(EXIT_FAILURE);
+        } else
+            printf("Counts file created successfully\n");
         coordinates_file = fopen(coordinates_filename, "w");
+        if (coordinates_file == NULL) {
+            printf("Error creating coordinates file :(\n)");
+            exit(EXIT_FAILURE);
+        } else
+            printf("Coordinates file created successfully\n");
         log_file = fopen(log_filename, "w");
+        if (log_file == NULL) {
+            printf("Error creating log file :(\n)");
+            exit(EXIT_FAILURE);
+        } else
+            printf("Log file created successfully\n");
+
         if (strcmp(init_density, "uniform") == 0) {
+            printf("Distributing the init coordinates uniformly\n");
             distribute_coordinates_uniformly(A_coordinates, n_realizations, lower_bound,
                                              upper_bound);
             distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound,
@@ -187,6 +214,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
             distribute_coordinates_uniformly(C_coordinates, n_realizations, lower_bound,
                                              upper_bound);
         } else if (strcmp(init_density, "demixed") == 0) {
+            printf("Preparing the init coordinates in the demixed state\n");
             distribute_coordinates_in_one_third(A_coordinates, n_realizations,
                                                 lower_bound, upper_bound, 0);
             distribute_coordinates_in_one_third(B_coordinates, n_realizations,
@@ -201,16 +229,19 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         }
 
         // write the initial counts and coordinates
+        printf("Writing init counts to file\n");
         for (int k = 0; k <= 2; k++) {
             fprintf(counts_file, "0 ");
             write_int_array(counts_file, counts[k], n_bins, "");
         }
+        printf("Writing init coordinates to file\n");
         for (int k = 0; k <= 2; k++) {
             fprintf(coordinates_file, "0 ");
             write_double_array(coordinates_file, coordinates[k], n_realizations, "");
         }
     }
 
+    printf("Calculating initial histograms\n");
     histogram(A_coordinates, A_counts, n_realizations, n_bins, lower_bound, upper_bound);
     histogram(B_coordinates, B_counts, n_realizations, n_bins, lower_bound, upper_bound);
     histogram(C_coordinates, C_counts, n_realizations, n_bins, lower_bound, upper_bound);
@@ -236,8 +267,11 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     double iloop_time = 0.0;
     double histogram_time = 0.0;
 
+    int time_loop_start = i_mb_checkpoint + 1;
+    int time_loop_end = i_mb_checkpoint + continue_offset + n_t;
+    printf("Starting the time loop from i = %d until %d\n", time_loop_start, time_loop_end);
     time_t start_iloop = time(NULL);
-    for (int i = i_mb_checkpoint + 1; i < i_mb_checkpoint + continue_offset + n_t; i++) {
+    for (int i = time_loop_start; i < time_loop_end; i++) {
         // first compute all histograms for the current timestep so that every
         // particle sort sees the same density
         time_t start_histogram = time(NULL);
@@ -366,7 +400,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
         // update the progress bar
         time_t start_progress_bar = time(NULL);
-        if (i % (n_t / 100) == 0 || i == n_t - 1) {
+        if (i % (n_t / 1) == 0 || i == n_t - 1) {
             float progress = (float)i / (n_t - 1);
             int bar_width = 100;
             int pos = bar_width * progress;
@@ -426,8 +460,10 @@ int main(int argc, char *argv[]) {
     char config_path[128];
     if (argc == 1) {
         snprintf(config_path, 127, "../%s", "config.txt");
+        printf("Using the default config path: %s\n", config_path);
     } else {
         snprintf(config_path, 127, "../%s", argv[1]);
+        printf("Using the custom built config path: %s\n", config_path);
     }
     DiffusionConfig config = read_config(config_path);
     diffuse_and_save_histograms(config);

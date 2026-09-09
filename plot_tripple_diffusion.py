@@ -14,6 +14,8 @@ BOUNDARY = "reflective"
 
 centers = np.linspace(-1, 1, 100)
 
+"""
+NOT CURRENTLY USED:
 
 def draw_trajectories():
     plt.subplots(figsize=(25, 10), dpi=300)
@@ -41,6 +43,8 @@ def draw_trajectories():
     os.replace(temp_path, final_path)
 
 
+
+"""
 def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary, run):
     fig, ax = plt.subplots(figsize=(8, 6), dpi=100)
     ax.set_xlim(-1, 1)
@@ -103,9 +107,9 @@ def ffmpeg_direct_hist(
     with open(data_filename, "r") as f:
         lines = f.readlines()
 
-    A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::30]]
-    B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::30]]
-    C_counts_list = [np.fromstring(line, sep=" ") for line in lines[2::30]]
+    A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::3]]
+    B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::3]]
+    C_counts_list = [np.fromstring(line, sep=" ") for line in lines[2::3]]
 
     # check if there is more frames in data than should be in one run. In this case we
     # are continuing a run and there might be multiple animations for the first stages
