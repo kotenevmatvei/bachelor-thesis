@@ -22,25 +22,25 @@ def generate_c_sweep():
             c_list = q2_c if q_val == 2 else q3_c
             for c_val in c_list:
                 content = f"""type power
-    run {run_name}
-    dependency symmetric
-    boundary reflecting
-    init_density uniform
-    delta_t 0.0001
-    start 0
-    lower_bound -1
-    upper_bound 1
-    d 1
-    n_t 100000000
-    n_realizations 10000
-    n_bins 100
-    c {c_val}
-    q {q_val}
-    rs 0
-    frame_timestep 10000
-    alpha 8
-    p_0 0.35
-    """
+run {run_name}
+dependency symmetric
+boundary reflecting
+init_density uniform
+delta_t 0.0001
+start 0
+lower_bound -1
+upper_bound 1
+d 1
+n_t 100000000
+n_realizations 10000
+n_bins 100
+c {c_val}
+q {q_val}
+rs 0
+frame_timestep 10000
+alpha 8
+p_0 0.35
+"""
                 with open(f"configs/{run_name}/q{q_val}_c{c_val}.txt", "w") as f:
                     f.write(content)
 
@@ -53,25 +53,25 @@ def generate_p0_sweep():
     for alpha in [7, 8]:
         for p_0 in p_0_list:
             content = f"""type logistic
-    run {run_name}
-    dependency symmetric
-    boundary reflecting
-    init_density demixed
-    delta_t 0.0001
-    start 0
-    lower_bound -1
-    upper_bound 1
-    d 1
-    n_t 100000000
-    n_realizations 10000
-    n_bins 100
-    c 3
-    q 3
-    rs 0
-    frame_timestep 10000
-    alpha {alpha}
-    p_0 {p_0}
-    """
+run {run_name}
+dependency symmetric
+boundary reflecting
+init_density demixed
+delta_t 0.0001
+start 0
+lower_bound -1
+upper_bound 1
+d 1
+n_t 100000000
+n_realizations 10000
+n_bins 100
+c 3
+q 3
+rs 0
+frame_timestep 10000
+alpha {alpha}
+p_0 {p_0}
+"""
             with open(f"configs/{run_name}/alpha{alpha}_p0{p_0}.txt", "w") as f:
                 f.write(content)
 
@@ -142,26 +142,28 @@ def generate_rs_sweep_power():
 
         for rs in rs_list:
             content = f"""type power
-    run {run['name']}
-    dependency {run['dependency']}
-    boundary reflecting
-    init_density {run['init_density']}
-    delta_t 0.0001
-    start 0
-    lower_bound -1
-    upper_bound 1
-    d 1
-    n_t 100000000
-    n_realizations 10000
-    n_bins 100
-    c {run['c']}
-    q {run['q']}
-    rs {rs}
-    frame_timestep 10000
-    alpha 8
-    p_0 0.35
-    """
-            with open(f"configs/{run['name']}/q{run['q']}_c{run['c']}_rs{rs}.txt", "w") as f:
+run {run["name"]}
+dependency {run["dependency"]}
+boundary reflecting
+init_density {run["init_density"]}
+delta_t 0.0001
+start 0
+lower_bound -1
+upper_bound 1
+d 1
+n_t 100000000
+n_realizations 10000
+n_bins 100
+c {run["c"]}
+q {run["q"]}
+rs {rs}
+frame_timestep 10000
+alpha 8
+p_0 0.35
+"""
+            with open(
+                f"configs/{run['name']}/q{run['q']}_c{run['c']}_rs{rs}.txt", "w"
+            ) as f:
                 f.write(content)
 
 
@@ -173,29 +175,42 @@ def generate_rs_sweep_logistic():
 
     for rs in rs_list:
         content = f"""type logistic
-    run {run_name}
-    dependency symmetric
-    boundary reflecting
-    init_density demixed
-    delta_t 0.0001
-    start 0
-    lower_bound -1
-    upper_bound 1
-    d 1
-    n_t 100000000
-    n_realizations 10000
-    n_bins 100
-    c 3
-    q 3
-    rs {rs}
-    frame_timestep 10000
-    alpha 7
-    p_0 0.6
-    """
+run {run_name}
+dependency symmetric
+boundary reflecting
+init_density demixed
+delta_t 0.0001
+start 0
+lower_bound -1
+upper_bound 1
+d 1
+n_t 100000000
+n_realizations 10000
+n_bins 100
+c 3
+q 3
+rs {rs}
+frame_timestep 10000
+alpha 7
+p_0 0.6
+"""
         with open(f"configs/{run_name}/alpha7_p0-0.6_rs{rs}.txt", "w") as f:
             f.write(content)
 
 
 if __name__ == "__main__":
     generate_rs_sweep_power()
-    generate_rs_sweep_logistic()
+ #    generate_rs_sweep_logistic()
+ # 
+ # 
+ # 
+ # 
+ # 
+ # 
+ # 
+ # 
+ # 
+ # 
+ # 
+ # 
+ # 
