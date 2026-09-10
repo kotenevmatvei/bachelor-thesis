@@ -400,31 +400,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         }
         time_t end_io = time(NULL);
         io_time += end_io - start_io;
-
-        // update the progress bar
-        time_t start_progress_bar = time(NULL);
-        if (i % (n_t / 1) == 0 || i == n_t - 1) {
-            float progress = (float)i / (n_t - 1);
-            int bar_width = 100;
-            int pos = bar_width * progress;
-
-            printf("\r[");
-            for (int p = 0; p < bar_width; p++) {
-                if (p < pos)
-                    printf("=");
-                else if (p == pos)
-                    printf(">");
-                else
-                    printf(" ");
-                fflush(stdout);
-            }
-            printf("] %3d%%", (int)(progress * 100.0));
-
-            fflush(stdout);
-        }
-        time_t end_progress_bar = time(NULL);
-        progress_bar_time += end_progress_bar - start_progress_bar;
     }
+
     time_t end_iloop = time(NULL);
     iloop_time = end_iloop - start_iloop;
 
