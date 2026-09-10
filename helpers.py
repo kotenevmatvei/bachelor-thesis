@@ -29,7 +29,7 @@ def parse_config(config_name: str):
         "p_0",
         "alpha",
     ]
-    int_keys = ["n_t", "n_realizations", "n_bins", "q", "rs", "frame_timestep"]
+    int_keys = ["n_t", "n_realizations", "n_bins", "q", "rs", "counts_timestep"]
     with open(config_name) as file:
         lines = file.readlines()
     for line in lines:

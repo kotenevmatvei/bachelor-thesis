@@ -33,7 +33,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     double p_0 = config.p_0;
     int q = config.q;
     int rs = config.rs;
-    int frame_timestep = config.frame_timestep;
+    int counts_timestep = config.counts_timestep;
 
     // set dependency index for faster branching later in the main loop
     int dependency_id = -1;
@@ -73,7 +73,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         exit(EXIT_FAILURE);
     }
 
-    printf("\nframe_timestep = %d\n", frame_timestep);
+    printf("\ncounts_timestep = %d\n", counts_timestep);
 
     gsl_rng_env_setup();
     const gsl_rng_type *T = gsl_rng_default;
@@ -94,13 +94,13 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         snprintf(config_name, 255,
                  "%s_%s_init-%s_q%d_c%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d", dependency,
                  boundary, init_density, q, c, delta_t, n_t, n_realizations, rs, n_bins,
-                 frame_timestep);
+                 counts_timestep);
         printf("Built power model config name: %s\n", config_name);
     } else { // running logistic model
         snprintf(config_name, 255,
                  "%s_%s_init-%s_p0%g_alpha%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d", dependency,
                  boundary, init_density, p_0, alpha, delta_t, n_t, n_realizations, rs,
-                 n_bins, frame_timestep);
+                 n_bins, counts_timestep);
         printf("Built logistic model config name: %s\n", config_name);
     }
 
@@ -380,14 +380,17 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         }
 
         // save a snapshot of the simulation (counts/coordinates) state every
-        // frame_timestep
+        // counts_timestep
         time_t start_io = time(NULL);
-        if (i % frame_timestep == 0) {
+        if (i % counts_timestep == 0) {
             for (int k = 0; k <= 2; k++) {
                 fprintf(counts_file, "%d ", i);
                 write_int_array(counts_file, counts[k], n_bins, "");
             }
+        }
+        if (i % (counts_timestep * 100) == 0) {
             // overwrite the coordinates
+            printf("Saving a coordinates snapshot for i = %d\n", i);
             fclose(coordinates_file);
             coordinates_file = fopen(coordinates_filename, "w");
             for (int k = 0; k <= 2; k++) {

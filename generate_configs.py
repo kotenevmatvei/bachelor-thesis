@@ -37,7 +37,7 @@ n_bins 100
 c {c_val}
 q {q_val}
 rs 0
-frame_timestep 10000
+counts_timestep 10000
 alpha 8
 p_0 0.35
 """
@@ -68,7 +68,7 @@ n_bins 100
 c 3
 q 3
 rs 0
-frame_timestep 10000
+counts_timestep 10000
 alpha {alpha}
 p_0 {p_0}
 """
@@ -157,7 +157,7 @@ n_bins 100
 c {run["c"]}
 q {run["q"]}
 rs {rs}
-frame_timestep 10000
+counts_timestep 10000
 alpha 8
 p_0 0.35
 """
@@ -190,7 +190,7 @@ n_bins 100
 c 3
 q 3
 rs {rs}
-frame_timestep 10000
+counts_timestep 10000
 alpha 7
 p_0 0.6
 """

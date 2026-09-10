@@ -14,6 +14,6 @@ n_bins 100
 c 6
 q 2
 rs 4
-frame_timestep 10000
+counts_timestep 10000
 alpha 8
 p_0 0.35

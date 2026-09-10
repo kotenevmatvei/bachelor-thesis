@@ -25,7 +25,7 @@ typedef struct {
     int n_bins;
     int q;
     int rs;
-    int frame_timestep;
+    int counts_timestep;
     char type[64];
     char run[64];
     char dependency[64];

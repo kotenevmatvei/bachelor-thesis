@@ -86,17 +86,17 @@ def ffmpeg_direct_hist(
     p_0,
     alpha,
     rs,
-    frame_timestep,
+    counts_timestep,
 ):
     if type_ == "power":
         name = (
             f"counts_{type_}_{dependency}_{boundary}_init-{init_density}_q{q}_c{c:g}_dt{delta_t}_nt{n_t}"
-            f"_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{frame_timestep}"
+            f"_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{counts_timestep}"
         )
     elif type_ == "logistic":
         name = (
             f"counts_{type_}_{dependency}_{boundary}_init-{init_density}_p0{p_0:g}_alpha{alpha:g}_dt{delta_t}"
-            f"_nt{n_t}_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{frame_timestep}"
+            f"_nt{n_t}_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{counts_timestep}"
         )
     else:
         raise ValueError(f"Unknown type {type_}")
@@ -115,7 +115,7 @@ def ffmpeg_direct_hist(
     # are continuing a run and there might be multiple animations for the first stages
     # already generated. so we add a corresponding suffix to the animation name and only
     # regenerate the new data
-    n_frames_in_run = int(n_t / frame_timestep)
+    n_frames_in_run = int(n_t / counts_timestep)
     suffix = str(int(len(A_counts_list) / n_frames_in_run))
 
     A_counts_list = A_counts_list[-n_frames_in_run::1]
@@ -197,7 +197,7 @@ def main():
     rs = config["rs"]
     p_0 = config["p_0"]
     alpha = config["alpha"]
-    frame_timestep = config["frame_timestep"]
+    counts_timestep = config["counts_timestep"]
     dependency = config["dependency"]
     boundary = config["boundary"]
     init_density = config["init_density"]
@@ -223,7 +223,7 @@ def main():
         p_0=p_0,
         alpha=alpha,
         rs=rs,
-        frame_timestep=frame_timestep,
+        counts_timestep=counts_timestep,
     )
 
 
