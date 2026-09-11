@@ -8,5 +8,7 @@ data
 tmp_frames
 animations
 __pycache__
-runs
+runs/sprint-1
+runs/*/data
+runs/*/animations
 slurm/

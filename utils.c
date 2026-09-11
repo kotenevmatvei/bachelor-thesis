@@ -70,11 +70,14 @@ DiffusionConfig read_config(const char *filename) {
             config.q = atoi(val_str);
         } else if (strcmp(key, "counts_timestep") == 0) {
             config.counts_timestep = atoi(val_str);
+        } else if (strcmp(key, "coordinates_snapshot") == 0) {
+            config.coordinates_snapshot = atoi(val_str);
 
         } else if (strcmp(key, "comments:") == 0) { // from here starts the commensts section
             break;
         } else {
-            printf("Warning: Unknown config key '%s' ignored.\n", key);
+            printf("Error: Unknown config key '%s'. Quitting. \n", key);
+            exit(1);
         }
     }
     fclose(file);

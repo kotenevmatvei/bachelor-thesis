@@ -34,6 +34,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     int q = config.q;
     int rs = config.rs;
     int counts_timestep = config.counts_timestep;
+    int coordinates_snapshot = config.coordinates_snapshot;
 
     // set dependency index for faster branching later in the main loop
     int dependency_id = -1;
@@ -263,13 +264,13 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     int n_bins_within_rs = 1 + 2 * rs;
 
     double io_time = 0.0;
-    double progress_bar_time = 0.0;
     double iloop_time = 0.0;
     double histogram_time = 0.0;
 
     int time_loop_start = i_mb_checkpoint + 1;
     int time_loop_end = i_mb_checkpoint + continue_offset + n_t;
-    printf("Starting the time loop from i = %d until %d\n", time_loop_start, time_loop_end);
+    printf("Starting the time loop from i = %d until %d\n", time_loop_start,
+           time_loop_end);
     time_t start_iloop = time(NULL);
     for (int i = time_loop_start; i < time_loop_end; i++) {
         // first compute all histograms for the current timestep so that every
@@ -388,13 +389,14 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 write_int_array(counts_file, counts[k], n_bins, "");
             }
         }
-        if (i % (counts_timestep * 100) == 0) {
+        if (i % coordinates_snapshot == 0 || i == time_loop_end - 1) {
             // overwrite the coordinates
-            printf("Saving a coordinates snapshot for i = %d\n", i);
+            printf("Saving a coordinates snapshot for i = %d of the total %d\n",
+                   i + 1, time_loop_end);
             fclose(coordinates_file);
             coordinates_file = fopen(coordinates_filename, "w");
             for (int k = 0; k <= 2; k++) {
-                fprintf(coordinates_file, "%d ", i);
+                fprintf(coordinates_file, "%d ", i + 1);
                 write_double_array(coordinates_file, coordinates[k], n_realizations, "");
             }
         }
@@ -406,11 +408,9 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     iloop_time = end_iloop - start_iloop;
 
     double io_part = io_time / iloop_time;
-    double progress_bar_part = progress_bar_time / iloop_time;
     double histogram_part = histogram_time / iloop_time;
 
     printf("\nio_part = %f\n", io_part);
-    printf("progress_bar_part = %f\n", progress_bar_part);
     printf("histogram_part = %f\n", histogram_part);
 
     time_t end = time(NULL);

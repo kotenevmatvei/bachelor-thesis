@@ -2,6 +2,7 @@ import numpy as np
 import concurrent.futures
 import os
 import shutil
+import time
 import subprocess
 import argparse
 from matplotlib import pyplot as plt
@@ -136,6 +137,7 @@ def ffmpeg_direct_hist(
     shutil.rmtree(f"runs/{run}/tmp_frames", ignore_errors=True)
     os.makedirs(f"runs/{run}/tmp_frames")
 
+    
     worker_func = functools.partial(
         render_frame,
         A_counts_list=A_counts_list,
@@ -145,9 +147,11 @@ def ffmpeg_direct_hist(
         run=run,
     )
 
+    render_start = time.time()
+
     print(f"\nRendering {total_frames} frames in parallel...")
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        list(tqdm(executor.map(worker_func, range(total_frames)), total=total_frames))
+        executor.map(worker_func, range(total_frames))
 
     print("Stitching video...")
     animation_filename = f"runs/{run}/animations/{name}_iteration{suffix}.mp4"
@@ -173,6 +177,8 @@ def ffmpeg_direct_hist(
     except subprocess.CalledProcessError as e:
         print(f"Error during video stitching! FFmpeg failed with code {e.returncode}.")
         print(f"FFmpeg Error Output:\\n{e.stderr}")
+    render_time = time.time() - render_start
+    print(f"Rendering took {render_time}s")
 
 
 def main():

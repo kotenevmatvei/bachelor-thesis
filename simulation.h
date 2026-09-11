@@ -26,6 +26,7 @@ typedef struct {
     int q;
     int rs;
     int counts_timestep;
+    int coordinates_snapshot;
     char type[64];
     char run[64];
     char dependency[64];

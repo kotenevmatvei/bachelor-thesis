@@ -1,0 +1,28 @@
+run q2_c6_symmetric_init-uniform
+type power
+dependency symmetric
+boundary reflecting
+init_density uniform
+delta_t 0.00000001
+start 0
+lower_bound -1
+upper_bound 1
+d 1
+n_t 1000000
+n_realizations 1000000
+n_bins 100
+c 6
+q 2
+rs 0
+counts_timestep 100
+coordinates_snapshot 10000
+alpha 3
+p_0 0.2
+
+
+comments:
+
+type: logistic or power
+dependency: symmetric or cyclic
+boundary: reflecting or periodic
+init_density: uniform or demixed
