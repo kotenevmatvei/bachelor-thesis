@@ -11,4 +11,4 @@ __pycache__
 runs/sprint-1
 runs/*/data
 runs/*/animations
-slurm/
+slurm/sprint-1
