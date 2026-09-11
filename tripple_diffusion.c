@@ -271,6 +271,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     int time_loop_end = i_mb_checkpoint + continue_offset + n_t;
     printf("Starting the time loop from i = %d until %d\n", time_loop_start,
            time_loop_end);
+    fflush(stdout);
     time_t start_iloop = time(NULL);
     for (int i = time_loop_start; i < time_loop_end; i++) {
         // first compute all histograms for the current timestep so that every
@@ -388,6 +389,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 fprintf(counts_file, "%d ", i);
                 write_int_array(counts_file, counts[k], n_bins, "");
             }
+            fflush(stdout);
         }
         if (i % coordinates_snapshot == 0 || i == time_loop_end - 1) {
             // overwrite the coordinates
@@ -399,6 +401,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 fprintf(coordinates_file, "%d ", i + 1);
                 write_double_array(coordinates_file, coordinates[k], n_realizations, "");
             }
+            fflush(stdout);
         }
         time_t end_io = time(NULL);
         io_time += end_io - start_io;
