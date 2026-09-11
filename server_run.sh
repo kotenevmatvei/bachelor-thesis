@@ -7,9 +7,6 @@ set -e
 # set the number of omp threads
 export OMP_NUM_THREADS=4
 
-# cd /home/matvei/Desktop/bachelor-thesis/
-echo "building the project..."
-make
 cd build/
 
 CONFIG_NAME=${1:-config}
