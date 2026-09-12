@@ -14,8 +14,8 @@ n_bins 100
 c 6
 q 2
 rs 0
-cnts_timestep 1
-crds_snapshot 100
+cnts_timestep 1000
+crds_snapshot 10000
 alpha 3
 p_0 0.2
 
