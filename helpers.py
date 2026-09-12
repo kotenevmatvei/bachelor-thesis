@@ -11,8 +11,8 @@ def gen_hist_test_cases():
     ]
 
     for test_case in test_cases:
-        counts, bins = np.histogram(test_case[0], bins=test_case[1])
-        print(counts)
+        cnts, bins = np.histogram(test_case[0], bins=test_case[1])
+        print(cnts)
         print(bins)
 
 
@@ -35,8 +35,8 @@ def parse_config(config_name: str):
         "n_bins",
         "q",
         "rs",
-        "counts_timestep",
-        "coordinates_snapshot",
+        "cnts_timestep",
+        "crds_snapshot",
     ]
     with open(config_name) as file:
         lines = file.readlines()

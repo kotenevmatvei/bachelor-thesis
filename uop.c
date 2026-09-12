@@ -32,7 +32,7 @@ void calculate_and_save_correlation(int N_realizations, int N_t, double delta_t,
         gsl_fft_real_transform(v_data[i], 1, N_t, wavetable, workspace);
 
         // 2. REPACK INTO HALF-COMPLEX LAYOUT IN-PLACE
-        // We calculate the squared magnitude (power) and pack it into the real slots,
+        // We calculate the squared magnitude (pow) and pack it into the real slots,
         // while putting 0.0 into the imaginary slots.
 
         double dc = v_data[i][0];
@@ -94,7 +94,7 @@ void calculate_and_save_correlation(int N_realizations, int N_t, double delta_t,
 
     printf("Correlation function successfully written to %s\n", filename);
 }
-double *calculate_and_save_power_spectrum(int N_realizations, // e.g., 1000
+double *calculate_and_save_pow_spectrum(int N_realizations, // e.g., 1000
                                           int N_t,            // e.g., 100000
                                           double delta_t,     // e.g., 0.01
                                           const char *filename, gsl_rng *r, double D,
@@ -102,9 +102,9 @@ double *calculate_and_save_power_spectrum(int N_realizations, // e.g., 1000
     double T = N_t * delta_t;
     int max_k = N_t / 2;
 
-    // Allocate array to accumulate the sum of powers across all realizations
+    // Allocate array to accumulate the sum of pows across all realizations
     // We need max_k + 1 bins to hold frequencies from 0 Hz up to the Nyquist limit
-    double *power_accumulator = calloc(max_k + 1, sizeof(double));
+    double *pow_accumulator = calloc(max_k + 1, sizeof(double));
 
     // Allocate GSL FFT structures once to reuse across all realizations
     gsl_fft_real_wavetable *wavetable = gsl_fft_real_wavetable_alloc(N_t);
@@ -123,7 +123,7 @@ double *calculate_and_save_power_spectrum(int N_realizations, // e.g., 1000
 
         // DC Component (k = 0)
         double real_i = v_data[i][0];
-        power_accumulator[0] += (real_i * real_i);
+        pow_accumulator[0] += (real_i * real_i);
 
         // Middle Frequencies (Mixed-Radix format)
         for (int k = 1; k < max_k; k++) {
@@ -132,16 +132,16 @@ double *calculate_and_save_power_spectrum(int N_realizations, // e.g., 1000
 
             double real_part = v_data[i][real_idx];
             double imag_part = v_data[i][imag_idx];
-            power_accumulator[k] += (real_part * real_part) + (imag_part * imag_part);
+            pow_accumulator[k] += (real_part * real_part) + (imag_part * imag_part);
         }
 
         if (N_t % 2 == 0) {
             double real_nyquist = v_data[i][N_t - 1];
-            power_accumulator[max_k] += (real_nyquist * real_nyquist);
+            pow_accumulator[max_k] += (real_nyquist * real_nyquist);
         }
     }
 
-    // 3. Average the accumulated power and write to file
+    // 3. Average the accumulated pow and write to file
     FILE *fp = fopen(filename, "w");
 
     // We only loop up to k = 10000 (which is 10 Hz) to match Figure 1.3d
@@ -150,7 +150,7 @@ double *calculate_and_save_power_spectrum(int N_realizations, // e.g., 1000
 
     for (int k = 0; k <= plot_limit_k && k <= max_k; k++) {
         // Divide by N_realizations to get the average (variance)
-        double average_mag_squared = power_accumulator[k] / N_realizations;
+        double average_mag_squared = pow_accumulator[k] / N_realizations;
 
         // Apply the continuous scaling physics from Equation 1.16
         double S_f = (average_mag_squared * delta_t * delta_t) / T;
@@ -169,7 +169,7 @@ double *calculate_and_save_power_spectrum(int N_realizations, // e.g., 1000
     gsl_fft_real_workspace_free(workspace);
 
     printf("Power spectrum successfully written to %s\n", filename);
-    return power_accumulator;
+    return pow_accumulator;
 }
 
 int main(void) {
@@ -208,13 +208,13 @@ int main(void) {
             v_time_snapshot[j] = v_data[j][time_];
         }
         double *bin_bounds = malloc((n_bins + 2) * sizeof(double));
-        int *counts = histogram_flexible_bounds(v_time_snapshot, bin_bounds, N, n_bins);
+        int *cnts = histogram_flexible_bounds(v_time_snapshot, bin_bounds, N, n_bins);
         char *mode = i == 0 ? "w" : "a";
         char *comment = malloc(20 * sizeof(char));
         sprintf(comment, "# t=%.1fs\n", (double)time_ * delta_t);
-        write_int_array_to_file(counts, n_bins, hist_fname, mode, comment);
+        write_int_array_to_file(cnts, n_bins, hist_fname, mode, comment);
         write_double_array_to_file(bin_bounds, n_bins + 1, hist_fname, "a", "");
-        free(counts);
+        free(cnts);
         free(bin_bounds);
     }
 
@@ -246,12 +246,12 @@ int main(void) {
     N_t = (int)1e7;
     v_data = simulate_V_values(D, gamma, N, N_t, delta_t, r);
     double *bin_bounds = malloc(n_bins * sizeof(int));
-    int *counts = histogram_flexible_bounds(v_data[0], bin_bounds, N_t, n_bins);
-    write_int_array_to_file(counts, n_bins, "../data/long_time_average.txt", "w", "");
+    int *cnts = histogram_flexible_bounds(v_data[0], bin_bounds, N_t, n_bins);
+    write_int_array_to_file(cnts, n_bins, "../data/long_time_average.txt", "w", "");
     write_double_array_to_file(bin_bounds, n_bins + 1, "../data/long_time_average.txt",
                                "a", "");
 
-    free(counts);
+    free(cnts);
     free(bin_bounds);
 
     // save a trajectory
@@ -293,11 +293,11 @@ int main(void) {
     write_double_array_to_file(real_transform, max_k + 1, "../data/fft.txt", "w", "");
     free(real_transform);
 
-    // compute the power spectrum
-    // double *ps = calculate_and_save_power_spectrum(10000, N_t, delta_t,
+    // compute the pow spectrum
+    // double *ps = calculate_and_save_pow_spectrum(10000, N_t, delta_t,
     // "../data/ps.txt", r, D, gamma);
 
-    // fft-transform the power spectrum back to time domain to get the correlation
+    // fft-transform the pow spectrum back to time domain to get the correlation
     // function
     calculate_and_save_correlation(10000, N_t, delta_t, "../data/corr.txt", r, D, gamma);
 

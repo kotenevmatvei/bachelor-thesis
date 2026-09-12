@@ -136,19 +136,19 @@ int *histogram_flexible_bounds(double *array, double *bin_bounds, int array_len,
     find_min_and_max(array, array_len, &min, &max);
     double range = max - min;
     double bin_size = range / n_bins;
-    int *counts = calloc(n_bins, sizeof(int));
+    int *cnts = calloc(n_bins, sizeof(int));
     for (int i = 0; i < array_len; i++) {
         int bin = (int)((array[i] - min) / bin_size);
         if (bin >= n_bins)
             bin = n_bins - 1;
         if (bin < 0)
             bin = 0;
-        counts[bin]++;
+        cnts[bin]++;
     }
     for (int i = 0; i < n_bins + 1; i++) {
         bin_bounds[i] = min + i * bin_size;
     }
-    return counts;
+    return cnts;
 }
 
 int *histogram_fixed_bins_write_bin_bounds(double *array, double *bin_bounds,
@@ -156,26 +156,26 @@ int *histogram_fixed_bins_write_bin_bounds(double *array, double *bin_bounds,
                                            double upper_bound) {
     double range = upper_bound - lower_bound;
     double bin_size = range / n_bins;
-    int *counts = calloc(n_bins, sizeof(int));
+    int *cnts = calloc(n_bins, sizeof(int));
     for (int i = 0; i < array_len; i++) {
         int bin = (int)((array[i] - lower_bound) / bin_size);
         if (bin >= n_bins)
             bin = n_bins - 1;
         if (bin < 0)
             bin = 0;
-        counts[bin]++;
+        cnts[bin]++;
     }
     for (int i = 0; i < n_bins + 1; i++) {
         bin_bounds[i] = lower_bound + i * bin_size;
     }
-    return counts;
+    return cnts;
 }
 
-void histogram(const double *array, int *counts, const int array_len, const int n_bins,
+void histogram(const double *array, int *cnts, const int array_len, const int n_bins,
                const double lower_bound, const double upper_bound) {
-    // make sure the counts are zero
+    // make sure the cnts are zero
     for (int i = 0; i < n_bins; i++)
-        counts[i] = 0;
+        cnts[i] = 0;
     double range = upper_bound - lower_bound;
     double bin_size = range / n_bins;
     for (int i = 0; i < array_len; i++) {
@@ -184,7 +184,7 @@ void histogram(const double *array, int *counts, const int array_len, const int 
             bin = n_bins - 1;
         if (bin < 0)
             bin = 0;
-        counts[bin]++;
+        cnts[bin]++;
     }
 }
 
@@ -194,7 +194,7 @@ double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng 
     return next_coordinate;
 }
 
-double reflecting_boundary(double coordinate, double lower_bound, double upper_bound) {
+double ref_boundary(double coordinate, double lower_bound, double upper_bound) {
     if (coordinate > upper_bound)
         return 2 * upper_bound - coordinate;
 
@@ -203,7 +203,7 @@ double reflecting_boundary(double coordinate, double lower_bound, double upper_b
     return coordinate;
 }
 
-double periodic_boundary(double coordinate, double lower_bound, double upper_bound) {
+double per_boundary(double coordinate, double lower_bound, double upper_bound) {
     if (coordinate > upper_bound)
         return lower_bound + coordinate - upper_bound;
 
@@ -224,7 +224,7 @@ double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
     return coordinate;
 }
 
-double double_power_diffuse(double coordinate, double D, double c, int q, double delta_t,
+double double_pow_diffuse(double coordinate, double D, double c, int q, double delta_t,
                             double density, gsl_rng *r) {
 
     double eta = gsl_ran_gaussian(r, 1);
@@ -233,7 +233,7 @@ double double_power_diffuse(double coordinate, double D, double c, int q, double
     return new_coordinate;
 }
 
-double symmetric_tripple_power_diffuse(double coordinate, double D, double c, int q,
+double sym_tripple_pow_diffuse(double coordinate, double D, double c, int q,
                                        double delta_t, double density1, double density2,
                                        gsl_rng *r) {
 
@@ -247,7 +247,7 @@ double symmetric_tripple_power_diffuse(double coordinate, double D, double c, in
     return new_coordinate;
 }
 
-double double_logistic_diffuse(double coordinate, double D, double p_0, double alpha,
+double double_log_diffuse(double coordinate, double D, double p_0, double alpha,
                                double delta_t, double density, gsl_rng *r) {
     const double eta = gsl_ran_gaussian(r, 1);
     double new_coordinate =
@@ -255,7 +255,7 @@ double double_logistic_diffuse(double coordinate, double D, double p_0, double a
     return new_coordinate;
 }
 
-double symmetric_tripple_logistic_diffuse(const double coordinate, const double D,
+double sym_tripple_log_diffuse(const double coordinate, const double D,
                                           double p_0, double alpha, const double delta_t,
                                           const double density1, const double density2,
                                           gsl_rng *r) {
@@ -266,7 +266,7 @@ double symmetric_tripple_logistic_diffuse(const double coordinate, const double 
     return new_coordinate;
 }
 
-void distribute_coordinates_uniformly(double *array, int array_len, double lower_bound,
+void distribute_crds_uniformly(double *array, int array_len, double lower_bound,
                                       double upper_bound) {
     double range = upper_bound - lower_bound;
     double step = range / array_len;
@@ -274,7 +274,7 @@ void distribute_coordinates_uniformly(double *array, int array_len, double lower
         array[i] = lower_bound + i * step;
 }
 
-void distribute_coordinates_in_one_third(double *array, int array_len, double lower_bound,
+void distribute_crds_in_one_third(double *array, int array_len, double lower_bound,
                                          double upper_bound, int n_third) {
     const double range = upper_bound - lower_bound;
     const double third_len = range / 3;
@@ -284,8 +284,8 @@ void distribute_coordinates_in_one_third(double *array, int array_len, double lo
     }
 }
 
-int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates,
-                    double *C_coordinates, int n_realizations, int *i) {
+int load_checkpoint(char *filename, double *A_crds, double *B_crds,
+                    double *C_crds, int n_realizations, int *i) {
 
     printf("Loading the found checkpoint!\n");
     FILE *file = fopen(filename, "r");
@@ -298,20 +298,20 @@ int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates
         printf("Could not read i...\n");
 
     for (int j = 0; j < n_realizations; j++) {
-        if (fscanf(file, "%lf", &A_coordinates[j]) != 1) {
+        if (fscanf(file, "%lf", &A_crds[j]) != 1) {
             printf("Error reading A_coordinate %d\n", j);
             return 0;
         }
     }
     for (int j = 0; j < n_realizations; j++) {
-        if (fscanf(file, "%lf", &B_coordinates[j]) != 1) {
+        if (fscanf(file, "%lf", &B_crds[j]) != 1) {
             printf("Error reading B_coordinate %d\n", j);
             return 0;
         }
     }
 
     for (int j = 0; j < n_realizations; j++) {
-        if (fscanf(file, "%lf", &C_coordinates[j]) != 1) {
+        if (fscanf(file, "%lf", &C_crds[j]) != 1) {
             printf("Error reading B_coordinate %d\n", j);
             return 0;
         }
@@ -319,11 +319,15 @@ int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates
     return 1;
 }
 
-int check_for_existing_checkpoint(char *coordinates_filename) {
-    printf("Here is the coordinates_filename we are looking for: %s\n",
-           coordinates_filename);
+// int remove_nt_part_from_filename(char *filename) {
+//     while ()
+// }
 
-    if (access(coordinates_filename, F_OK) == 0) {
+int check_for_existing_checkpoint(char *crds_filename) {
+    printf("Here is the crds_filename we are looking for: %s\n",
+           crds_filename);
+
+    if (access(crds_filename, F_OK) == 0) {
         printf("Found it!\n");
         return 1;
     } else {

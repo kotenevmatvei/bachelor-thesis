@@ -39,37 +39,37 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     snprintf(config_name, 63, "dt%g_nt%d_nr%d_c%d_q%d_bins%d", delta_t, n_t,
              n_realizations, c, q, n_bins);
 
-    char counts_filename[128];
-    snprintf(counts_filename, 127, "../data/dd_counts_%s.txt", config_name);
+    char cnts_filename[128];
+    snprintf(cnts_filename, 127, "../data/dd_cnts_%s.txt", config_name);
 
-    char coordinates_filename[128];
-    snprintf(coordinates_filename, 127, "../data/dd_coordinates_%s.txt", config_name);
+    char crds_filename[128];
+    snprintf(crds_filename, 127, "../data/dd_crds_%s.txt", config_name);
 
     char log_filename[128];
     snprintf(log_filename, 127, "../data/dd_log_%s.txt", config_name);
 
-    FILE *counts_file = fopen(counts_filename, "w");
-    FILE *coordinates_file = fopen(coordinates_filename, "w");
+    FILE *cnts_file = fopen(cnts_filename, "w");
+    FILE *crds_file = fopen(crds_filename, "w");
     FILE *log_file = fopen(log_filename, "w");
 
-    double *A_coordinates = malloc(n_realizations * sizeof(double));
-    double *B_coordinates = malloc(n_realizations * sizeof(double));
+    double *A_crds = malloc(n_realizations * sizeof(double));
+    double *B_crds = malloc(n_realizations * sizeof(double));
 
-    distribute_coordinates_uniformly(A_coordinates, n_realizations, lower_bound,
+    distribute_crds_uniformly(A_crds, n_realizations, lower_bound,
                                      upper_bound);
-    distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound,
+    distribute_crds_uniformly(B_crds, n_realizations, lower_bound,
                                      upper_bound);
 
-    double *coordinates[2] = {A_coordinates, B_coordinates};
+    double *crds[2] = {A_crds, B_crds};
 
-    int *A_counts = malloc(n_bins * sizeof(int));
-    int *B_counts = malloc(n_bins * sizeof(int));
-    histogram(A_coordinates, A_counts, n_realizations, n_bins, lower_bound, upper_bound);
-    histogram(B_coordinates, B_counts, n_realizations, n_bins, lower_bound, upper_bound);
-    int *counts[2] = {A_counts, B_counts};
+    int *A_cnts = malloc(n_bins * sizeof(int));
+    int *B_cnts = malloc(n_bins * sizeof(int));
+    histogram(A_crds, A_cnts, n_realizations, n_bins, lower_bound, upper_bound);
+    histogram(B_crds, B_cnts, n_realizations, n_bins, lower_bound, upper_bound);
+    int *cnts[2] = {A_cnts, B_cnts};
 
-    write_int_array(counts_file, A_counts, n_bins, "");
-    write_int_array(counts_file, B_counts, n_bins, "");
+    write_int_array(cnts_file, A_cnts, n_bins, "");
+    write_int_array(cnts_file, B_cnts, n_bins, "");
 
     double range = upper_bound - lower_bound;
     double bin_size = range / n_bins;
@@ -85,36 +85,36 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 gsl_rng *local_r = thread_rngs[thread_id];
 
                 // get the bin in which current coordinate falls
-                int bin = (int)((coordinates[k][j] - lower_bound) / bin_size);
+                int bin = (int)((crds[k][j] - lower_bound) / bin_size);
                 if (bin >= n_bins)
                     bin = n_bins - 1;
                 if (bin < 0)
                     bin = 0;
                 // get density of the OTHER particle sort in this bin
-                double density = (double)counts[1 - k][bin] / (n_realizations * delta_x);
+                double density = (double)cnts[1 - k][bin] / (n_realizations * delta_x);
 
                 double coordinate =
-                    double_power_diffuse(coordinates[k][j], d, c, q, delta_t, density, local_r);
+                    double_pow_diffuse(crds[k][j], d, c, q, delta_t, density, local_r);
 
-                coordinate = reflecting_boundary(coordinate, lower_bound, upper_bound);
+                coordinate = ref_boundary(coordinate, lower_bound, upper_bound);
 
-                coordinates[k][j] = coordinate;
+                crds[k][j] = coordinate;
             }
 
-            histogram(coordinates[k], counts[k], n_realizations, n_bins, lower_bound,
+            histogram(crds[k], cnts[k], n_realizations, n_bins, lower_bound,
                       upper_bound);
-            write_int_array(counts_file, counts[k], n_bins, "");
+            write_int_array(cnts_file, cnts[k], n_bins, "");
         }
 
         // save a snapshot of the simulation state every 10000 timesteps
         if (i % 1000 == 0 || i == n_t - 1) {
-            fseek(coordinates_file, 0, SEEK_SET);
-            fprintf(coordinates_file, "%d ", i);
+            fseek(crds_file, 0, SEEK_SET);
+            fprintf(crds_file, "%d ", i);
             for (int j = 0; j < n_realizations; j++) {
-                fprintf(coordinates_file, "%lf ", A_coordinates[j]);
+                fprintf(crds_file, "%lf ", A_crds[j]);
             }
             for (int j = 0; j < n_realizations; j++) {
-                fprintf(coordinates_file, "%lf ", B_coordinates[j]);
+                fprintf(crds_file, "%lf ", B_crds[j]);
             }
         }
 
@@ -150,11 +150,11 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     fprintf(log_file, "\nThe simulation took %d hours %d minutes and %d seconds\n", hours,
             minutes, seconds);
 
-    fclose(counts_file);
-    free(A_coordinates);
-    free(B_coordinates);
-    free(A_counts);
-    free(B_counts);
+    fclose(cnts_file);
+    free(A_crds);
+    free(B_crds);
+    free(A_cnts);
+    free(B_cnts);
     for (int i = 0; i < max_threads; i++) {
         gsl_rng_free(thread_rngs[i]);
     }

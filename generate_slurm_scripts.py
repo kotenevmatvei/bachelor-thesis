@@ -6,13 +6,13 @@ def generate_c_sweep():
 
     print(f"q3: {len(q3_c)}, q2: {len(q2_c)}")
 
-    power_run_names = [
-        "q2-3_c_sweep_symmetric_init-uniform", # already run
-        "q2-3_c_sweep_symmetric_init-demixed",
-        "q2-3_c_sweep_cyclic_init-uniform",
+    pow_run_names = [
+        "q2-3_c_sweep_sym_init-un", # already run
+        "q2-3_c_sweep_sym_init-dem",
+        "q2-3_c_sweep_cy_init-un",
     ]
 
-    for run_name in power_run_names:
+    for run_name in pow_run_names:
         os.makedirs(f"slurm/{run_name}", exist_ok=True)
 
         for q_val in [2, 3]:
@@ -37,7 +37,7 @@ bash server_run.sh "configs/{run_name}/q{q_val}_c{c_val}.txt"
 def generate_p0_sweep():
     p_0_list = [0, 0.2, 0.4, 0.5, 0.6, 0.8, 1]
 
-    run_name = "alpha7-8_p0_sweep_symmetric_init-demixed"
+    run_name = "alpha7-8_p0_sweep_sym_init-dem"
 
     os.makedirs(f"slurm/{run_name}", exist_ok=True)
 
@@ -59,64 +59,64 @@ bash server_run.sh "configs/{run_name}/alpha{alpha}_p0{p_0}.txt"
                 f.write(content)
 
 
-def generate_rs_sweep_power():
+def generate_rs_sweep_pow():
     rs_list = [0, 1, 2, 4, 10, 20, 30, 40, 47, 48, 60, 61, 70]
     runs = [
         {
-            "name": "q3_c3_rs-sweep_symmetric_init-uniform",
+            "name": "q3_c3_rs-sweep_sym_init-un",
             "q": 3,
             "c": 3,
-            "dependency": "symmetric",
-            "init_density": "uniform",
+            "dependency": "sym",
+            "init_density": "un",
         },
         {
-            "name": "q3_c3_rs-sweep_symmetric_init-uniform",
+            "name": "q3_c3_rs-sweep_sym_init-un",
             "q": 3,
             "c": 3,
-            "dependency": "symmetric",
-            "init_density": "demixed",
+            "dependency": "sym",
+            "init_density": "dem",
         },
         {
-            "name": "q2_c6_rs-sweep_symmetric_init-uniform",
+            "name": "q2_c6_rs-sweep_sym_init-un",
             "q": 2,
             "c": 6,
-            "dependency": "symmetric",
-            "init_density": "uniform",
+            "dependency": "sym",
+            "init_density": "un",
         },
         {
-            "name": "q2_c6_rs-sweep_symmetric_init-demixed",
+            "name": "q2_c6_rs-sweep_sym_init-dem",
             "q": 2,
             "c": 6,
-            "dependency": "symmetric",
-            "init_density": "demixed",
+            "dependency": "sym",
+            "init_density": "dem",
         },
         {
-            "name": "q3_c3_rs-sweep_cyclic_init-uniform",
+            "name": "q3_c3_rs-sweep_cy_init-un",
             "q": 3,
             "c": 3,
-            "dependency": "cyclic",
-            "init_density": "uniform",
+            "dependency": "cy",
+            "init_density": "un",
         },
         {
-            "name": "q3_c3_rs-sweep_cyclic_init-uniform",
+            "name": "q3_c3_rs-sweep_cy_init-un",
             "q": 3,
             "c": 3,
-            "dependency": "cyclic",
-            "init_density": "demixed",
+            "dependency": "cy",
+            "init_density": "dem",
         },
         {
-            "name": "q2_c6_rs-sweep_cyclic_init-uniform",
+            "name": "q2_c6_rs-sweep_cy_init-un",
             "q": 2,
             "c": 6,
-            "dependency": "cyclic",
-            "init_density": "uniform",
+            "dependency": "cy",
+            "init_density": "un",
         },
         {
-            "name": "q2_c6_rs-sweep_cyclic_init-demixed",
+            "name": "q2_c6_rs-sweep_cy_init-dem",
             "q": 2,
             "c": 6,
-            "dependency": "cyclic",
-            "init_density": "demixed",
+            "dependency": "cy",
+            "init_density": "dem",
         },
     ]
 
@@ -140,10 +140,10 @@ bash server_run.sh "configs/{run['name']}/q{run['q']}_c{run['c']}_rs{rs}.txt"
                 f.write(content)
 
 
-def generate_rs_sweep_logistic():
+def generate_rs_sweep_log():
     rs_list = [0, 1, 2, 4, 10, 20, 30, 40, 47, 48, 60, 61, 70]
 
-    run_name = "alpha7_p0-0.6_rs-sweep_symmetric_init-demixed_logistic"
+    run_name = "alpha7_p0-0.6_rs-sweep_sym_init-dem_log"
 
     os.makedirs(f"slurm/{run_name}", exist_ok=True)
 
@@ -165,6 +165,6 @@ bash server_run.sh "configs/{run_name}/alpha7_p0-0.6_rs{rs}.txt"
 
 
 if __name__ == "__main__":
-    generate_rs_sweep_power()
-    generate_rs_sweep_logistic()
+    generate_rs_sweep_pow()
+    generate_rs_sweep_log()
 

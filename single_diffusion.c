@@ -21,31 +21,31 @@ void diffuse_save_histograms(double start, double lower_bound, double upper_boun
     const gsl_rng_type *T = gsl_rng_default;
     gsl_rng *r = gsl_rng_alloc(T);
 
-    double *coordinates = alloc_fill_double_array(start, n_realizations);
+    double *crds = alloc_fill_double_array(start, n_realizations);
     for (int i = 0; i < n_t; i++) {
         for (int j = 0; j < n_realizations; j++) {
             // stick to the top if reached the upper bound
-            if (coordinates[j] >= upper_bound) {
-                coordinates[j] = upper_bound;
+            if (crds[j] >= upper_bound) {
+                crds[j] = upper_bound;
                 continue;
             }
             // otherwise apply the boundary condition function
-            double coordinate = simple_diffuse(coordinates[j], d, delta_t, r);
-            coordinates[j] =
+            double coordinate = simple_diffuse(crds[j], d, delta_t, r);
+            crds[j] =
                 sticky_top_refl_bottom_boundary(coordinate, lower_bound, upper_bound);
         }
         double *bin_bounds = malloc((n_bins + 1) * sizeof(double));
-        int *counts = histogram_fixed_bins_write_bin_bounds(coordinates, bin_bounds, n_realizations,
+        int *cnts = histogram_fixed_bins_write_bin_bounds(crds, bin_bounds, n_realizations,
                                            n_bins, lower_bound, upper_bound);
         write_int_array_to_file(
-            counts, n_bins, "../data/diffusion_hist_sticky_top_refl_bottom.txt", "a", "");
+            cnts, n_bins, "../data/diffusion_hist_sticky_top_refl_bottom.txt", "a", "");
         write_double_array_to_file(bin_bounds, n_bins + 1,
                                    "../data/diffusion_hist_sticky_top_refl_bottom.txt",
                                    "a", "");
         free(bin_bounds);
-        free(counts);
+        free(cnts);
     }
-    free(coordinates);
+    free(crds);
 }
 
 void diffuse_save_trajectories(double start, double lower_bound, double upper_bound,

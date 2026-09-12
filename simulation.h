@@ -25,8 +25,8 @@ typedef struct {
     int n_bins;
     int q;
     int rs;
-    int counts_timestep;
-    int coordinates_snapshot;
+    int cnts_timestep;
+    int crds_snapshot;
     char type[64];
     char run[64];
     char dependency[64];
@@ -64,40 +64,40 @@ int *histogram_fixed_bins_write_bin_bounds(double *array, double *bin_bounds,
 
 double simple_diffuse(double last_coordinate, double D, double delta_t, gsl_rng *r);
 
-double reflecting_boundary(double coordinate, double lower_bound, double upper_bound);
+double ref_boundary(double coordinate, double lower_bound, double upper_bound);
 
-double periodic_boundary(double coordinate, double lower_bound, double upper_bound);
+double per_boundary(double coordinate, double lower_bound, double upper_bound);
 
 double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
                                        double upper_bound);
 
-double double_power_diffuse(double coordinate, double D, double c, int q, double delta_t,
+double double_pow_diffuse(double coordinate, double D, double c, int q, double delta_t,
                             double density, gsl_rng *r);
 
-void histogram(const double *array, int *counts, const int array_len, const int n_bins,
+void histogram(const double *array, int *cnts, const int array_len, const int n_bins,
                const double lower_bound, const double upper_bound);
 
-void distribute_coordinates_uniformly(double *array, int array_len, double lower_bound,
+void distribute_crds_uniformly(double *array, int array_len, double lower_bound,
                                       double upper_bound);
 
-void distribute_coordinates_in_one_third(double *array, int array_len, double lower_bound,
+void distribute_crds_in_one_third(double *array, int array_len, double lower_bound,
                                          double upper_bound, int n_third);
 
-double symmetric_tripple_power_diffuse(double coordinate, double D, double c, int q,
+double sym_tripple_pow_diffuse(double coordinate, double D, double c, int q,
                                        double delta_t, double density1, double density2,
                                        gsl_rng *r);
 
-double double_logistic_diffuse(double coordinate, double D, double p_0, double alpha,
+double double_log_diffuse(double coordinate, double D, double p_0, double alpha,
                                double delta_t, double density, gsl_rng *r);
 
-double symmetric_tripple_logistic_diffuse(const double coordinate, const double D,
+double sym_tripple_log_diffuse(const double coordinate, const double D,
                                           double p_0, double alpha, const double delta_t,
                                           const double density1, const double density2,
                                           gsl_rng *r);
 
-int load_checkpoint(char *filename, double *A_coordinates, double *B_coordinates,
-                    double *C_coordinates, int n_realizations, int *i);
+int load_checkpoint(char *filename, double *A_crds, double *B_crds,
+                    double *C_crds, int n_realizations, int *i);
 
-int check_for_existing_checkpoint(char *coordinates_filename);
+int check_for_existing_checkpoint(char *crds_filename);
 
 #endif // SIMULATION_H

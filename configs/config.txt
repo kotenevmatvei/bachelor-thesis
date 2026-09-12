@@ -1,8 +1,8 @@
 run test
-type power
-dependency symmetric
-boundary reflecting
-init_density demixed
+type pow
+dependency sym
+boundary ref
+init_density dem
 delta_t 0.00000001
 start 0
 lower_bound -1
@@ -14,17 +14,17 @@ n_bins 100
 c 2
 q 2
 rs 0
-counts_timestep 1
+cnts_timestep 1
 alpha 3
 p_0 0.2
 
 
 comments:
 
-type: logistic or power
-dependency: symmetric or cyclic
-boundary: reflecting or periodic
-init_density: uniform or demixed
+type: log or pow
+dependency: sym or cy
+boundary: ref or per
+init_density: un or dem
 
 finite sensing radius on the edges?
 
@@ -65,7 +65,7 @@ bin + offset <= n_bins - 1 <=> bin <= n_bins - 1 - offset
 bin - offset >= 0  <=>  bin >= offset
 
 
-demixed initial conditions?
+dem initial conditions?
 
 -1                 0                 1
 --------------------------------------

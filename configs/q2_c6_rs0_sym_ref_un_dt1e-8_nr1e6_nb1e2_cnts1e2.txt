@@ -1,0 +1,28 @@
+run q2_c6_rs0_sym_ref_un_dt1e-8_nr1e6_nb1e2_cnts1e2
+type pow
+dependency sym
+boundary ref
+init_density un
+delta_t 0.00000001
+start 0
+lower_bound -1
+upper_bound 1
+d 1
+n_t 300
+n_realizations 1000000
+n_bins 100
+c 6
+q 2
+rs 0
+cnts_timestep 1
+crds_snapshot 100
+alpha 3
+p_0 0.2
+
+
+comments:
+
+type: log or pow
+dependency: sym or cy
+boundary: ref or per
+init_density: un or dem

@@ -46,28 +46,65 @@ def draw_trajectories():
 
 
 """
-def render_frame(i, A_counts_list, B_counts_list, C_counts_list, boundary, run):
+
+
+def render_frame(i, A_cnts_list, B_cnts_list, C_cnts_list, boundary, run):
     fig, ax = plt.subplots(figsize=(8, 6), dpi=100)
     ax.set_xlim(-1, 1)
     ax.set_ylim(0, 3)
     ax.set_xlabel("Coordinate x")
     ax.set_ylabel("Counts")
-    ax.set_yticks(np.linspace(0,3,30))
+    ax.set_yticks(np.linspace(0, 3, 30))
     # ax.set_title(f"Particle diffusion, {boundary} boundaries")
     ax.grid(which="major")
     ax.grid(which="minor")
 
-    A_counts = A_counts_list[i][1:]
-    B_counts = B_counts_list[i][1:]
-    C_counts = C_counts_list[i][1:]
+    A_cnts = A_cnts_list[i][1:]
+    B_cnts = B_cnts_list[i][1:]
+    C_cnts = C_cnts_list[i][1:]
 
-    ax.plot(centers, A_counts)
-    ax.plot(centers, B_counts)
-    ax.plot(centers, C_counts)
+    ax.plot(centers, A_cnts)
+    ax.plot(centers, B_cnts)
+    ax.plot(centers, C_cnts)
 
     filename = f"runs/{run}/tmp_frames/frame_{i:05d}.png"
     fig.savefig(filename)
     plt.close(fig)
+
+
+def build_config_name(
+    type_,
+    dependency,
+    run,
+    boundary,
+    init_density,
+    delta_t,
+    n_t,
+    n_realizations,
+    n_bins,
+    upper_bound,
+    lower_bound,
+    c,
+    q,
+    p_0,
+    alpha,
+    rs,
+    cnts_timestep,
+):
+    if type_ == "pow":
+        config_name = (
+            f"{type_}_{dependency}_{boundary}_init-{init_density}_q{q}_c{c:g}_dt{delta_t}"
+            f"_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{cnts_timestep}"
+        )
+    elif type_ == "log":
+        config_name = (
+            f"{type_}_{dependency}_{boundary}_init-{init_density}_p0{p_0:g}_alpha{alpha:g}_dt{delta_t}"
+            f"_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{cnts_timestep}"
+        )
+    else:
+        raise ValueError(f"Unknown type {type_}")
+
+    return config_name
 
 
 def ffmpeg_direct_hist(
@@ -87,20 +124,28 @@ def ffmpeg_direct_hist(
     p_0,
     alpha,
     rs,
-    counts_timestep,
+    cnts_timestep,
 ):
-    if type_ == "power":
-        name = (
-            f"counts_{type_}_{dependency}_{boundary}_init-{init_density}_q{q}_c{c:g}_dt{delta_t}_nt{n_t}"
-            f"_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{counts_timestep}"
-        )
-    elif type_ == "logistic":
-        name = (
-            f"counts_{type_}_{dependency}_{boundary}_init-{init_density}_p0{p_0:g}_alpha{alpha:g}_dt{delta_t}"
-            f"_nt{n_t}_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{counts_timestep}"
-        )
-    else:
-        raise ValueError(f"Unknown type {type_}")
+    config_name = build_config_name(
+        type_,
+        dependency,
+        run,
+        boundary,
+        init_density,
+        delta_t,
+        n_t,
+        n_realizations,
+        n_bins,
+        upper_bound,
+        lower_bound,
+        c,
+        q,
+        p_0,
+        alpha,
+        rs,
+        cnts_timestep,
+    )
+    name = f"cnts_{config_name}"
 
     print(f"name: {name}")
     data_filename = f"runs/{run}/data/{name}.txt"
@@ -108,41 +153,40 @@ def ffmpeg_direct_hist(
     with open(data_filename, "r") as f:
         lines = f.readlines()
 
-    A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::3]]
-    B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::3]]
-    C_counts_list = [np.fromstring(line, sep=" ") for line in lines[2::3]]
+    A_cnts_list = [np.fromstring(line, sep=" ") for line in lines[0::3]]
+    B_cnts_list = [np.fromstring(line, sep=" ") for line in lines[1::3]]
+    C_cnts_list = [np.fromstring(line, sep=" ") for line in lines[2::3]]
 
     # check if there is more frames in data than should be in one run. In this case we
     # are continuing a run and there might be multiple animations for the first stages
     # already generated. so we add a corresponding suffix to the animation name and only
     # regenerate the new data
-    n_frames_in_run = int(n_t / counts_timestep)
-    suffix = str(int(len(A_counts_list) / n_frames_in_run))
+    n_frames_in_run = int(n_t / cnts_timestep)
+    suffix = str(int(len(A_cnts_list) / n_frames_in_run))
 
-    A_counts_list = A_counts_list[-n_frames_in_run::1]
-    B_counts_list = B_counts_list[-n_frames_in_run::1]
-    C_counts_list = C_counts_list[-n_frames_in_run::1]
+    A_cnts_list = A_cnts_list[-n_frames_in_run::1]
+    B_cnts_list = B_cnts_list[-n_frames_in_run::1]
+    C_cnts_list = C_cnts_list[-n_frames_in_run::1]
 
-    print("A_counts_list length: ", len(A_counts_list))
+    print("A_cnts_list length: ", len(A_cnts_list))
 
     bin_width = (upper_bound - lower_bound) / n_bins
 
     # normalize the histograms
-    A_counts_list = [count / (n_realizations * bin_width) for count in A_counts_list]
-    B_counts_list = [count / (n_realizations * bin_width) for count in B_counts_list]
-    C_counts_list = [count / (n_realizations * bin_width) for count in C_counts_list]
+    A_cnts_list = [count / (n_realizations * bin_width) for count in A_cnts_list]
+    B_cnts_list = [count / (n_realizations * bin_width) for count in B_cnts_list]
+    C_cnts_list = [count / (n_realizations * bin_width) for count in C_cnts_list]
 
-    total_frames = len(A_counts_list)
+    total_frames = len(A_cnts_list)
 
     shutil.rmtree(f"runs/{run}/tmp_frames", ignore_errors=True)
     os.makedirs(f"runs/{run}/tmp_frames")
 
-    
     worker_func = functools.partial(
         render_frame,
-        A_counts_list=A_counts_list,
-        B_counts_list=B_counts_list,
-        C_counts_list=C_counts_list,
+        A_cnts_list=A_cnts_list,
+        B_cnts_list=B_cnts_list,
+        C_cnts_list=C_cnts_list,
         boundary=BOUNDARY,
         run=run,
     )
@@ -203,7 +247,7 @@ def main():
     rs = config["rs"]
     p_0 = config["p_0"]
     alpha = config["alpha"]
-    counts_timestep = config["counts_timestep"]
+    cnts_timestep = config["cnts_timestep"]
     dependency = config["dependency"]
     boundary = config["boundary"]
     init_density = config["init_density"]
@@ -229,7 +273,7 @@ def main():
         p_0=p_0,
         alpha=alpha,
         rs=rs,
-        counts_timestep=counts_timestep,
+        cnts_timestep=cnts_timestep,
     )
 
 

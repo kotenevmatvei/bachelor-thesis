@@ -45,7 +45,7 @@ ax_traj.axvline(x = 4, color = "grey", linestyle="dashed", label = "t=4s")
 times = [30, 50, 100, 400]
 labels = ["t=0.3", "t=0.5", "t=1.0", "t=4.0"]
 
-# read counts and bin bounds
+# read cnts and bin bounds
 hist_data = []
 with open("data/hist_data.txt") as file:
     for line in file:
@@ -53,7 +53,7 @@ with open("data/hist_data.txt") as file:
             hist_data.append({})
             hist_data[-1]["label"] = line[2:]
             continue
-        hist_data[-1]["counts"] = [float(count) for count in line.split(" ")]
+        hist_data[-1]["cnts"] = [float(count) for count in line.split(" ")]
         next_line = next(file)
         hist_data[-1]["bin_bounds"] = [float(bin_bound) for bin_bound in next_line.split(" ")]
 
@@ -63,13 +63,13 @@ for i, hist in enumerate(hist_data):
 
     label = hist["label"]
     bin_bounds = hist["bin_bounds"]
-    counts = hist["counts"]
+    cnts = hist["cnts"]
 
-    total_count = sum(counts)
+    total_count = sum(cnts)
     bin_width = bin_bounds[1] - bin_bounds[0]
-    density = [c / (total_count * bin_width) for c in counts]
+    density = [c / (total_count * bin_width) for c in cnts]
 
-    centers = [(bin_bounds[j] + bin_bounds[j + 1]) / 2 for j in range(len(counts))]
+    centers = [(bin_bounds[j] + bin_bounds[j + 1]) / 2 for j in range(len(cnts))]
 
     ax_hist.bar(centers, density, width=bin_width, edgecolor="blue", color="grey",
                 linewidth=1, label="Ensemble average")
@@ -96,11 +96,11 @@ for i, hist in enumerate(hist_data):
     # add long time average to the bottom histogram
     if i == 3:
         with open("data/long_time_average.txt") as file:
-            counts = [float(count) for count in next(file).split(" ")]
+            cnts = [float(count) for count in next(file).split(" ")]
             bin_bounds = [float(bb) for bb in next(file).split(" ")]
-        total_count = sum(counts)
+        total_count = sum(cnts)
         bin_width = bin_bounds[1] - bin_bounds[0]
-        density = [c / (total_count * bin_width) for c in counts]
+        density = [c / (total_count * bin_width) for c in cnts]
         sparse_v_axis = np.linspace(-1.5, 1.5, 30)
         ax_hist.scatter(sparse_v_axis, density, label="Long time average")
 

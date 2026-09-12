@@ -11,4 +11,5 @@ __pycache__
 runs/sprint-1
 runs/*/data
 runs/*/animations
+runs/*.zip
 slurm/sprint-1

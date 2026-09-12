@@ -33,48 +33,47 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     double p_0 = config.p_0;
     int q = config.q;
     int rs = config.rs;
-    int counts_timestep = config.counts_timestep;
-    int coordinates_snapshot = config.coordinates_snapshot;
+    int cnts_timestep = config.cnts_timestep;
+    int crds_snapshot = config.crds_snapshot;
 
     // set dependency index for faster branching later in the main loop
     int dependency_id = -1;
-    if (strcmp(dependency, "symmetric") == 0)
+    if (strcmp(dependency, "sym") == 0)
         dependency_id = 1;
-    else if (strcmp(dependency, "cyclic") == 0)
+    else if (strcmp(dependency, "cy") == 0)
         dependency_id = 0;
     else {
-        printf("Unknown dependency in config: %s, valid options are 'symmetric' and "
-               "'cyclic'\n",
+        printf("Unknown dependency in config: %s, valid options are 'sym' and "
+               "'cy'\n",
                dependency);
         exit(EXIT_FAILURE);
     }
 
     // same for boundary
     int boundary_id = -1;
-    if (strcmp(boundary, "reflecting") == 0)
+    if (strcmp(boundary, "ref") == 0)
         boundary_id = 1;
-    else if (strcmp(boundary, "periodic") == 0)
+    else if (strcmp(boundary, "per") == 0)
         boundary_id = 0;
     else {
-        printf("Unknown boundary in config: %s, valid options are 'reflecting' and "
-               "'periodic'\n",
+        printf("Unknown boundary in config: %s, valid options are 'ref' and "
+               "'per'\n",
                boundary);
         exit(EXIT_FAILURE);
     }
 
-    // same for type (power or logistic)
+    // same for type (pow or log)
     int type_id = -1;
-    if (strcmp(type, "power") == 0)
+    if (strcmp(type, "pow") == 0)
         type_id = 1;
-    else if (strcmp(type, "logistic") == 0)
+    else if (strcmp(type, "log") == 0)
         type_id = 0;
     else {
-        printf("Unknown type in config: %s, valid options are 'power' and 'logistic'\n",
-               type);
+        printf("Unknown type in config: %s, valid options are 'pow' and 'log'\n", type);
         exit(EXIT_FAILURE);
     }
 
-    printf("\ncounts_timestep = %d\n", counts_timestep);
+    printf("\ncnts_timestep = %d\n", cnts_timestep);
 
     gsl_rng_env_setup();
     const gsl_rng_type *T = gsl_rng_default;
@@ -91,29 +90,28 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
 
     // construct the file name
     char config_name[256];
-    if (type_id) { // running power model
+    if (type_id) { // running pow model
+        snprintf(config_name, 255, "%s_%s_init-%s_q%d_c%g_dt%g_nr%d_rs%d_bins%d_ft%d",
+                 dependency, boundary, init_density, q, c, delta_t, n_realizations, rs,
+                 n_bins, cnts_timestep);
+        printf("Built pow model config name: %s\n", config_name);
+    } else { // running log model
         snprintf(config_name, 255,
-                 "%s_%s_init-%s_q%d_c%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d", dependency,
-                 boundary, init_density, q, c, delta_t, n_t, n_realizations, rs, n_bins,
-                 counts_timestep);
-        printf("Built power model config name: %s\n", config_name);
-    } else { // running logistic model
-        snprintf(config_name, 255,
-                 "%s_%s_init-%s_p0%g_alpha%g_dt%g_nt%d_nr%d_rs%d_bins%d_ft%d", dependency,
-                 boundary, init_density, p_0, alpha, delta_t, n_t, n_realizations, rs,
-                 n_bins, counts_timestep);
-        printf("Built logistic model config name: %s\n", config_name);
+                 "%s_%s_init-%s_p0%g_alpha%g_dt%g_nr%d_rs%d_bins%d_ft%d", dependency,
+                 boundary, init_density, p_0, alpha, delta_t, n_realizations, rs, n_bins,
+                 cnts_timestep);
+        printf("Built log model config name: %s\n", config_name);
     }
 
-    char counts_filename[1024];
-    snprintf(counts_filename, 1023, "../runs/%s/data/counts_%s_%s.txt", run, type,
+    char cnts_filename[1024];
+    snprintf(cnts_filename, 1023, "../runs/%s/data/cnts_%s_%s.txt", run, type,
              config_name);
-    printf("Counts file name: %s\n", counts_filename);
+    printf("Counts file name: %s\n", cnts_filename);
 
-    char coordinates_filename[1024];
-    snprintf(coordinates_filename, 1023, "../runs/%s/data/coordinates_%s_%s.txt", run,
-             type, config_name);
-    printf("Coordinates file name: %s\n", coordinates_filename);
+    char crds_filename[1024];
+    snprintf(crds_filename, 1023, "../runs/%s/data/crds_%s_%s.txt", run, type,
+             config_name);
+    printf("Coordinates file name: %s\n", crds_filename);
 
     char log_filename[1024];
     snprintf(log_filename, 1023, "../runs/%s/data/log_%s_%s.txt", run, type, config_name);
@@ -151,51 +149,51 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         }
     }
 
-    double *A_coordinates = malloc(n_realizations * sizeof(double));
-    double *B_coordinates = malloc(n_realizations * sizeof(double));
-    double *C_coordinates = malloc(n_realizations * sizeof(double));
-    double *coordinates[3] = {A_coordinates, B_coordinates, C_coordinates};
+    double *A_crds = malloc(n_realizations * sizeof(double));
+    double *B_crds = malloc(n_realizations * sizeof(double));
+    double *C_crds = malloc(n_realizations * sizeof(double));
+    double *crds[3] = {A_crds, B_crds, C_crds};
 
-    int *A_counts = malloc(n_bins * sizeof(int));
-    int *B_counts = malloc(n_bins * sizeof(int));
-    int *C_counts = malloc(n_bins * sizeof(int));
-    int *counts[3] = {A_counts, B_counts, C_counts};
+    int *A_cnts = malloc(n_bins * sizeof(int));
+    int *B_cnts = malloc(n_bins * sizeof(int));
+    int *C_cnts = malloc(n_bins * sizeof(int));
+    int *cnts[3] = {A_cnts, B_cnts, C_cnts};
 
     int file_found = 0;
 
-    FILE *counts_file;
-    FILE *coordinates_file;
+    FILE *cnts_file;
+    FILE *crds_file;
     FILE *log_file;
 
-    int i_mb_checkpoint = 0;
-    int continue_offset = 0;
+    int i_mb_checkpoint = 1;
+    int first_iter_offset = 1;
 
     // see if we can load a preexisting checkpoint:
-    if (check_for_existing_checkpoint(coordinates_filename)) {
-        if (load_checkpoint(coordinates_filename, A_coordinates, B_coordinates,
-                            C_coordinates, n_realizations, &i_mb_checkpoint)) {
+    if (check_for_existing_checkpoint(crds_filename)) {
+        if (load_checkpoint(crds_filename, A_crds, B_crds, C_crds, n_realizations,
+                            &i_mb_checkpoint)) {
             printf("Since the checkpoint exists, open files in append mode\n");
             file_found = 1;
-            counts_file = fopen(counts_filename, "a");
-            coordinates_file = fopen(coordinates_filename, "a");
+            cnts_file = fopen(cnts_filename, "a");
+            crds_file = fopen(crds_filename, "a");
             log_file = fopen(log_filename, "a");
-            continue_offset = 1;
-            // fprintf(counts_file, "\n");
-            // fprintf(coordinates_file, "\n");
+            first_iter_offset = 0;
+            // fprintf(cnts_file, "\n");
+            // fprintf(crds_file, "\n");
             // fprintf(log_file, "\n");
         }
     }
     if (file_found == 0) {
         printf("file_found = 0, so we are creating new files to write now\n");
-        counts_file = fopen(counts_filename, "w");
-        if (counts_file == NULL) {
-            printf("Error creating counts file :(\n)");
+        cnts_file = fopen(cnts_filename, "w");
+        if (cnts_file == NULL) {
+            printf("Error creating cnts file :(\n)");
             exit(EXIT_FAILURE);
         } else
             printf("Counts file created successfully\n");
-        coordinates_file = fopen(coordinates_filename, "w");
-        if (coordinates_file == NULL) {
-            printf("Error creating coordinates file :(\n)");
+        crds_file = fopen(crds_filename, "w");
+        if (crds_file == NULL) {
+            printf("Error creating crds file :(\n)");
             exit(EXIT_FAILURE);
         } else
             printf("Coordinates file created successfully\n");
@@ -206,46 +204,43 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         } else
             printf("Log file created successfully\n");
 
-        if (strcmp(init_density, "uniform") == 0) {
-            printf("Distributing the init coordinates uniformly\n");
-            distribute_coordinates_uniformly(A_coordinates, n_realizations, lower_bound,
-                                             upper_bound);
-            distribute_coordinates_uniformly(B_coordinates, n_realizations, lower_bound,
-                                             upper_bound);
-            distribute_coordinates_uniformly(C_coordinates, n_realizations, lower_bound,
-                                             upper_bound);
-        } else if (strcmp(init_density, "demixed") == 0) {
-            printf("Preparing the init coordinates in the demixed state\n");
-            distribute_coordinates_in_one_third(A_coordinates, n_realizations,
-                                                lower_bound, upper_bound, 0);
-            distribute_coordinates_in_one_third(B_coordinates, n_realizations,
-                                                lower_bound, upper_bound, 1);
-            distribute_coordinates_in_one_third(C_coordinates, n_realizations,
-                                                lower_bound, upper_bound, 2);
+        if (strcmp(init_density, "un") == 0) {
+            printf("Distributing the init crds uniformly\n");
+            distribute_crds_uniformly(A_crds, n_realizations, lower_bound, upper_bound);
+            distribute_crds_uniformly(B_crds, n_realizations, lower_bound, upper_bound);
+            distribute_crds_uniformly(C_crds, n_realizations, lower_bound, upper_bound);
+        } else if (strcmp(init_density, "dem") == 0) {
+            printf("Preparing the init crds in the dem state\n");
+            distribute_crds_in_one_third(A_crds, n_realizations, lower_bound, upper_bound,
+                                         0);
+            distribute_crds_in_one_third(B_crds, n_realizations, lower_bound, upper_bound,
+                                         1);
+            distribute_crds_in_one_third(C_crds, n_realizations, lower_bound, upper_bound,
+                                         2);
         } else {
-            printf("Invalid init_density in config: %s, valid options are 'uniform' and "
-                   "'demixed'\n",
+            printf("Invalid init_density in config: %s, valid options are 'un' and "
+                   "'dem'\n",
                    init_density);
             exit(EXIT_FAILURE);
         }
 
-        // write the initial counts and coordinates
-        printf("Writing init counts to file\n");
+        // write the initial cnts and crds
+        printf("Writing init cnts to file\n");
         for (int k = 0; k <= 2; k++) {
-            fprintf(counts_file, "0 ");
-            write_int_array(counts_file, counts[k], n_bins, "");
+            fprintf(cnts_file, "1 ");
+            write_int_array(cnts_file, cnts[k], n_bins, "");
         }
-        printf("Writing init coordinates to file\n");
+        printf("Writing init crds to file\n");
         for (int k = 0; k <= 2; k++) {
-            fprintf(coordinates_file, "0 ");
-            write_double_array(coordinates_file, coordinates[k], n_realizations, "");
+            fprintf(crds_file, "1 ");
+            write_double_array(crds_file, crds[k], n_realizations, "");
         }
     }
 
     printf("Calculating initial histograms\n");
-    histogram(A_coordinates, A_counts, n_realizations, n_bins, lower_bound, upper_bound);
-    histogram(B_coordinates, B_counts, n_realizations, n_bins, lower_bound, upper_bound);
-    histogram(C_coordinates, C_counts, n_realizations, n_bins, lower_bound, upper_bound);
+    histogram(A_crds, A_cnts, n_realizations, n_bins, lower_bound, upper_bound);
+    histogram(B_crds, B_cnts, n_realizations, n_bins, lower_bound, upper_bound);
+    histogram(C_crds, C_cnts, n_realizations, n_bins, lower_bound, upper_bound);
 
     double range = upper_bound - lower_bound;
     double bin_size = range / n_bins;
@@ -254,12 +249,12 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     // key is the indey of in the array, values are the densities on which the
     // density of the <key>-particle-sort depends) int
 
-    int symmetric_dependencies_map[3][2] = {{1, 2}, {2, 0}, {0, 1}};
-    int cyclic_dependencies_map[3] = {2, 0, 1};
+    int sym_dependencies_map[3][2] = {{1, 2}, {2, 0}, {0, 1}};
+    int cy_dependencies_map[3] = {2, 0, 1};
 
     printf("Compiler chill, i am using both maps...\n");
-    printf("sdm[0][0] = %d\n", symmetric_dependencies_map[0][0]);
-    printf("cdm[0] = %d\n", cyclic_dependencies_map[0]);
+    printf("sdm[0][0] = %d\n", sym_dependencies_map[0][0]);
+    printf("cdm[0] = %d\n", cy_dependencies_map[0]);
 
     int n_bins_within_rs = 1 + 2 * rs;
 
@@ -268,18 +263,17 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     double histogram_time = 0.0;
 
     int time_loop_start = i_mb_checkpoint + 1;
-    int time_loop_end = i_mb_checkpoint + continue_offset + n_t;
-    printf("Starting the time loop from i = %d until %d\n", time_loop_start,
-           time_loop_end);
+    int time_loop_end = i_mb_checkpoint + n_t - first_iter_offset;
+    printf("Starting the time loop from i = %d until %d\n",
+           time_loop_start - first_iter_offset, time_loop_end);
     fflush(stdout);
     time_t start_iloop = time(NULL);
-    for (int i = time_loop_start; i < time_loop_end; i++) {
+    for (int i = time_loop_start; i <= time_loop_end; i++) {
         // first compute all histograms for the current timestep so that every
         // particle sort sees the same density
         time_t start_histogram = time(NULL);
         for (int k = 0; k <= 2; k++) {
-            histogram(coordinates[k], counts[k], n_realizations, n_bins, lower_bound,
-                      upper_bound);
+            histogram(crds[k], cnts[k], n_realizations, n_bins, lower_bound, upper_bound);
         }
         time_t end_histogram = time(NULL);
         histogram_time += end_histogram - start_histogram;
@@ -288,9 +282,9 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         for (int k = 0; k <= 2; k++) {
             int *dependency_ind;
             if (dependency_id)
-                dependency_ind = symmetric_dependencies_map[k];
+                dependency_ind = sym_dependencies_map[k];
             else
-                dependency_ind = &cyclic_dependencies_map[k];
+                dependency_ind = &cy_dependencies_map[k];
 
 #pragma omp parallel for
             for (int j = 0; j < n_realizations; j++) {
@@ -298,7 +292,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 gsl_rng *local_r = thread_rngs[thread_id];
 
                 // get the bin in which current coordinate falls
-                int bin = (int)((coordinates[k][j] - lower_bound) / bin_size);
+                int bin = (int)((crds[k][j] - lower_bound) / bin_size);
                 if (bin >= n_bins)
                     bin = n_bins - 1;
                 if (bin < 0)
@@ -307,25 +301,25 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                 double coordinate;
 
                 if (dependency_id) {
-                    // ----------this is for tripple symmetric diffusion ---------
-                    double density1 = (double)counts[dependency_ind[0]][bin] /
-                                      (n_realizations * delta_x);
-                    double density2 = (double)counts[dependency_ind[1]][bin] /
-                                      (n_realizations * delta_x);
+                    // ----------this is for tripple sym diffusion ---------
+                    double density1 =
+                        (double)cnts[dependency_ind[0]][bin] / (n_realizations * delta_x);
+                    double density2 =
+                        (double)cnts[dependency_ind[1]][bin] / (n_realizations * delta_x);
 
                     // accumulate the densities from neighboring bins in non-local case
                     // (rs >= 1)
                     for (int offset = 1; offset <= rs; offset++) {
                         if (bin >= offset) {
-                            density1 += (double)counts[dependency_ind[0]][bin - offset] /
+                            density1 += (double)cnts[dependency_ind[0]][bin - offset] /
                                         (n_realizations * delta_x);
-                            density2 += (double)counts[dependency_ind[1]][bin - offset] /
+                            density2 += (double)cnts[dependency_ind[1]][bin - offset] /
                                         (n_realizations * delta_x);
                         }
                         if (bin <= n_bins - offset - 1) {
-                            density1 += (double)counts[dependency_ind[0]][bin + offset] /
+                            density1 += (double)cnts[dependency_ind[0]][bin + offset] /
                                         (n_realizations * delta_x);
-                            density2 += (double)counts[dependency_ind[1]][bin + offset] /
+                            density2 += (double)cnts[dependency_ind[1]][bin + offset] /
                                         (n_realizations * delta_x);
                         }
                     }
@@ -334,72 +328,70 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
                     density2 /= n_bins_within_rs;
 
                     if (type_id)
-                        coordinate = symmetric_tripple_power_diffuse(
-                            coordinates[k][j], d, c, q, delta_t, density1, density2,
-                            local_r);
+                        coordinate = sym_tripple_pow_diffuse(crds[k][j], d, c, q, delta_t,
+                                                             density1, density2, local_r);
                     else
-                        coordinate = symmetric_tripple_logistic_diffuse(
-                            coordinates[k][j], d, p_0, alpha, delta_t, density1, density2,
-                            local_r);
+                        coordinate =
+                            sym_tripple_log_diffuse(crds[k][j], d, p_0, alpha, delta_t,
+                                                    density1, density2, local_r);
                 } else {
-                    // -------------- this is for tripple cyclic diffusion ---------------
+                    // -------------- this is for tripple cy diffusion ---------------
                     double density =
-                        (double)counts[*dependency_ind][bin] / (n_realizations * delta_x);
+                        (double)cnts[*dependency_ind][bin] / (n_realizations * delta_x);
 
                     // accumulate the densities from neighboring bins in non-local case
                     // (rs >= 1)
                     for (int offset = 1; offset <= rs; offset++) {
                         if (bin >= offset) {
-                            density += (double)counts[*dependency_ind][bin - offset] /
+                            density += (double)cnts[*dependency_ind][bin - offset] /
                                        (n_realizations * delta_x);
                         }
                         if (bin <= n_bins - offset - 1) {
-                            density += (double)counts[*dependency_ind][bin + offset] /
+                            density += (double)cnts[*dependency_ind][bin + offset] /
                                        (n_realizations * delta_x);
                         }
                     }
                     density /= n_bins_within_rs;
                     if (type_id)
-                        coordinate = double_power_diffuse(coordinates[k][j], d, c, q,
-                                                          delta_t, density, local_r);
+                        coordinate = double_pow_diffuse(crds[k][j], d, c, q, delta_t,
+                                                        density, local_r);
                     else
-                        coordinate = double_logistic_diffuse(
-                            coordinates[k][j], d, p_0, alpha, delta_t, density, local_r);
+                        coordinate = double_log_diffuse(crds[k][j], d, p_0, alpha,
+                                                        delta_t, density, local_r);
                 }
 
                 if (boundary_id)
-                    coordinate =
-                        reflecting_boundary(coordinate, lower_bound, upper_bound);
+                    coordinate = ref_boundary(coordinate, lower_bound, upper_bound);
                 else if (boundary_id == 0)
-                    coordinate = periodic_boundary(coordinate, lower_bound, upper_bound);
+                    coordinate = per_boundary(coordinate, lower_bound, upper_bound);
                 else {
                     printf("Uknown boundary_id: %d", boundary_id);
                     exit(EXIT_FAILURE);
                 }
 
-                coordinates[k][j] = coordinate;
+                crds[k][j] = coordinate;
             }
         }
 
-        // save a snapshot of the simulation (counts/coordinates) state every
-        // counts_timestep
+        // save a snapshot of the simulation (cnts/crds) state every
+        // cnts_timestep
         time_t start_io = time(NULL);
-        if (i % counts_timestep == 0) {
+        if (i % cnts_timestep == 0) {
             for (int k = 0; k <= 2; k++) {
-                fprintf(counts_file, "%d ", i);
-                write_int_array(counts_file, counts[k], n_bins, "");
+                fprintf(cnts_file, "%d ", i);
+                write_int_array(cnts_file, cnts[k], n_bins, "");
             }
             fflush(stdout);
         }
-        if (i % coordinates_snapshot == 0 || i == time_loop_end - 1) {
-            // overwrite the coordinates
-            printf("Saving a coordinates snapshot for i = %d of the total %d\n",
-                   i + 1, time_loop_end);
-            fclose(coordinates_file);
-            coordinates_file = fopen(coordinates_filename, "w");
+        if (i % crds_snapshot == 0 || i == time_loop_end) {
+            // overwrite the crds
+            printf("Saving a crds snapshot for i = %d of the total %d\n", i,
+                   time_loop_end);
+            fclose(crds_file);
+            crds_file = fopen(crds_filename, "w");
             for (int k = 0; k <= 2; k++) {
-                fprintf(coordinates_file, "%d ", i + 1);
-                write_double_array(coordinates_file, coordinates[k], n_realizations, "");
+                fprintf(crds_file, "%d ", i);
+                write_double_array(crds_file, crds[k], n_realizations, "");
             }
             fflush(stdout);
         }
@@ -426,13 +418,13 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     fprintf(log_file, "\nThe simulation took %d hours %d minutes and %d seconds\n", hours,
             minutes, seconds);
 
-    fclose(counts_file);
-    free(A_coordinates);
-    free(B_coordinates);
-    free(C_coordinates);
-    free(A_counts);
-    free(B_counts);
-    free(C_counts);
+    fclose(cnts_file);
+    free(A_crds);
+    free(B_crds);
+    free(C_crds);
+    free(A_cnts);
+    free(B_cnts);
+    free(C_cnts);
     for (int i = 0; i < max_threads; i++) {
         gsl_rng_free(thread_rngs[i]);
     }

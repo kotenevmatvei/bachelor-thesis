@@ -40,18 +40,18 @@ def draw_histogram(style: str = "line"):
     with open(f"data/diffusion_hist_{BOUNDARY}.txt", "r") as f:
         lines = f.readlines()
 
-    counts_list = [np.fromstring(line, sep=" ") for line in lines[0::2]]
+    cnts_list = [np.fromstring(line, sep=" ") for line in lines[0::2]]
     bin_bounds_list = [np.fromstring(line, sep=" ") for line in lines[1::2]]
 
-    counts_init = counts_list[0]
+    cnts_init = cnts_list[0]
     bin_bounds_init = bin_bounds_list[0]
-    total_count = sum(counts_init)
+    total_count = sum(cnts_init)
     bin_width = bin_bounds_init[1] - bin_bounds_init[0]
 
-    density = [c / (total_count * bin_width) for c in counts_init]
+    density = [c / (total_count * bin_width) for c in cnts_init]
     centers = [
         (bin_bounds_init[j] + bin_bounds_init[j + 1]) / 2
-        for j in range(len(counts_init))
+        for j in range(len(cnts_init))
     ]
 
     fig, ax = plt.subplots()
@@ -63,16 +63,16 @@ def draw_histogram(style: str = "line"):
     ax.grid()
 
     def run_hist(frame_index, bars):
-        counts = counts_list[frame_index]
-        density = [c / (total_count * bin_width) for c in counts]
+        cnts = cnts_list[frame_index]
+        density = [c / (total_count * bin_width) for c in cnts]
 
         for rect, new_height in zip(bars.patches, density):
             rect.set_height(new_height)
         return bars.patches
 
     def run_line(frame_index, line):
-        counts = counts_list[frame_index]
-        density = [c / (total_count * bin_width) for c in counts]
+        cnts = cnts_list[frame_index]
+        density = [c / (total_count * bin_width) for c in cnts]
         line.set_data(centers, density)
         return (line,)
 
@@ -83,7 +83,7 @@ def draw_histogram(style: str = "line"):
         bars = ax.bar(centers, density, width=bin_width, linewidth=1)
         run = functools.partial(run_hist, bars=bars)
 
-    total_frames = len(counts_list)
+    total_frames = len(cnts_list)
 
     ani = animation.FuncAnimation(
         fig,
@@ -109,7 +109,7 @@ def draw_histogram(style: str = "line"):
         )
 
 
-def render_frame(i, counts_list, total_count, bin_width, centers, style, boundary):
+def render_frame(i, cnts_list, total_count, bin_width, centers, style, boundary):
     fig, ax = plt.subplots(
         figsize=(8, 6), dpi=100
     )
@@ -120,8 +120,8 @@ def render_frame(i, counts_list, total_count, bin_width, centers, style, boundar
     ax.set_title(f"Particle diffusion, {boundary} boundaries")
     ax.grid()
 
-    counts = counts_list[i]
-    density = [c / (total_count * bin_width) for c in counts]
+    cnts = cnts_list[i]
+    density = [c / (total_count * bin_width) for c in cnts]
 
     if style == "line":
         ax.plot(centers, density)
@@ -138,24 +138,24 @@ def ffmpeg_direct_hist(style="bars"):
     with open(f"data/diffusion_hist_{BOUNDARY}.txt", "r") as f:
         lines = f.readlines()
 
-    counts_list = [np.fromstring(line, sep=" ") for line in lines[0::2]]
+    cnts_list = [np.fromstring(line, sep=" ") for line in lines[0::2]]
     bin_bounds_list = [np.fromstring(line, sep=" ") for line in lines[1::2]]
 
-    counts_init = counts_list[0]
+    cnts_init = cnts_list[0]
     bin_bounds_init = bin_bounds_list[0]
-    total_count = sum(counts_init)
+    total_count = sum(cnts_init)
     bin_width = bin_bounds_init[1] - bin_bounds_init[0]
     centers = [
         (bin_bounds_init[j] + bin_bounds_init[j + 1]) / 2
-        for j in range(len(counts_init))
+        for j in range(len(cnts_init))
     ]
 
-    total_frames = len(counts_list)
+    total_frames = len(cnts_list)
     os.makedirs("tmp_frames", exist_ok=True)
 
     worker_func = functools.partial(
         render_frame,
-        counts_list=counts_list,
+        cnts_list=cnts_list,
         total_count=total_count,
         bin_width=bin_width,
         centers=centers,

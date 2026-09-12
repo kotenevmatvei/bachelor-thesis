@@ -9,23 +9,23 @@ print(f"q3: {len(q3_c)}, q2: {len(q2_c)}")
 
 
 def generate_c_sweep():
-    power_run_names = [
-        "q2-3_c_sweep_symmetric_init-uniform",  # already run
-        "q2-3_c_sweep_symmetric_init-demixed",  # already run
-        "q2-3_c_sweep_cyclic_init-uniform",  # already run
+    pow_run_names = [
+        "q2-3_c_sweep_sym_init-un",  # already run
+        "q2-3_c_sweep_sym_init-dem",  # already run
+        "q2-3_c_sweep_cy_init-un",  # already run
     ]
 
-    for run_name in power_run_names:
+    for run_name in pow_run_names:
         os.makedirs(f"configs/{run_name}", exist_ok=True)
 
         for q_val in [2, 3]:
             c_list = q2_c if q_val == 2 else q3_c
             for c_val in c_list:
-                content = f"""type power
+                content = f"""type pow
 run {run_name}
-dependency symmetric
-boundary reflecting
-init_density uniform
+dependency sym
+boundary ref
+init_density un
 delta_t 0.0001
 start 0
 lower_bound -1
@@ -37,7 +37,7 @@ n_bins 100
 c {c_val}
 q {q_val}
 rs 0
-counts_timestep 10000
+cnts_timestep 10000
 alpha 8
 p_0 0.35
 """
@@ -46,17 +46,17 @@ p_0 0.35
 
 
 def generate_p0_sweep():
-    run_name = "alpha7-8_p0_sweep_symmetric_init-demixed"
+    run_name = "alpha7-8_p0_sweep_sym_init-dem"
 
     os.makedirs(f"configs/{run_name}", exist_ok=True)
 
     for alpha in [7, 8]:
         for p_0 in p_0_list:
-            content = f"""type logistic
+            content = f"""type log
 run {run_name}
-dependency symmetric
-boundary reflecting
-init_density demixed
+dependency sym
+boundary ref
+init_density dem
 delta_t 0.0001
 start 0
 lower_bound -1
@@ -68,7 +68,7 @@ n_bins 100
 c 3
 q 3
 rs 0
-counts_timestep 10000
+cnts_timestep 10000
 alpha {alpha}
 p_0 {p_0}
 """
@@ -76,64 +76,64 @@ p_0 {p_0}
                 f.write(content)
 
 
-def generate_rs_sweep_power():
+def generate_rs_sweep_pow():
     rs_list = [0, 1, 2, 4, 10, 20, 30, 40, 47, 48, 60, 61, 70]
     runs = [
         {
-            "name": "q3_c3_rs-sweep_symmetric_init-uniform",
+            "name": "q3_c3_rs-sweep_sym_init-un",
             "q": 3,
             "c": 3,
-            "dependency": "symmetric",
-            "init_density": "uniform",
+            "dependency": "sym",
+            "init_density": "un",
         },
         {
-            "name": "q3_c3_rs-sweep_symmetric_init-uniform",
+            "name": "q3_c3_rs-sweep_sym_init-un",
             "q": 3,
             "c": 3,
-            "dependency": "symmetric",
-            "init_density": "demixed",
+            "dependency": "sym",
+            "init_density": "dem",
         },
         {
-            "name": "q2_c6_rs-sweep_symmetric_init-uniform",
+            "name": "q2_c6_rs-sweep_sym_init-un",
             "q": 2,
             "c": 6,
-            "dependency": "symmetric",
-            "init_density": "uniform",
+            "dependency": "sym",
+            "init_density": "un",
         },
         {
-            "name": "q2_c6_rs-sweep_symmetric_init-demixed",
+            "name": "q2_c6_rs-sweep_sym_init-dem",
             "q": 2,
             "c": 6,
-            "dependency": "symmetric",
-            "init_density": "demixed",
+            "dependency": "sym",
+            "init_density": "dem",
         },
         {
-            "name": "q3_c3_rs-sweep_cyclic_init-uniform",
+            "name": "q3_c3_rs-sweep_cy_init-un",
             "q": 3,
             "c": 3,
-            "dependency": "cyclic",
-            "init_density": "uniform",
+            "dependency": "cy",
+            "init_density": "un",
         },
         {
-            "name": "q3_c3_rs-sweep_cyclic_init-uniform",
+            "name": "q3_c3_rs-sweep_cy_init-un",
             "q": 3,
             "c": 3,
-            "dependency": "cyclic",
-            "init_density": "demixed",
+            "dependency": "cy",
+            "init_density": "dem",
         },
         {
-            "name": "q2_c6_rs-sweep_cyclic_init-uniform",
+            "name": "q2_c6_rs-sweep_cy_init-un",
             "q": 2,
             "c": 6,
-            "dependency": "cyclic",
-            "init_density": "uniform",
+            "dependency": "cy",
+            "init_density": "un",
         },
         {
-            "name": "q2_c6_rs-sweep_cyclic_init-demixed",
+            "name": "q2_c6_rs-sweep_cy_init-dem",
             "q": 2,
             "c": 6,
-            "dependency": "cyclic",
-            "init_density": "demixed",
+            "dependency": "cy",
+            "init_density": "dem",
         },
     ]
 
@@ -141,10 +141,10 @@ def generate_rs_sweep_power():
         os.makedirs(f"configs/{run['name']}", exist_ok=True)
 
         for rs in rs_list:
-            content = f"""type power
+            content = f"""type pow
 run {run["name"]}
 dependency {run["dependency"]}
-boundary reflecting
+boundary ref
 init_density {run["init_density"]}
 delta_t 0.0001
 start 0
@@ -157,7 +157,7 @@ n_bins 100
 c {run["c"]}
 q {run["q"]}
 rs {rs}
-counts_timestep 10000
+cnts_timestep 10000
 alpha 8
 p_0 0.35
 """
@@ -167,18 +167,18 @@ p_0 0.35
                 f.write(content)
 
 
-def generate_rs_sweep_logistic():
-    run_name = "alpha7_p0-0.6_rs-sweep_symmetric_init-demixed_logistic"
+def generate_rs_sweep_log():
+    run_name = "alpha7_p0-0.6_rs-sweep_sym_init-dem_log"
     rs_list = [0, 1, 2, 4, 10, 20, 30, 40, 47, 48, 60, 61, 70]
 
     os.makedirs(f"configs/{run_name}", exist_ok=True)
 
     for rs in rs_list:
-        content = f"""type logistic
+        content = f"""type log
 run {run_name}
-dependency symmetric
-boundary reflecting
-init_density demixed
+dependency sym
+boundary ref
+init_density dem
 delta_t 0.0001
 start 0
 lower_bound -1
@@ -190,7 +190,7 @@ n_bins 100
 c 3
 q 3
 rs {rs}
-counts_timestep 10000
+cnts_timestep 10000
 alpha 7
 p_0 0.6
 """
@@ -199,8 +199,8 @@ p_0 0.6
 
 
 if __name__ == "__main__":
-    generate_rs_sweep_power()
- #    generate_rs_sweep_logistic()
+    generate_rs_sweep_pow()
+ #    generate_rs_sweep_log()
  # 
  # 
  # 

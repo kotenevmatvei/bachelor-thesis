@@ -13,7 +13,7 @@ typedef struct {
     int n_array;
     double array[MAX_ARRAY_LENGTH];
     int n_bins;
-    int expected_counts[MAX_COUNTS];
+    int expected_cnts[MAX_COUNTS];
     double expected_bin_bounds[MAX_COUNTS + 1];
 } histogram_test_case;
 
@@ -30,23 +30,23 @@ histogram_test_case test_cases[] = {
 
 void handle_histogram_test_case(histogram_test_case *tc) {
     double *bin_bounds = calloc(tc->n_bins + 1, sizeof(double));
-    int *counts = histogram_flexible_bounds(tc->array, bin_bounds, tc->n_array, tc->n_bins);
-    int counts_equal = compare_int_arrays(tc->expected_counts, counts, tc->n_bins);
+    int *cnts = histogram_flexible_bounds(tc->array, bin_bounds, tc->n_array, tc->n_bins);
+    int cnts_equal = compare_int_arrays(tc->expected_cnts, cnts, tc->n_bins);
     double bin_bounds_equal = compare_double_arrays(tc->expected_bin_bounds, bin_bounds,
                                                     tc->n_bins + 1);
 
-    if (counts_equal && bin_bounds_equal) {
+    if (cnts_equal && bin_bounds_equal) {
         printf("PASS: %s\n", tc->name);
     } else {
         printf("FAIL: %s\n", tc->name);
         printf("\t");
         print_double_array(tc->array, tc->n_array, "array");
         // print wrong arrays
-        if (!counts_equal) {
+        if (!cnts_equal) {
             printf("\t");
-            print_int_array(tc->expected_counts, tc->n_bins, "Expected counts");
+            print_int_array(tc->expected_cnts, tc->n_bins, "Expected cnts");
             printf("\t");
-            print_int_array(counts, tc->n_bins, "Got instead");
+            print_int_array(cnts, tc->n_bins, "Got instead");
         }
         if (!bin_bounds_equal) {
             printf("\t");

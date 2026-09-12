@@ -68,10 +68,10 @@ DiffusionConfig read_config(const char *filename) {
             config.c = atof(val_str);
         } else if (strcmp(key, "q") == 0) {
             config.q = atoi(val_str);
-        } else if (strcmp(key, "counts_timestep") == 0) {
-            config.counts_timestep = atoi(val_str);
-        } else if (strcmp(key, "coordinates_snapshot") == 0) {
-            config.coordinates_snapshot = atoi(val_str);
+        } else if (strcmp(key, "cnts_timestep") == 0) {
+            config.cnts_timestep = atoi(val_str);
+        } else if (strcmp(key, "crds_snapshot") == 0) {
+            config.crds_snapshot = atoi(val_str);
 
         } else if (strcmp(key, "comments:") == 0) { // from here starts the commensts section
             break;

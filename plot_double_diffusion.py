@@ -42,7 +42,7 @@ def draw_trajectories():
     os.replace(temp_path, final_path)
 
 
-def render_frame(i, A_counts_list, B_counts_list, boundary):
+def render_frame(i, A_cnts_list, B_cnts_list, boundary):
     fig, ax = plt.subplots(figsize=(8, 6), dpi=100)
     ax.set_xlim(-1, 1)
     ax.set_ylim(0, 1)
@@ -51,11 +51,11 @@ def render_frame(i, A_counts_list, B_counts_list, boundary):
     # ax.set_title(f"Particle diffusion, {boundary} boundaries")
     ax.grid()
 
-    A_counts = A_counts_list[i]
-    B_counts = B_counts_list[i]
+    A_cnts = A_cnts_list[i]
+    B_cnts = B_cnts_list[i]
 
-    ax.plot(centers, A_counts)
-    ax.plot(centers, B_counts)
+    ax.plot(centers, A_cnts)
+    ax.plot(centers, B_cnts)
 
     filename = f"tmp_frames/frame_{i:05d}.png"
     fig.savefig(filename)
@@ -65,7 +65,7 @@ def render_frame(i, A_counts_list, B_counts_list, boundary):
 def ffmpeg_direct_hist(
     delta_t, n_t, n_realizations, n_bins, upper_bound, lower_bound, c, q
 ):
-    name = f"dd_counts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c}_q{q}_bins{n_bins}"
+    name = f"dd_cnts_dt{delta_t}_nt{n_t}_nr{n_realizations}_c{c}_q{q}_bins{n_bins}"
     data_filename = f"data/{name}.txt"
 
     with open(data_filename, "r") as f:
@@ -73,23 +73,23 @@ def ffmpeg_direct_hist(
 
     frame_step = int(n_t / 1000)
 
-    A_counts_list = [np.fromstring(line, sep=" ") for line in lines[0::frame_step]]
-    B_counts_list = [np.fromstring(line, sep=" ") for line in lines[1::frame_step]]
+    A_cnts_list = [np.fromstring(line, sep=" ") for line in lines[0::frame_step]]
+    B_cnts_list = [np.fromstring(line, sep=" ") for line in lines[1::frame_step]]
 
     bin_width = (upper_bound - lower_bound) / n_bins
 
-    A_counts_list = [count / (n_realizations * bin_width) for count in A_counts_list]
-    B_counts_list = [count / (n_realizations * bin_width) for count in B_counts_list]
+    A_cnts_list = [count / (n_realizations * bin_width) for count in A_cnts_list]
+    B_cnts_list = [count / (n_realizations * bin_width) for count in B_cnts_list]
 
-    total_frames = len(A_counts_list)
+    total_frames = len(A_cnts_list)
 
     shutil.rmtree("tmp_frames", ignore_errors=True)
     os.makedirs("tmp_frames")
 
     worker_func = functools.partial(
         render_frame,
-        A_counts_list=A_counts_list,
-        B_counts_list=B_counts_list,
+        A_cnts_list=A_cnts_list,
+        B_cnts_list=B_cnts_list,
         boundary=BOUNDARY,
     )
 
