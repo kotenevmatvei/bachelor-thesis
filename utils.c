@@ -27,10 +27,10 @@ DiffusionConfig read_config(const char *filename) {
         exit(EXIT_FAILURE);
     }
 
-    char key[124];
-    char val_str[124];
+    char key[256];
+    char val_str[256];
 
-    while (fscanf(file, "%123s %123s", key, val_str) == 2) {
+    while (fscanf(file, "%255s %255s", key, val_str) == 2) {
 
         if (strcmp(key, "type") == 0) {
             strcpy(config.type, val_str);

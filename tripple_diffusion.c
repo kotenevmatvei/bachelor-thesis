@@ -118,14 +118,14 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     printf("Log file name: %s\n", log_filename);
 
     // if the run directory doesnt exist yet, create it
-    char run_dirname[256];
-    snprintf(run_dirname, 255, "../runs/%s", run);
+    char run_dirname[512];
+    snprintf(run_dirname, 511, "../runs/%s", run);
     printf("Run directory name: %s\n", run_dirname);
-    char data_dirname[256];
-    snprintf(data_dirname, 255, "../runs/%s/data", run);
+    char data_dirname[512];
+    snprintf(data_dirname, 511, "../runs/%s/data", run);
     printf("Data directory name: %s\n", data_dirname);
-    char animations_dirname[256];
-    snprintf(animations_dirname, 255, "../runs/%s/animations", run);
+    char animations_dirname[512];
+    snprintf(animations_dirname, 511, "../runs/%s/animations", run);
     printf("Animations directory name: %s\n", animations_dirname);
 
     struct stat statbuf;
