@@ -8,4 +8,4 @@
 #SBATCH --output=slurm/R-%x.%j.out
 #SBATCH --error=slurm/R-%x.%j.err
 
-bash server_run.sh "configs/pow_sym_ref_init-un-08_nr1000000_rs0_bins100_cnts-step1.txt"
+bash server_run.sh "configs/pow_sym_ref_init-un_q2_c6_dt1e-08_nr1000000_rs0_bins100_cnts-step1.txt"
