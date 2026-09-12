@@ -184,7 +184,7 @@ def ffmpeg_direct_hist(
         A_cnts_list=A_cnts_list,
         B_cnts_list=B_cnts_list,
         C_cnts_list=C_cnts_list,
-        boundary=BOUNDARY,
+        boundary=boundary,
         run=run,
     )
 

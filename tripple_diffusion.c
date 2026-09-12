@@ -91,7 +91,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     // construct the file name
     char config_name[256];
     if (type_id) { // running pow model
-        snprintf(config_name, 255, "%s_%s_init-%s_q%d_c%g_dt%g_nr%d_rs%d_bins%d_ft%d",
+        snprintf(config_name, 255, "%s_%s_init-%s_q%d_c%g_dt%g_nr%d_rs%d_bins%d_cnts-step%d",
                  dependency, boundary, init_density, q, c, delta_t, n_realizations, rs,
                  n_bins, cnts_timestep);
         printf("Built pow model config name: %s\n", config_name);
@@ -118,8 +118,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     printf("Log file name: %s\n", log_filename);
 
     // if the run directory doesnt exist yet, create it
-    char run_dirname[128];
-    snprintf(run_dirname, 127, "../runs/%s", run);
+    char run_dirname[256];
+    snprintf(run_dirname, 255, "../runs/%s", run);
     printf("Run directory name: %s\n", run_dirname);
     char data_dirname[256];
     snprintf(data_dirname, 255, "../runs/%s/data", run);

@@ -28,7 +28,7 @@ typedef struct {
     int cnts_timestep;
     int crds_snapshot;
     char type[64];
-    char run[64];
+    char run[128];
     char dependency[64];
     char boundary[64];
     char init_density[32];
