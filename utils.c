@@ -31,6 +31,7 @@ DiffusionConfig read_config(const char *filename) {
     char val_str[256];
 
     while (fscanf(file, "%255s %255s", key, val_str) == 2) {
+        printf("Parsing key: %s, value: %s\n", key, val_str);
 
         if (strcmp(key, "type") == 0) {
             strcpy(config.type, val_str);
