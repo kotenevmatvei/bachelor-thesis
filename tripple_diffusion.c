@@ -97,7 +97,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
         printf("Built pow model config name: %s\n", config_name);
     } else { // running log model
         snprintf(config_name, 255,
-                 "%s_%s_init-%s_p0%g_alpha%g_dt%g_nr%d_rs%d_bins%d_ft%d", dependency,
+                 "%s_%s_init-%s_p0%g_alpha%g_dt%g_nr%d_rs%d_bins%d_cnts-step%d", dependency,
                  boundary, init_density, p_0, alpha, delta_t, n_realizations, rs, n_bins,
                  cnts_timestep);
         printf("Built log model config name: %s\n", config_name);

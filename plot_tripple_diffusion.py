@@ -7,11 +7,8 @@ import subprocess
 import argparse
 from matplotlib import pyplot as plt
 import functools
-from tqdm import tqdm
 
 from helpers import parse_config
-
-BOUNDARY = "reflective"
 
 centers = np.linspace(-1, 1, 100)
 
@@ -94,12 +91,12 @@ def build_config_name(
     if type_ == "pow":
         config_name = (
             f"{type_}_{dependency}_{boundary}_init-{init_density}_q{q}_c{c:g}_dt{delta_t}"
-            f"_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{cnts_timestep}"
+            f"_nr{n_realizations}_rs{rs}_bins{n_bins}_cnts-step{cnts_timestep}"
         )
     elif type_ == "log":
         config_name = (
             f"{type_}_{dependency}_{boundary}_init-{init_density}_p0{p_0:g}_alpha{alpha:g}_dt{delta_t}"
-            f"_nr{n_realizations}_rs{rs}_bins{n_bins}_ft{cnts_timestep}"
+            f"_nr{n_realizations}_rs{rs}_bins{n_bins}_cnts-step{cnts_timestep}"
         )
     else:
         raise ValueError(f"Unknown type {type_}")
