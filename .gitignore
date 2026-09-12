@@ -8,8 +8,12 @@ data
 tmp_frames
 animations
 __pycache__
+
 runs/sprint-1
 runs/*/data
 runs/*/animations
 runs/*.zip
+
 slurm/sprint-1
+slurm/*.out
+slurm/*.err
