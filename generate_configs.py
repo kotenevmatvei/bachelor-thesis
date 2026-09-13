@@ -215,7 +215,7 @@ start 0
 lower_bound -1
 upper_bound 1
 d 1
-n_t 2000000
+n_t 10000000
 n_realizations 100000
 n_bins 100
 c {c_val}
