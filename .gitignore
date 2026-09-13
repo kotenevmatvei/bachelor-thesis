@@ -1,4 +1,3 @@
-.idea
 .venv
 build
 .gdb_history
@@ -13,6 +12,7 @@ runs/sprint-1
 runs/*/data
 runs/*/animations
 runs/*.zip
+runs/*/tmp_frames
 
 slurm/sprint-1
 slurm/*.out
