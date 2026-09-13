@@ -15,6 +15,47 @@ def gen_hist_test_cases():
         print(cnts)
         print(bins)
 
+# maybe unnecessary, leave for now
+def parse_config_essentials_from_name(name: str):
+    str_keys = ["type", "run", "dependency", "boundary", "init_density"]
+    float_keys = [
+        "delta_t",
+        "start",
+        "lower_bound",
+        "upper_bound",
+        "d",
+        "c",
+        "p_0",
+        "alpha",
+    ]
+    int_keys = [
+        "n_t",
+        "n_realizations",
+        "n_bins",
+        "q",
+        "rs",
+        "cnts_timestep",
+        "crds_snapshot",
+    ]
+    tokens = name.split("_")
+    config = {}
+    config["type"] = "pow" if "pow" in name else "log"
+    config["dependency"] = "sym" if "sym" in name else "cy"
+    config["boundary"] = "ref" if "ref" in name else "per"
+    config["init_density"] = "dem" if "dem" in name else "un"
+    config["dt"] = float([token for token in tokens if token.startswith("dt")][0][2:])
+    config["n_realizations"] = int([token for token in tokens if token.startswith("nr")][0][2:])
+    config["nr"] = int([token for token in tokens if token.startswith("nr")][0][2:])
+    config["n_bins"] = int([token for token in tokens if token.startswith("bins")][0][4:])
+
+    print(config)
+    print(type(config["dt"]))
+
+
+    
+
+
+
 
 def parse_config(config_name: str):
     config = {}
@@ -55,3 +96,5 @@ def parse_config(config_name: str):
             raise ValueError(f"Unknown key: {key}")
 
     return config
+
+parse_config_essentials_from_name("pow_sym_ref_init-un_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000.txt")
