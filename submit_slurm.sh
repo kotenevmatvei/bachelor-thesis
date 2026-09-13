@@ -1,6 +1,28 @@
 #!/bin/bash
-for run in $(ls slurm); do
-    for config in $(ls slurm/$run/*.slurm); do
-        sbatch $config
-    done
+runs="
+pow_sym_ref_init-dem_q2_c3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.2_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.33_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c7_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.2_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.33_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+"
+for run in $runs; do
+    echo slurm/$run
 done
