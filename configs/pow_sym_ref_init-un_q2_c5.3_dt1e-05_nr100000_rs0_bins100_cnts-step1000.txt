@@ -1,8 +1,8 @@
-run pow_sym_ref_init-dem_q2_c5.3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+run pow_sym_ref_init-un_q2_c5.3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 type pow
 dependency sym
 boundary ref
-init_density dem
+init_density un
 delta_t 0.00001
 start 0
 lower_bound -1

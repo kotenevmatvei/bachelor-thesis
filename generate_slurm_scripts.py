@@ -1,13 +1,48 @@
 import os
 
+
 def generate_c_sweep():
-    q3_c = [1, 1.5, 1.7, 1.9, 1.95, 1.97, 1.99, 2, 2.01, 2.03, 2.05, 2.1, 2.3, 2.5, 3, 4]
-    q2_c = [4, 5, 5.1, 5.2, 5.25, 5.3, 5.33, 5.333, 5.34, 5.345, 5.4, 5.5, 5.6, 5.8, 6, 7]
+    q3_c = [
+        1,
+        1.5,
+        1.7,
+        1.9,
+        1.95,
+        1.97,
+        1.99,
+        2,
+        2.01,
+        2.03,
+        2.05,
+        2.1,
+        2.3,
+        2.5,
+        3,
+        4,
+    ]
+    q2_c = [
+        4,
+        5,
+        5.1,
+        5.2,
+        5.25,
+        5.3,
+        5.33,
+        5.333,
+        5.34,
+        5.345,
+        5.4,
+        5.5,
+        5.6,
+        5.8,
+        6,
+        7,
+    ]
 
     print(f"q3: {len(q3_c)}, q2: {len(q2_c)}")
 
     pow_run_names = [
-        "q2-3_c_sweep_sym_init-un", # already run
+        "q2-3_c_sweep_sym_init-un",  # already run
         "q2-3_c_sweep_sym_init-dem",
         "q2-3_c_sweep_cy_init-un",
     ]
@@ -131,12 +166,14 @@ def generate_rs_sweep_pow():
 #SBATCH --cpus-per-task=4
 #SBATCH --time=48:00:00
 
-#SBATCH --output=slurm/{run['name']}/R-%x.%j.out
-#SBATCH --error=slurm/{run['name']}/R-%x.%j.err
+#SBATCH --output=slurm/{run["name"]}/R-%x.%j.out
+#SBATCH --error=slurm/{run["name"]}/R-%x.%j.err
 
-bash server_run.sh "configs/{run['name']}/q{run['q']}_c{run['c']}_rs{rs}.txt"
+bash server_run.sh "configs/{run["name"]}/q{run["q"]}_c{run["c"]}_rs{rs}.txt"
 """
-            with open(f"slurm/{run['name']}/q{run['q']}_c{run['c']}_rs{rs}.slurm", "w") as f:
+            with open(
+                f"slurm/{run['name']}/q{run['q']}_c{run['c']}_rs{rs}.slurm", "w"
+            ) as f:
                 f.write(content)
 
 
@@ -164,7 +201,28 @@ bash server_run.sh "configs/{run_name}/alpha7_p0-0.6_rs{rs}.txt"
             f.write(content)
 
 
-if __name__ == "__main__":
-    generate_rs_sweep_pow()
-    generate_rs_sweep_log()
+def generate_c_sweep_to_test_bistability():
+    c_list = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7, 9]
 
+    for init in ["dem", "un"]:
+        for c_val in c_list:
+            run_name = f"pow_sym_ref_init-{init}_q2_c{c_val}_dt1e-05_nr100000_rs0_bins100_cnts-step1000"
+            content = f"""#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --time=48:00:00
+
+#SBATCH --output=slurm/R-%x.%j.out
+#SBATCH --error=slurm/R-%x.%j.err
+
+bash server_run.sh "configs/{run_name}.txt"
+"""
+            with open(f"slurm/{run_name}.slurm", "w") as f:
+                f.write(content)
+            print(run_name)
+
+
+if __name__ == "__main__":
+    generate_c_sweep_to_test_bistability()
