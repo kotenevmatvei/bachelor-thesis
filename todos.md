@@ -2,9 +2,9 @@
 
 ## runs
 - [x] ! run the simulation with the fixed diffusion function for q=3, c=3; q=3, c=20; q=2, c=20
-- [ ] longer runs for q=2, c=5.4,6 (pick up last checkpoints?) - those should demix!
-- [ ] q=3, c=5 per boundaries (to make sure those demix - just to see what it looks like)
-- [ ] cy dependency same parameters - see what happens!
+- [x] longer runs for q=2, c=5.4,6 (pick up last checkpoints?) - those should demix!
+- [x] q=3, c=5 per boundaries (to make sure those demix - just to see what it looks like)
+- [x] cy dependency same parameters - see what happens!
 
 ## content
 - [x] no need to write bin_bounds when lower and upper bounds are fixed
