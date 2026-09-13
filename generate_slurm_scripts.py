@@ -247,4 +247,4 @@ bash server_run.sh "configs/{run_name}.txt"
 
 
 if __name__ == "__main__":
-    generate_c_sweep_to_test_bistability()
+    generate_c_sweep_to_test_bistability_cyclic_periodic()
