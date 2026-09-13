@@ -223,6 +223,28 @@ bash server_run.sh "configs/{run_name}.txt"
                 f.write(content)
             print(run_name)
 
+def generate_c_sweep_to_test_bistability_cyclic_periodic():
+    c_list = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7, 9]
+
+    for init in ["dem", "un"]:
+        for c_val in c_list:
+            run_name = f"pow_cy_per_init-{init}_q2_c{c_val}_dt1e-05_nr100000_rs0_bins100_cnts-step1000"
+            content = f"""#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --time=48:00:00
+
+#SBATCH --output=slurm/R-%x.%j.out
+#SBATCH --error=slurm/R-%x.%j.err
+
+bash server_run.sh "configs/{run_name}.txt"
+"""
+            with open(f"slurm/{run_name}.slurm", "w") as f:
+                f.write(content)
+            print(run_name)
+
 
 if __name__ == "__main__":
     generate_c_sweep_to_test_bistability()

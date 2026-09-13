@@ -7,6 +7,7 @@ data
 tmp_frames
 animations
 __pycache__
+*.mp4
 
 runs/sprint-1
 runs/*/data

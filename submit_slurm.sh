@@ -1,5 +1,5 @@
 #!/bin/bash
-runs="
+runs_bist_sym_ref="
 pow_sym_ref_init-dem_q2_c3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-dem_q2_c4_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-dem_q2_c5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
@@ -23,6 +23,30 @@ pow_sym_ref_init-un_q2_c6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-un_q2_c7_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-un_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 "
-for run in $runs; do
+runs_bist_cy_per="
+pow_cy_per_init-dem_q2_c3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-dem_q2_c4_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-dem_q2_c5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-dem_q2_c5.2_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-dem_q2_c5.3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-dem_q2_c5.33_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-dem_q2_c5.5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-dem_q2_c5.6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-dem_q2_c6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-dem_q2_c7_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-dem_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c4_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c5.2_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c5.3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c5.33_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c5.5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c5.6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c7_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_cy_per_init-un_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+"
+for run in $runs_bist_cy_per; do
     sbatch slurm/$run.slurm
 done
