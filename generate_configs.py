@@ -278,5 +278,45 @@ init_density: un or dem
                 f.write(content)
             print(run_name)
 
+
+def generate_q2_c7():
+    # init-demixed
+    for init in ["dem", "un"]:
+        run_name = f"pow_sym_ref_init-{init}_q2_c7_dt1e-05_nr1000000_rs0_bins100_cnts-step1000"
+
+        content = f"""run {run_name}
+type pow
+dependency sym
+boundary ref
+init_density {init}
+delta_t 0.00001
+start 0
+lower_bound -1
+upper_bound 1
+d 1
+n_t 2000000
+n_realizations 1000000
+n_bins 100
+c 7
+q 2
+rs 0
+cnts_timestep 1000
+crds_snapshot 10000
+alpha 3
+p_0 0.2
+
+
+comments:
+
+type: log or pow
+dependency: sym or cy
+boundary: ref or per
+init_density: un or dem
+"""
+        with open(f"configs/{run_name}.txt", "w") as f:
+            f.write(content)
+        print(run_name)
+
+
 if __name__ == "__main__":
-    generate_c_sweep_for_bistability_cyclic_periodic()
+    generate_q2_c7()

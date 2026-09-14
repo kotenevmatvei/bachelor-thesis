@@ -246,5 +246,26 @@ bash server_run.sh "configs/{run_name}.txt"
             print(run_name)
 
 
+def generate_q2_c7():
+
+    for init in ["dem", "un"]:
+        run_name = f"pow_sym_ref_init-{init}_q2_c7_dt1e-05_nr1000000_rs0_bins100_cnts-step1000"
+        content = f"""#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --time=48:00:00
+
+#SBATCH --output=slurm/R-%x.%j.out
+#SBATCH --error=slurm/R-%x.%j.err
+
+bash server_run.sh "configs/{run_name}.txt"
+"""
+        with open(f"slurm/{run_name}.slurm", "w") as f:
+            f.write(content)
+        print(run_name)
+
+
 if __name__ == "__main__":
-    generate_c_sweep_to_test_bistability_cyclic_periodic()
+    generate_q2_c7()

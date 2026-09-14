@@ -47,6 +47,10 @@ pow_cy_per_init-un_q2_c6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 pow_cy_per_init-un_q2_c7_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 pow_cy_per_init-un_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 "
-for run in $runs_bist_cy_per; do
+runs_q2_c7="
+pow_sym_ref_init-dem_q2_c7_dt1e-05_nr1000000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt1e-05_nr1000000_rs0_bins100_cnts-step1000
+"
+for run in $runs_q2_c7; do
     sbatch slurm/$run.slurm
 done
