@@ -282,14 +282,14 @@ init_density: un or dem
 def generate_q2_c7():
     # init-demixed
     for init in ["dem", "un"]:
-        run_name = f"pow_sym_ref_init-{init}_q2_c7_dt1e-05_nr1000000_rs0_bins100_cnts-step1000"
+        run_name = f"pow_sym_ref_init-{init}_q2_c7_dt1e-08_nr1000000_rs0_bins100_cnts-step1000"
 
         content = f"""run {run_name}
 type pow
 dependency sym
 boundary ref
 init_density {init}
-delta_t 0.00001
+delta_t 0.00000001
 start 0
 lower_bound -1
 upper_bound 1
