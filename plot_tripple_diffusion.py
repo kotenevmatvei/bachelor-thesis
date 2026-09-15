@@ -213,6 +213,7 @@ def ffmpeg_direct_hist(
         result = subprocess.run(
             ffmpeg_command, capture_output=True, text=True, check=True
         )
+        shutil.rmtree(f"runs/{run}/tmp_frames", ignore_errors=True)
         print("Animation done!")
 
     except subprocess.CalledProcessError as e:
