@@ -63,6 +63,13 @@ for run in $runs_q2_c7; do
     sbatch slurm/$run.slurm
 done
 
+for run in $runs_bist_sym_ref; do
+    sbatch slurm/$run.slurm
+done
+
+for run in $runs_bist_cy_per; do
+    sbatch slurm/$run.slurm
+done
 
 
 

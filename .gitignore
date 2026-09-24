@@ -18,3 +18,4 @@ runs/*/tmp_frames
 slurm/sprint-1
 slurm/*.out
 slurm/*.err
+*.zip
