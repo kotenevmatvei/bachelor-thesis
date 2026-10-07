@@ -2,6 +2,7 @@ import numpy as np
 import concurrent.futures
 import os
 import shutil
+from tqdm import tqdm
 import time
 import subprocess
 import argparse
@@ -45,7 +46,9 @@ def draw_trajectories():
 """
 
 
-def render_frame(i, A_cnts_list, B_cnts_list, C_cnts_list, boundary, run):
+def render_frame(
+    i, A_cnts_list, B_cnts_list, C_cnts_list, boundary, run, bin_width, n_realizations
+):
     fig, ax = plt.subplots(figsize=(8, 6), dpi=100)
     ax.set_xlim(-1, 1)
     ax.set_ylim(0, 3)
@@ -56,13 +59,21 @@ def render_frame(i, A_cnts_list, B_cnts_list, C_cnts_list, boundary, run):
     ax.grid(which="major")
     ax.grid(which="minor")
 
+    timestep = int(A_cnts_list[i][0])
+
     A_cnts = A_cnts_list[i][1:]
     B_cnts = B_cnts_list[i][1:]
     C_cnts = C_cnts_list[i][1:]
 
+    # normalize the histograms
+    A_cnts = [count / (n_realizations * bin_width) for count in A_cnts]
+    B_cnts = [count / (n_realizations * bin_width) for count in B_cnts]
+    C_cnts = [count / (n_realizations * bin_width) for count in C_cnts]
+
     ax.plot(centers, A_cnts)
     ax.plot(centers, B_cnts)
     ax.plot(centers, C_cnts)
+    ax.text(x=0, y=2.5, s=f"timestep {timestep}")
 
     filename = f"runs/{run}/tmp_frames/frame_{i:05d}.png"
     fig.savefig(filename)
@@ -150,29 +161,24 @@ def ffmpeg_direct_hist(
     with open(data_filename, "r") as f:
         lines = f.readlines()
 
-    A_cnts_list = [np.fromstring(line, sep=" ") for line in lines[0::3]]
-    B_cnts_list = [np.fromstring(line, sep=" ") for line in lines[1::3]]
-    C_cnts_list = [np.fromstring(line, sep=" ") for line in lines[2::3]]
+    A_cnts_list = [np.fromstring(line, sep=" ") for line in lines[0::30]]
+    B_cnts_list = [np.fromstring(line, sep=" ") for line in lines[1::30]]
+    C_cnts_list = [np.fromstring(line, sep=" ") for line in lines[2::30]]
 
     # check if there is more frames in data than should be in one run. In this case we
     # are continuing a run and there might be multiple animations for the first stages
     # already generated. so we add a corresponding suffix to the animation name and only
     # regenerate the new data
-    n_frames_in_run = int(n_t / cnts_timestep)
-    suffix = str(int(len(A_cnts_list) / n_frames_in_run))
+    # n_frames_in_run = int(n_t / cnts_timestep)
+    # suffix = str(int(len(A_cnts_list) / n_frames_in_run))
 
-    A_cnts_list = A_cnts_list[-n_frames_in_run::1]
-    B_cnts_list = B_cnts_list[-n_frames_in_run::1]
-    C_cnts_list = C_cnts_list[-n_frames_in_run::1]
+    # A_cnts_list = A_cnts_list[-n_frames_in_run::1]
+    # B_cnts_list = B_cnts_list[-n_frames_in_run::1]
+    # C_cnts_list = C_cnts_list[-n_frames_in_run::1]
 
     print("A_cnts_list length: ", len(A_cnts_list))
 
     bin_width = (upper_bound - lower_bound) / n_bins
-
-    # normalize the histograms
-    A_cnts_list = [count / (n_realizations * bin_width) for count in A_cnts_list]
-    B_cnts_list = [count / (n_realizations * bin_width) for count in B_cnts_list]
-    C_cnts_list = [count / (n_realizations * bin_width) for count in C_cnts_list]
 
     total_frames = len(A_cnts_list)
 
@@ -186,16 +192,26 @@ def ffmpeg_direct_hist(
         C_cnts_list=C_cnts_list,
         boundary=boundary,
         run=run,
+        bin_width=bin_width,
+        n_realizations=n_realizations
     )
 
     render_start = time.time()
 
     print(f"\nRendering {total_frames} frames in parallel...")
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        executor.map(worker_func, range(total_frames))
+        list(
+            tqdm(
+                executor.map(worker_func, range(total_frames)),
+                total=total_frames,
+            )
+        )
+    render_time = time.time() - render_start
+    print(f"Rendering all frames took {render_time}s")
 
     print("Stitching video...")
-    animation_filename = f"runs/{run}/animations/{name}_iteration{suffix}.mp4"
+    # animation_filename = f"runs/{run}/animations/{name}_iteration{suffix}.mp4"
+    animation_filename = f"runs/{run}/animations/{name}.mp4"
     mp4_path = animation_filename
     ffmpeg_command = [
         "ffmpeg",
