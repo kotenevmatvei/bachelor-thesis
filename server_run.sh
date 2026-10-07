@@ -17,6 +17,6 @@ echo "running the simulation..."
 
 cd ..
 
-echo "running the visualizations..."
-python plot_tripple_diffusion.py "$CONFIG_NAME"
-echo "the run done!"
+# echo "running the visualizations..."
+# python plot_tripple_diffusion.py "$CONFIG_NAME"
+# echo "the run done!"
