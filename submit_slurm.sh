@@ -47,29 +47,37 @@ pow_cy_per_init-un_q2_c6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 pow_cy_per_init-un_q2_c7_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 pow_cy_per_init-un_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000
 "
-runs_q2_c7="
+runs_q2_c7_dt5="
+pow_sym_ref_init-dem_q2_c7_dt1e-05_nr1000000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt1e-05_nr1000000_rs0_bins100_cnts-step1000
+"
+runs_q2_c7_dt8="
 pow_sym_ref_init-dem_q2_c7_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-un_q2_c7_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 "
-runs_q2_c6="
+runs_q2_c6_dt8="
 pow_sym_ref_init-dem_q2_c6_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-un_q2_c6_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 "
-for run in $runs_q2_c6; do
+for run in $runs_q2_c6_dt8; do
     sbatch slurm/$run.slurm
 done
 
-for run in $runs_q2_c7; do
+for run in $runs_q2_c7_dt8; do
     sbatch slurm/$run.slurm
 done
 
-for run in $runs_bist_sym_ref; do
+for run in $runs_q2_c7_dt5; do
     sbatch slurm/$run.slurm
 done
 
-for run in $runs_bist_cy_per; do
-    sbatch slurm/$run.slurm
-done
+# for run in $runs_bist_sym_ref; do
+#     sbatch slurm/$run.slurm
+# done
+# 
+# for run in $runs_bist_cy_per; do
+#     sbatch slurm/$run.slurm
+# done
 
 
 
