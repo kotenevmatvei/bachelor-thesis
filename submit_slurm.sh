@@ -63,22 +63,22 @@ runs_q2_c6_dt8="
 pow_sym_ref_init-dem_q2_c6_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-un_q2_c6_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 "
-for run in $runs_q2_c6_dt8; do
-    sbatch slurm/$run.slurm
-done
-
-for run in $runs_q2_c7_dt8; do
-    sbatch slurm/$run.slurm
-done
+# for run in $runs_q2_c6_dt8; do
+#     sbatch slurm/$run.slurm
+# done
+# 
+# for run in $runs_q2_c7_dt8; do
+#     sbatch slurm/$run.slurm
+# done
 
 for run in $runs_q2_c6_dt5; do
     sbatch slurm/$run.slurm
 done
 
-for run in $runs_q2_c7_dt5; do
-    sbatch slurm/$run.slurm
-done
-
+# for run in $runs_q2_c7_dt5; do
+#     sbatch slurm/$run.slurm
+# done
+# 
 # for run in $runs_bist_sym_ref; do
 #     sbatch slurm/$run.slurm
 # done
