@@ -91,15 +91,16 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     // construct the file name
     char config_name[256];
     if (type_id) { // running pow model
-        snprintf(config_name, 255, "%s_%s_init-%s_q%d_c%g_dt%g_nr%d_rs%d_bins%d_cnts-step%d",
-                 dependency, boundary, init_density, q, c, delta_t, n_realizations, rs,
-                 n_bins, cnts_timestep);
+        snprintf(config_name, 255,
+                 "%s_%s_init-%s_q%d_c%g_dt%g_nr%d_rs%d_bins%d_cnts-step%d", dependency,
+                 boundary, init_density, q, c, delta_t, n_realizations, rs, n_bins,
+                 cnts_timestep);
         printf("Built pow model config name: %s\n", config_name);
     } else { // running log model
         snprintf(config_name, 255,
-                 "%s_%s_init-%s_p0%g_alpha%g_dt%g_nr%d_rs%d_bins%d_cnts-step%d", dependency,
-                 boundary, init_density, p_0, alpha, delta_t, n_realizations, rs, n_bins,
-                 cnts_timestep);
+                 "%s_%s_init-%s_p0%g_alpha%g_dt%g_nr%d_rs%d_bins%d_cnts-step%d",
+                 dependency, boundary, init_density, p_0, alpha, delta_t, n_realizations,
+                 rs, n_bins, cnts_timestep);
         printf("Built log model config name: %s\n", config_name);
     }
 

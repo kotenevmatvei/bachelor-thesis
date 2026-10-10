@@ -14,6 +14,7 @@ runs/*/data
 runs/*/animations
 runs/*.zip
 runs/*/tmp_frames
+runs/*/*.mp4
 
 slurm/sprint-1
 slurm/*.out

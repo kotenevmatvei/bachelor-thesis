@@ -212,7 +212,7 @@ def generate_c_sweep_to_test_bistability():
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --time=48:00:00
+#SBATCH --time=4-00:00:00
 
 #SBATCH --output=slurm/R-%x.%j.out
 #SBATCH --error=slurm/R-%x.%j.err
@@ -268,4 +268,4 @@ bash server_run.sh "configs/{run_name}.txt"
 
 
 if __name__ == "__main__":
-    generate_q2_c7()
+    generate_c_sweep_to_test_bistability()
