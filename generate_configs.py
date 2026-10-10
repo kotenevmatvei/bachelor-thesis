@@ -234,7 +234,6 @@ dependency: sym or cy
 boundary: ref or per
 init_density: un or dem
 """
-            print(content)
             with open(f"configs/{run_name}.txt", "w") as f:
                 f.write(content)
             print(run_name)
