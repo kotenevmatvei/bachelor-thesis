@@ -1,7 +1,5 @@
 import os
 
-from generate_slurm_scripts import generate_c_sweep_to_test_bistability
-
 q3_c = [1, 1.5, 1.7, 1.9, 1.95, 1.97, 1.99, 2, 2.01, 2.03, 2.05, 2.1, 2.3, 2.5, 3, 4]
 q2_c = [4, 5, 5.1, 5.2, 5.25, 5.3, 5.33, 5.333, 5.34, 5.345, 5.4, 5.5, 5.6, 5.8, 6, 7]
 
@@ -236,6 +234,7 @@ dependency: sym or cy
 boundary: ref or per
 init_density: un or dem
 """
+            print(content)
             with open(f"configs/{run_name}.txt", "w") as f:
                 f.write(content)
             print(run_name)
@@ -321,4 +320,4 @@ init_density: un or dem
 
 
 if __name__ == "__main__":
-    generate_c_sweep_to_test_bistability()
+    generate_c_sweep_for_bistability()
