@@ -47,7 +47,16 @@ def draw_trajectories():
 
 
 def render_frame(
-    i, A_cnts_list, B_cnts_list, C_cnts_list, boundary, run, bin_width, n_realizations
+    i,
+    A_cnts_list,
+    B_cnts_list,
+    C_cnts_list,
+    boundary,
+    run,
+    bin_width,
+    n_realizations,
+    theory_prediction_high,
+    theory_prediction_low,
 ):
     fig, ax = plt.subplots(figsize=(8, 6), dpi=100)
     ax.set_xlim(-1, 1)
@@ -73,6 +82,8 @@ def render_frame(
     ax.plot(centers, A_cnts)
     ax.plot(centers, B_cnts)
     ax.plot(centers, C_cnts)
+    ax.plot(centers, [theory_prediction_high]*len(centers))
+    ax.plot(centers, [theory_prediction_low]*len(centers))
     ax.text(x=0, y=2.5, s=f"timestep {timestep}")
 
     filename = f"runs/{run}/tmp_frames/frame_{i:05d}.png"
@@ -133,6 +144,8 @@ def ffmpeg_direct_hist(
     alpha,
     rs,
     cnts_timestep,
+    theory_prediction_high,
+    theory_prediction_low,
 ):
     config_name = build_config_name(
         type_,
@@ -193,7 +206,9 @@ def ffmpeg_direct_hist(
         boundary=boundary,
         run=run,
         bin_width=bin_width,
-        n_realizations=n_realizations
+        n_realizations=n_realizations,
+        theory_prediction_high=theory_prediction_high,
+        theory_prediction_low=theory_prediction_low,
     )
 
     render_start = time.time()
@@ -242,6 +257,14 @@ def ffmpeg_direct_hist(
 def main():
     parser = argparse.ArgumentParser(description="Get config name")
     parser.add_argument("config_name", help="The name of the config file")
+    parser.add_argument(
+        "-tph", "--theory_prediction_high", type=float, default=0,
+        help="Theoretical prediction for the asymptotic high density distribution",
+    )
+    parser.add_argument(
+        "-tpl", "--theory_prediction_low", type=float, default=0,
+        help="Theoretical prediction for the asymptotic low density distribution",
+    )
     args = parser.parse_args()
     config_name = args.config_name
     config = parse_config(config_name)
@@ -288,6 +311,8 @@ def main():
         alpha=alpha,
         rs=rs,
         cnts_timestep=cnts_timestep,
+        theory_prediction_high=args.theory_prediction_high,
+        theory_prediction_low=args.theory_prediction_low
     )
 
 
