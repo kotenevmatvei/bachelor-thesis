@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import concurrent.futures
 import os
 import shutil
@@ -82,8 +83,8 @@ def render_frame(
     ax.plot(centers, A_cnts)
     ax.plot(centers, B_cnts)
     ax.plot(centers, C_cnts)
-    ax.plot(centers, [theory_prediction_high]*len(centers))
-    ax.plot(centers, [theory_prediction_low]*len(centers))
+    ax.plot(centers, [theory_prediction_high] * len(centers))
+    ax.plot(centers, [theory_prediction_low] * len(centers))
     ax.text(x=0, y=2.5, s=f"timestep {timestep}")
 
     filename = f"runs/{run}/tmp_frames/frame_{i:05d}.png"
@@ -146,6 +147,7 @@ def ffmpeg_direct_hist(
     cnts_timestep,
     theory_prediction_high,
     theory_prediction_low,
+    n_frames,
 ):
     config_name = build_config_name(
         type_,
@@ -171,12 +173,15 @@ def ffmpeg_direct_hist(
     print(f"name: {name}")
     data_filename = f"runs/{run}/data/{name}.txt"
 
-    with open(data_filename, "r") as f:
+    with open(data_filename, "rb") as f:
         lines = f.readlines()
 
-    A_cnts_list = [np.fromstring(line, sep=" ") for line in lines[0::30]]
-    B_cnts_list = [np.fromstring(line, sep=" ") for line in lines[1::30]]
-    C_cnts_list = [np.fromstring(line, sep=" ") for line in lines[2::30]]
+    frame_step = int(len(lines) / n_frames)
+    print(f"frame_step = {frame_step}")
+
+    A_cnts_list = [np.fromstring(line, sep=" ") for line in lines[0::frame_step]]
+    B_cnts_list = [np.fromstring(line, sep=" ") for line in lines[1::frame_step]]
+    C_cnts_list = [np.fromstring(line, sep=" ") for line in lines[2::frame_step]]
 
     # check if there is more frames in data than should be in one run. In this case we
     # are continuing a run and there might be multiple animations for the first stages
@@ -258,12 +263,25 @@ def main():
     parser = argparse.ArgumentParser(description="Get config name")
     parser.add_argument("config_name", help="The name of the config file")
     parser.add_argument(
-        "-tph", "--theory_prediction_high", type=float, default=0,
+        "-tph",
+        "--theory_prediction_high",
+        type=float,
+        default=0,
         help="Theoretical prediction for the asymptotic high density distribution",
     )
     parser.add_argument(
-        "-tpl", "--theory_prediction_low", type=float, default=0,
+        "-tpl",
+        "--theory_prediction_low",
+        type=float,
+        default=0,
         help="Theoretical prediction for the asymptotic low density distribution",
+    )
+    parser.add_argument(
+        "-n_frames",
+        "--number_of_frames",
+        type=int,
+        default=1000,
+        help="Total number of frames to be rendered in the animation",
     )
     args = parser.parse_args()
     config_name = args.config_name
@@ -312,7 +330,8 @@ def main():
         rs=rs,
         cnts_timestep=cnts_timestep,
         theory_prediction_high=args.theory_prediction_high,
-        theory_prediction_low=args.theory_prediction_low
+        theory_prediction_low=args.theory_prediction_low,
+        n_frames=args.number_of_frames,
     )
 
 
