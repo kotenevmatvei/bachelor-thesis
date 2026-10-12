@@ -1,5 +1,5 @@
 #!/bin/bash
-runs="
+long_runs="
 pow_sym_ref_init-dem_q2_c7_dt1e-05_nr1000000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-un_q2_c7_dt1e-05_nr1000000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-dem_q2_c6_dt1e-05_nr1000000_rs0_bins100_cnts-step1000
@@ -9,7 +9,39 @@ pow_sym_ref_init-un_q2_c7_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-dem_q2_c6_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-dem_q2_c7_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 "
-for run in $runs; do
+quant_bist_sym_refl="
+pow_sym_ref_init-dem_q2_c3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.2_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.33_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c7_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.2_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.3_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.33_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.5_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000
+"
+
+# for run in $long_runs; do
+#     echo plotting $run
+#     python plot_tripple_diffusion.py configs/$run.txt
+# done
+
+
+for run in $quant_bist_sym_refl; do
     echo plotting $run
     python plot_tripple_diffusion.py configs/$run.txt
 done
+
