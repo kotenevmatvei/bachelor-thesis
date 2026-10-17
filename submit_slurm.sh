@@ -63,6 +63,86 @@ runs_q2_c6_dt8="
 pow_sym_ref_init-dem_q2_c6_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-un_q2_c6_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 "
+runs_c3_12_dt0_0001_nr10000="
+pow_sym_ref_init-dem_q2_c3_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.2_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.3_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.33_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.5_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c5.6_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c7_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c9_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c10_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c11_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c12_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c3_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.2_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.3_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.33_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.5_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c5.6_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c9_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c10_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c11_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c12_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+"
+runs_c6_dt0_0001_nr1000_1000000="
+pow_sym_ref_init-dem_q2_c6_dt0.0001_nr100_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt0.0001_nr1000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt0.0001_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt0.0001_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt0.0001_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.0001_nr100_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.0001_nr1000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.0001_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.0001_nr100000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.0001_nr100000_rs0_bins100_cnts-step1000
+"
+runs_c6_dt1e_8_0_1_nr10000="
+pow_sym_ref_init-dem_q2_c6_dt1e-08_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt1e-07_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt1e-06_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt1e-05_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt0.001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt0.01_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c6_dt0.1_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt1e-08_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt1e-07_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt1e-06_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt1e-05_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.01_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c6_dt0.1_nr10000_rs0_bins100_cnts-step1000
+"
+runs_c7_dt1e_8_0_1_nr10000="
+pow_sym_ref_init-dem_q2_c7_dt1e-08_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c7_dt1e-07_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c7_dt1e-06_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c7_dt1e-05_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c7_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c7_dt0.001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c7_dt0.01_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c7_dt0.1_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt1e-08_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt1e-07_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt1e-06_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt1e-05_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt0.001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt0.01_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c7_dt0.1_nr10000_rs0_bins100_cnts-step1000
+"
 
 # for run in $runs_q2_c6_dt8; do
 #     sbatch slurm/$run.slurm
@@ -80,15 +160,27 @@ pow_sym_ref_init-un_q2_c6_dt1e-08_nr1000000_rs0_bins100_cnts-step1000
 #     sbatch slurm/$run.slurm
 # done
  
-for run in $runs_bist_sym_ref; do
-    sbatch slurm/$run.slurm
-done
+# for run in $runs_bist_sym_ref; do
+#     sbatch slurm/$run.slurm
+# done
 # 
 # for run in $runs_bist_cy_per; do
 #     sbatch slurm/$run.slurm
 # done
 
 
+for run in $runs_c3_12_dt0_0001_nr10000; do
+    sbatch slurm/$run.slurm
+done
+for run in $runs_c6_dt0_0001_nr1000_1000000; do
+    sbatch slurm/$run.slurm
+done
+for run in $runs_c6_dt1e_8_0_1_nr10000; do
+    sbatch slurm/$run.slurm
+done
+for run in $runs_c7_dt1e_8_0_1_nr10000; do
+    sbatch slurm/$run.slurm
+done
 
 
 
