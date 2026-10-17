@@ -5,6 +5,12 @@
 - [x] longer runs for q=2, c=5.4,6 (pick up last checkpoints?) - those should demix!
 - [x] q=3, c=5 per boundaries (to make sure those demix - just to see what it looks like)
 - [x] cy dependency same parameters - see what happens!
+- [x] sym q2 c3-9 dt0.00001 nr100000
+
+- [ ] sym q2 c3-12 dt0.0001 nr10000 +
+- [ ] sym q2 c6 dt0.0001 nr1000-1000000 +
+- [ ] sym q2 c6 dt 1e-8 - 0.1 nr10000 +
+- [ ] sym q2 c7 dt 1e-8 - 0.1 nr10000 +
 
 ## content
 - [x] no need to write bin_bounds when lower and upper bounds are fixed
