@@ -245,11 +245,19 @@ tags: []
 
 
 
-## 
-- [x] sym q2 c3-12 dt0.00001 nr100000
+## Presentation on 29.10.26
+### runs
+- [x] sym q2 c3-9 dt0.00001 nr100000
 - [ ] sym q2 c3-12 dt0.0001 nr10000
 - [ ] sym q2 c6 dt0.0001 nr1000-1000000
 - [ ] sym q2 c6 dt 1e-8 - 0.1
+- [ ] sym q2 c7 dt 1e-8 - 0.1
 - [ ] 
 
+## data analysis and visualisation
+- [ ] define some criteria for convergence
+- [ ] order parameter
+- [ ] length (thikness) of the (three) demixed levels
+- [ ] (asymptotic) rolling time average
+- [ ] put all together
 
