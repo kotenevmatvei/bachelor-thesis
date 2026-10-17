@@ -69,3 +69,187 @@ recompile
 
 
 ## cosmetics
+
+
+
+---
+id: bachelor_thesis
+aliases:
+  - bachelor_thesis
+  - Bachelorarbeit
+tags: []
+---
+
+# bachelor_thesis
+
+## Time till next meetup with Lindner
+
+* meetup with Lindnder on              3.09
+* free days with today and weekends:   13
+* with 2 days off, without today:       10
+
+## TODOs
+
+### Today
+- [x] planning
+- [x] figure out how much data to save
+- [x] preferably implement checkpoint pickup 
+- [x] set up a long run with a parameter sweep (how many parameters??). let slurm distribute the work smartly
+    - [x] q=2, c_crit = 16/3
+    - [x] q=3, c_crit = 2
+
+### Simulation
+
+- [x] Exkurs: *0.5*
+    - [x] implement periodic boundaries & a short run
+    - [x] implement and sigmoid dependency & a short run
+- [x] research/consider tooling: *0.25*
+    - [x] python & Co. (Numba??)
+    - [x] GPU parallelization (OpenACC??)
+- [x] implement different initial conditions (adding a perturbation, starting with a separated densities) *0.25*
+- [x] structural and general cleanup *0.5*
+- [ ] 
+
+### Analysis
+
+- [!] numerical solution of full partial differential equations (without linear approximation). -> Python libraries for stochastic differential equations?? *1*
+- [x] stability analysis for three particles to the end
+    - [x] understand bistability analysis (Cahn Hilliard formalism, define potential??) and calculate the separated densities and confirm with the simulation: *2*
+- [x] understand the sensing radius analysis and apply to my calculations: *2*
+- [x] write up the most important calculations in latex *1*
+- [x] read and understand the first paper fully *2*
+- [!] read the second paper (just to get a superficial understanding) *1*
+- [ ] 
+
+### Achieved Extras
+- [x] fully automated project pipeline (simulation and slurm configs generation in pyhon -> folder structure creation in C -> visualization etc. in Python using the project folder structure)
+
+### Days Plan:
+
+
+0. (today) 
+- [x] planning
+- [x] research/consider tooling: *0.25*
+    - [x] python & Co. (Numba??) - NO!
+    - [x] GPU parallelization (OpenACC??) - NO!
+- [x] figure out how much data to save
+- [x] preferably implement checkpoint pickup  *did not manage, left for later, since correct checkpoint saving is implemented*
+- [x] set up a long run with a parameter sweep (how many parameters??). let slurm distribute the work smartly *finished on the second day, buffer gone*
+    - [x] q=2, c_crit = 16/3
+    - [x] q=3, c_crit = 2
+
+1.
+- [x] read and understand the first paper fully *2* *finished in one day on the second day (+extract specific TODOs for particle simulation, analysis and numerics! buffer is so back!)*
+2.
+- [x] stability analysis for three particles to the end
+    - [x] understand bistability analysis (Cahn Hilliard formalism, define potential??) and calculate the separated densities and confirm with the simulation: *2*
+3.
+- [x] read and understand the first paper fully *2* 
+4.
+- [x] stability analysis for three particles to the end
+    - [x] understand bistability analysis (Cahn Hilliard formalism, define potential??) and calculate the separated densities and confirm with the simulation: *2*
+
+5.
+- [!] numerical solution of full partial differential equations (without linear approximation). -> Python libraries for stochastic differential equations?? *1*
+
+5. 
+- [x] understand the sensing radius analysis and apply to my calculations: *2*
+
+6. 
+- [x] understand the sensing radius analysis and apply to my calculations: *2*
+
+7.
+- [x] Exkurs: *0.5* *all this on days 3 and 4*
+    - [x] implement periodic boundaries & a short run
+    - [x] implement and sigmoid dependency & a short run
+- [x] implement different initial conditions (adding a perturbation, starting with a separated densities) *0.25*
+- [x] structural and general cleanup *0.5*
+
+8.
+- [!] read the second paper (just to get a superficial understanding) *1*
+
+9.
+- [x] write up the most important calculations in latex *1*
+
+10.
+- [x] **BUFFER**
+
+
+
+
+#######################################################################
+
+
+
+
+## Sprint 2
+- next meeting with Lindner: 15.10.2026
+- total days till then: 35
+
+
+### Analysis
+- [ ] stability analysis of the demixed state
+    - [ ] normal with p_h and p_l - sheeesh that is more difficult than expected, but gotta try
+          another ansatz.
+    - [ ] tripple with p_h, p_l and p_m (p_m assumed by all species simultaneously)
+- [ ] done calculations for other periodic boundaries and cyclic dependency - for now not so relevant
+
+### Simulation Features
+
+### Bugs
+- [ ] init uniform first bin almost empty - for now not so relevant
+
+### Simulation Runs
+- [x] figure out large N_realizations and small delta_t so that the visuals are well visible
+- [x] q=2, c=6, dt=10-8, N_r=10+6, init-demixed, r_s = 0 - did not stabilize in something reasonable :(
+- [x] q=2, c=6, dt=10-8, N_r=10+6, init-uniform, r_s = 0 - did not leave the homohegeneous state ;(
+- [ ] degree of (in)stability (the rest of params for proper visuals):
+    - [x] q=2, c=3, dt=10-6
+    - [x] q=2, c=4, dt=10-6
+    - [x] q=2, c=5, dt=10-6
+    - [x] q=2, c=5.2, dt=10-6
+    - [x] q=2, c=5.3, dt=10-6
+    - [x] q=2, c=5.33, dt=10-6
+    - [x] q=2, c=5.5., dt=10-6
+    - [x] q=2, c=5.6, dt=10-6
+    - [x] q=2, c=6, dt=10-6
+    - [x] q=2, c=7, dt=10-6
+    - [x] q=2, c=9, dt=10-6
+            -> did not demix from the homogeneous satate in such fine time resolution :(
+            -> from demixed state - stayed in a funcky 3-denisities (transient? metastable?) state
+               - no idea what that is.
+- [o] dt-sweep - maybe really need it now, cuz seems to have crazy influence -> formalized in the meeting, prepare for the presentation
+- [x] other boundaries conditons -> nothing super interesting so far, for cyclic + periodic - strange
+      "skewed uniform" state.
+
+### Visualization
+- [x] plot theoretical predictions
+- [ ] compute rolling average of the densities to compare the speed of decrease/increase of fluctuations
+- [ ] other plots from the paper (heat map etc.) - identify!
+    - [x] init vs demixed with theory (fig 1)
+    - [ ] heat map + slices (fig 2)
+    - [ ] sharpness of the interface depending on dt (fig 3)
+
+### Numerics
+
+### LaTeX
+
+### Structure
+- [ ] write nr in scientific notation
+- [~] point the plotting script to a run folder to rerun visualization (need to copy over the config) - unnecessary
+- [x] do not build for every run on the server
+- [x] remove progress bar vor visualization - brought back, just don't visualize on the server
+- [x] pickup checkpoints independently of N_t
+- [~] append log for new iterations instead of overwriting - unnecessary
+- [x] delete tmp_frames after rendering?
+
+
+
+## 
+- [x] sym q2 c3-12 dt0.00001 nr100000
+- [ ] sym q2 c3-12 dt0.0001 nr10000
+- [ ] sym q2 c6 dt0.0001 nr1000-1000000
+- [ ] sym q2 c6 dt 1e-8 - 0.1
+- [ ] 
+
+
