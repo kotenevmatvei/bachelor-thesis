@@ -255,9 +255,14 @@ tags: []
 - [ ] 
 
 ## data analysis and visualisation
-- [ ] define some criteria for convergence
-- [ ] order parameter
+
+- [x] order parameter
+    - [ ] add the perfect order line!
 - [ ] length (thikness) of the (three) demixed levels
-- [ ] (asymptotic) rolling time average
+    - [ ] find a way to identify the x-position of the interfaces!
+- [ ] (asymptotic) rolling time average and define some criteria for convergence
+       - [ ] for now just take the last rows average
+       - [ ] ideally: calculate a rolling delta over multiple (averaged) rows (how many)
+    
 - [ ] put all together
 
