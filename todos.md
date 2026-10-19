@@ -258,11 +258,12 @@ tags: []
 
 - [x] order parameter
     - [ ] add the perfect order line!
-- [ ] length (thikness) of the (three) demixed levels
-    - [ ] find a way to identify the x-position of the interfaces!
+- [x] length (thikness) of the (three) demixed levels
+    - [x] find a way to identify the x-position of the interfaces!
 - [ ] (asymptotic) rolling time average and define some criteria for convergence
-       - [ ] for now just take the last rows average
+       - [x] for now just take the last rows average
        - [ ] ideally: calculate a rolling delta over multiple (averaged) rows (how many)
+             and check when it's not changing much anymore
     
 - [ ] put all together
 
