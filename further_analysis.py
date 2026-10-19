@@ -5,20 +5,37 @@ from matplotlib import pyplot as plt
 BIN_WIDTH = 0.02
 
 
-def get_last_mean_density_from_counts(run_name, n_realizations, n_last_rows=10):
+def get_last_mean_densities(run_name, n_realizations, n_last_rows=10):
     data_filename = f"runs/{run_name}/data/cnts_{run_name}.txt"
 
     with open(data_filename, "rb") as f:
         lines = f.readlines()
 
-    last_counts_rows = [np.fromstring(line, sep=" ", dtype=np.float64) for line in lines[-1 * n_last_rows :: 3]]
+    last_counts_rows = [np.fromstring(line, sep=" ", dtype=np.float64) for line in lines][-3 * n_last_rows :]
 
     # normalize and drop first element (timestep index)
-    last_density_rows = [counts[1:] / (n_realizations * BIN_WIDTH) for counts in last_counts_rows]
+    last_densities = [counts[1:] / (n_realizations * BIN_WIDTH) for counts in last_counts_rows]
+    densities = {
+        "A_densities": np.mean(last_densities[0::3], axis=0),
+        "B_densities": np.mean(last_densities[1::3], axis=0),
+        "C_densities": np.mean(last_densities[2::3], axis=0),
+    }
+    return densities
 
-    last_mean_density = np.mean(last_density_rows, axis=0)
 
-    return last_mean_density
+def assign_peak_position(density):
+    maximum = max(density)
+    max_index = list(density).index(maximum)
+    if max_index < 25:
+        return "left"
+    elif 25 < max_index < 75:
+        return "center"
+    else:
+        return "right"
+
+
+def average_densities(density):
+    density = np.mean(density, axis=0)
 
 
 def calculate_order_parameter(density):
@@ -26,34 +43,71 @@ def calculate_order_parameter(density):
     return order_parameter
 
 
-def get_level_widths(density, n_interfaces):
+def get_spreads(density):
     # calculate rolling spread
     spreads = []
     for ind in range(3, len(density) - 3):
         slice = density[ind - 3 : ind + 3]
         spread = max(slice) - min(slice)
         spreads.append(spread)
+    return spreads
 
+
+def get_level_widths(density):
+    spreads = get_spreads(density)
     # indices = np.where(np.isin(spreads, maxima))
     # indices = [spreads.index(maximum) for maximum in maxima]
-    indices = argrelextrema(np.array(spreads), np.greater, order=5)[0]
+    indices = argrelextrema(np.array(spreads), np.greater, order=6)[0]
+    n_indices = len(indices)
+    # remoce fake interfaces with too little density jumps
+    for ind, index in enumerate(indices):
+        slice = spreads[index - 4 : index + 4]
+        if max(slice) - min(slice) < 0.2:
+            indices = np.delete(indices, ind)
+    if len(indices) != 4:
+        raise ValueError("Interfaces must be 4")
+
     high_width = indices[2] - indices[1]
     middle_width = indices[1] - indices[0] + indices[3] - indices[2]
-    low_width = indices[0] + 3 + 100 - indices[3]
+    low_width = indices[0] + 100 - indices[3]
 
-    return high_width, middle_width, low_width
+    return high_width, middle_width, low_width, spreads
 
 
 def main():
-    c_vals = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7, 9]
+    c_vals = [5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7]
     run_names = [f"pow_sym_ref_init-dem_q2_c{c_val}_dt1e-05_nr100000_rs0_bins100_cnts-step1000" for c_val in c_vals]
-    densities = [get_last_mean_density_from_counts(run_name, 100000, 10) for run_name in run_names]
-    level_widths = get_level_widths(densities[5], 4)
-    print(level_widths)
+    orders = []
+    middle_widths = []
+    spreads_rows = []
+    mid_densities = []
+    for run_name in run_names:
+        print(f"Calculating run {run_name}")
+        densities = get_last_mean_densities(run_name, 100000, 10)
+        mid_density = []
+        for species, density in densities.items():
+            peak_position = assign_peak_position(density)
+            if peak_position == "center":
+                mid_density = density
+                mid_densities.append(density)
 
-    orders = [calculate_order_parameter(density) for density in densities]
-    # plt.plot(c_vals, orders, "-o")
+        order = calculate_order_parameter(mid_density)
+        middle_width = get_level_widths(mid_density)[1]
+        spreads = get_level_widths(mid_density)[3]
+        plt.plot(spreads)
+        orders.append(order)
+        middle_widths.append(middle_width)
+
+    plt.show()
+    plt.plot(c_vals, middle_widths, "-o")
+    plt.show()
+
     # add the perfect order line!
+    plt.plot(c_vals, orders, "-o")
+    plt.show()
+
+    for density in mid_densities:
+        plt.plot(density)
     plt.show()
 
 
