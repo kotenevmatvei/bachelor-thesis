@@ -269,5 +269,6 @@ tags: []
     - [x] need to figure out which counts are for the middle interface, it's not
           always A species -> density maximum between -0.5 and 0.5
     - [x] plot averaged densities
-    - [ ] cosmetics: legend, title, ticks and labels etc.
+    - [x] normierung
+    - [ ] cosmetics: axes, legend, title, ticks and labels etc.
 
