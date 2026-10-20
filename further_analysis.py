@@ -107,17 +107,30 @@ def main():
 
     
     plt.plot(c_vals, middle_widths, "-o")
-    plt.savefig("figures/middle_widths.png")
+    plt.title("Normed total width of middle density $p_{mid}$")
+    plt.xlabel("Coupling strength $c$")
+    plt.ylabel("$p_\\text{mid} * 0.01$")
+    plt.grid(True)
+    plt.savefig("figures/middle_widths.png", dpi=300)
     plt.clf()
 
     # add the perfect order line!
     plt.plot(c_vals, orders, "-o")
-    plt.savefig("figures/orders.png")
+    plt.title("Normed order parameter of the middle density $p_{mid}$")
+    plt.xlabel("Coupling strength $c$")
+    plt.ylabel("$O(p_{mid}) * 0.02$")
+    plt.grid(True)
+    plt.savefig("figures/orders.png", dpi=300)
     plt.clf()
 
-    for density in mid_densities:
-        plt.plot(density)
-    plt.savefig("figures/mid_densities.png")
+    for ind, density in enumerate(mid_densities):
+        plt.plot(density, label=str(ind))
+    plt.title("Final middle density vs coupling strength $c$")
+    plt.xlabel("Coupling strength $c$")
+    plt.ylabel("$p$")
+    plt.grid(True)
+    plt.legend()
+    plt.savefig("figures/mid_densities.png", dpi=300)
     plt.clf()
 
 
