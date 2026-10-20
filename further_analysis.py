@@ -19,8 +19,7 @@ def get_last_mean_densities(run_name, n_realizations, n_last_rows=10):
 
     # normalize and drop first element (timestep index)
     last_densities = [
-        counts[1:] / (n_realizations * BIN_WIDTH)
-        for counts in last_counts_rows
+        counts[1:] / (n_realizations * BIN_WIDTH) for counts in last_counts_rows
     ]
     densities = {
         "A_species": np.mean(last_densities[0::3], axis=0),
@@ -77,35 +76,35 @@ def get_level_widths(density):
 
 
 def main():
-    c_vals = [5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7]
-    run_names = [
-        f"pow_sym_ref_init-dem_q2_c{c_val}_dt1e-05_"
-        f"nr100000_rs0_bins100_cnts-step1000"
-        for c_val in c_vals
-    ]
-    orders = []
-    middle_widths = []
+    c_vals = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7]
+    orders = [0.0, 0.0]
+    middle_widths = [1.0, 1.0]
     spreads_rows = []
     mid_densities = []
-    for run_name in run_names:
+    for c_val in c_vals:
+        run_name = (
+            f"pow_sym_ref_init-dem_q2_c{c_val}_dt1e-05_"
+            f"nr100000_rs0_bins100_cnts-step1000"
+        )
         print(f"Calculating run {run_name}")
         densities = get_last_mean_densities(run_name, 100000)
-        mid_density = []
-        for species, density in densities.items():
-            peak_position = assign_peak_position(density)
-            if peak_position == "center":
-                print(f"Center peak assumed by {species}")
-                mid_density = density
-
-        order = calculate_order_parameter(mid_density)
-        middle_width = get_level_widths(mid_density)[1]
-        spreads = get_level_widths(mid_density)[3]
-        orders.append(order)
-        middle_widths.append(middle_width)
-        spreads_rows.append(spreads)
+        mid_density = densities["B_species"]
         mid_densities.append(mid_density)
 
-    
+        # for species, density in densities.items():
+        #     peak_position = assign_peak_position(density)
+        #     if peak_position == "center":
+        #         print(f"Center peak assumed by {species}")
+        #         mid_density = density
+
+        if c_val not in [3, 4]:
+            order = calculate_order_parameter(mid_density)
+            middle_width = get_level_widths(mid_density)[1]
+            spreads = get_level_widths(mid_density)[3]
+            orders.append(order)
+            middle_widths.append(middle_width)
+            spreads_rows.append(spreads)
+
     plt.plot(c_vals, middle_widths, "-o")
     plt.title("Normed total width of middle density $p_{mid}$")
     plt.xlabel("Coupling strength $c$")

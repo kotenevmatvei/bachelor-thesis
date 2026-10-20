@@ -262,12 +262,12 @@ tags: []
     - [x] find a way to identify the x-position of the interfaces!
 - [ ] (asymptotic) rolling time average and define some criteria for convergence
        - [x] for now just take the last rows average
-       - [ ] ideally: calculate a rolling delta over multiple (averaged) rows (how many)
+       - [x] ideally: calculate a rolling delta over multiple (averaged) rows (how many)
              and check when it's not changing much anymore
     
 - [ ] put all together
     - [ ] do not only consider middle density but average order and widths over all three
-    - [ ] add points with fewer than 3 densities or no demixed final state to the plots
+    - [x] add points with fewer than 3 densities or no demixed final state to the plots
     - [x] need to figure out which counts are for the middle interface, it's not
           always A species -> density maximum between -0.5 and 0.5
     - [x] plot averaged densities
