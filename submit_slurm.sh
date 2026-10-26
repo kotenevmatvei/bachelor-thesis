@@ -143,6 +143,26 @@ pow_sym_ref_init-un_q2_c7_dt0.001_nr10000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-un_q2_c7_dt0.01_nr10000_rs0_bins100_cnts-step1000
 pow_sym_ref_init-un_q2_c7_dt0.1_nr10000_rs0_bins100_cnts-step1000
 "
+runs_q2_c4_5="
+pow_sym_ref_init-dem_q2_c4.1_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4.2_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4.3_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4.4_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4.5_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4.6_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4.7_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4.8_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-dem_q2_c4.9_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4.1_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4.2_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4.3_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4.4_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4.5_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4.6_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4.7_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4.8_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+pow_sym_ref_init-un_q2_c4.9_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+"
 
 # for run in $runs_q2_c6_dt8; do
 #     sbatch slurm/$run.slurm
