@@ -1,6 +1,5 @@
 import os
 
-
 def generate_c_sweep():
     q3_c = [
         1,
@@ -202,7 +201,8 @@ bash server_run.sh "configs/{run_name}/alpha7_p0-0.6_rs{rs}.txt"
 
 
 def generate_c_sweep_to_test_bistability():
-    c_list = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7, 9, 10, 11, 12]
+    # c_list = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7, 9, 10, 11, 12]
+    c_list = [4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9]
 
     for init in ["dem", "un"]:
         for c_val in c_list:
@@ -311,4 +311,4 @@ bash server_run.sh "configs/{run_name}.txt"
             print(run_name)
 
 if __name__ == "__main__":
-    generate_nr_sweep_to_test_bistability_slurm()
+    generate_c_sweep_to_test_bistability()
