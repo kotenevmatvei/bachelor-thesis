@@ -6,7 +6,8 @@ BIN_WIDTH = 0.02
 PERFECT_ORDER = 50
 MAX_MID_WIDTH = 100
 
-def peak_width_analytical(c, low_level):
+
+def peak_width_analytical(c, low_level=0.103):
     h = low_level + 1 / (c * low_level)
     En = h * (1 + 4 * c * low_level**2)
     m = np.sinh((1 / 3) * np.arcsinh(3 * En * np.sqrt(3 * c))) / np.sqrt(3 * c)
@@ -34,9 +35,9 @@ def get_last_mean_densities(run_name, n_realizations, n_last_rows=10):
         "C_species": np.mean(last_densities[2::3], axis=0),
     }
     # densities = {
-    #     "A_species": last_densities[-6],
-    #     "B_species": last_densities[-5],
-    #     "C_species": last_densities[-4],
+    #     "A_species": last_densities[-3],
+    #     "B_species": last_densities[-2],
+    #     "C_species": last_densities[-1],
     # }
     # plt.plot(np.linspace(-1, 1, 100), densities["B_species"])
     # plt.show()
@@ -102,7 +103,7 @@ def main():
             f"nr100000_rs0_bins100_cnts-step1000"
         )
         print(f"Calculating run {run_name}")
-        densities = get_last_mean_densities(run_name, 100000)
+        densities = get_last_mean_densities(run_name, 100000, 70)
         mid_density = densities["B_species"]
         mid_densities.append(mid_density)
 
@@ -115,23 +116,23 @@ def main():
         if c_val not in [3, 4]:
             order = calculate_order_parameter(mid_density)
             peak_width = get_level_widths(mid_density)[0]
-            middle_width = get_level_widths(mid_density)[1]
             spreads = get_level_widths(mid_density)[3]
-            orders.append(order)
+            middle_width = get_level_widths(mid_density)[1]
             middle_widths.append(middle_width)
+            orders.append(order)
             peak_widths.append(peak_width)
             spreads_rows.append(spreads)
 
-            plt.plot(np.linspace(-1, 1, 94), spreads)
-            plt.title("Spreads")
-            plt.xlabel("Coupling strength $c$")
-            plt.ylabel("$spread$")
-            plt.grid(True)
-            plt.savefig("figures/spreads.png", dpi=300)
-            plt.clf()
+    plt.plot(np.linspace(-1, 1, 94), spreads_rows[-1])
+    plt.title("Spreads")
+    plt.xlabel("Coupling strength $c$")
+    plt.ylabel("$spread$")
+    plt.grid(True)
+    plt.savefig("figures/spreads.png", dpi=300)
+    plt.clf()
 
     plt.plot(c_vals, peak_widths, "-o")
-    w_analytical = [peak_width_analytical(c, 0.1) for c in c_vals]
+    w_analytical = [peak_width_analytical(c) for c in c_vals]
     plt.plot(c_vals, w_analytical, "-o")
     plt.title("Peak width vs coupling strength $c$")
     plt.xlabel("Coupling strength $c$")
