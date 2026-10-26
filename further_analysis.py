@@ -6,6 +6,13 @@ BIN_WIDTH = 0.02
 PERFECT_ORDER = 50
 MAX_MID_WIDTH = 100
 
+def peak_width_analytical(c, low_level):
+    h = low_level + 1 / (c * low_level)
+    En = h * (1 + 4 * c * low_level**2)
+    m = np.sinh((1 / 3) * np.arcsinh(3 * En * np.sqrt(3 * c))) / np.sqrt(3 * c)
+    w = (1 - 2 * m) / (h + 2 * low_level - 3 * m)
+    return w
+
 
 def get_last_mean_densities(run_name, n_realizations, n_last_rows=10):
     data_filename = f"runs/{run_name}/data/cnts_{run_name}.txt"
@@ -26,6 +33,13 @@ def get_last_mean_densities(run_name, n_realizations, n_last_rows=10):
         "B_species": np.mean(last_densities[1::3], axis=0),
         "C_species": np.mean(last_densities[2::3], axis=0),
     }
+    # densities = {
+    #     "A_species": last_densities[-6],
+    #     "B_species": last_densities[-5],
+    #     "C_species": last_densities[-4],
+    # }
+    # plt.plot(np.linspace(-1, 1, 100), densities["B_species"])
+    # plt.show()
     return densities
 
 
@@ -66,11 +80,11 @@ def get_level_widths(density):
         if max(slice) - min(slice) < 0.2:
             indices = np.delete(indices, ind)
     if len(indices) != 4:
-        raise ValueError("Interfaces must be 4")
+        raise ValueError(f"Interfaces must be 4, got {len(indices)}")
 
-    high_width = (indices[2] - indices[1]) / MAX_MID_WIDTH
-    middle_width = (indices[1] - indices[0] + indices[3] - indices[2]) / MAX_MID_WIDTH
-    low_width = (indices[0] + 100 - indices[3]) / MAX_MID_WIDTH
+    high_width = (indices[2] - indices[1]) * BIN_WIDTH
+    middle_width = (indices[1] - indices[0] + indices[3] - indices[2]) * BIN_WIDTH
+    low_width = (indices[0] + 100 - indices[3]) * BIN_WIDTH
 
     return high_width, middle_width, low_width, spreads
 
@@ -81,6 +95,7 @@ def main():
     middle_widths = [1.0, 1.0]
     spreads_rows = []
     mid_densities = []
+    peak_widths = [0, 0]
     for c_val in c_vals:
         run_name = (
             f"pow_sym_ref_init-dem_q2_c{c_val}_dt1e-05_"
@@ -99,11 +114,31 @@ def main():
 
         if c_val not in [3, 4]:
             order = calculate_order_parameter(mid_density)
+            peak_width = get_level_widths(mid_density)[0]
             middle_width = get_level_widths(mid_density)[1]
             spreads = get_level_widths(mid_density)[3]
             orders.append(order)
             middle_widths.append(middle_width)
+            peak_widths.append(peak_width)
             spreads_rows.append(spreads)
+
+            plt.plot(np.linspace(-1, 1, 94), spreads)
+            plt.title("Spreads")
+            plt.xlabel("Coupling strength $c$")
+            plt.ylabel("$spread$")
+            plt.grid(True)
+            plt.savefig("figures/spreads.png", dpi=300)
+            plt.clf()
+
+    plt.plot(c_vals, peak_widths, "-o")
+    w_analytical = [peak_width_analytical(c, 0.1) for c in c_vals]
+    plt.plot(c_vals, w_analytical, "-o")
+    plt.title("Peak width vs coupling strength $c$")
+    plt.xlabel("Coupling strength $c$")
+    plt.ylabel("Peak width W")
+    plt.grid(True)
+    plt.savefig("figures/peak_widths.png", dpi=300)
+    plt.clf()
 
     plt.plot(c_vals, middle_widths, "-o")
     plt.title("Normed total width of middle density $p_{mid}$")
@@ -122,8 +157,8 @@ def main():
     plt.savefig("figures/orders.png", dpi=300)
     plt.clf()
 
-    for ind, density in enumerate(mid_densities):
-        plt.plot(density, label=str(ind))
+    for c_val, density in zip(c_vals, mid_densities):
+        plt.plot(np.linspace(-1, 1, 100), density, label=f"$c$={c_val}")
     plt.title("Final middle density vs coupling strength $c$")
     plt.xlabel("Coupling strength $c$")
     plt.ylabel("$p$")
