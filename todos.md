@@ -248,10 +248,10 @@ tags: []
 ## Presentation on 29.10.26
 ### runs
 - [x] sym q2 c3-9 dt0.00001 nr100000
-- [ ] sym q2 c3-12 dt0.0001 nr10000
-- [ ] sym q2 c6 dt0.0001 nr1000-1000000
-- [ ] sym q2 c6 dt 1e-8 - 0.1
-- [ ] sym q2 c7 dt 1e-8 - 0.1
+- [x] sym q2 c3-12 dt0.0001 nr10000
+- [x] sym q2 c6 dt0.0001 nr1000-1000000
+- [x] sym q2 c6 dt 1e-8 - 0.1
+- [x] sym q2 c7 dt 1e-8 - 0.1
 - [ ] 
 
 ## data analysis and visualisation
@@ -265,7 +265,7 @@ tags: []
        - [x] ideally: calculate a rolling delta over multiple (averaged) rows (how many)
              and check when it's not changing much anymore
     
-- [ ] put all together
+- [x] put all together
     - [ ] do not only consider middle density but average order and widths over all three
     - [x] add points with fewer than 3 densities or no demixed final state to the plots
     - [x] need to figure out which counts are for the middle interface, it's not
@@ -274,3 +274,9 @@ tags: []
     - [x] normierung
     - [x] cosmetics: axes, legend, title, ticks and labels etc.
 
+# data analysis
+- [ ] calculate l
+- [ ] average ovservables, not densities
+- [ ] write to csv?
+- [ ] anayze h,m and w prediction for all peaks, compare (plot together), average
+- [ ] calculate and plot uncertancies 
