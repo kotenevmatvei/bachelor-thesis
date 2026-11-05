@@ -20,3 +20,5 @@ slurm/sprint-1
 slurm/*.out
 slurm/*.err
 *.zip
+
+*.avi

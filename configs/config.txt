@@ -1,4 +1,4 @@
-run pow_sym_ref_init-un_q2_c7_dt0.0001_nr10000_rs0_bins100_cnts-step1000
+run pow_sym_ref_init-dem_q3_c1_dt0.0001_nr10000_rs0_bins100_cnts-step10
 type pow
 dependency sym
 boundary ref
@@ -11,11 +11,11 @@ d 1
 n_t 1000000
 n_realizations 10000
 n_bins 100
-c 6
-q 2
+c 1
+q 3
 rs 0
-cnts_timestep 1000
-crds_snapshot 10000
+cnts_timestep 10
+crds_snapshot 100
 alpha 3
 p_0 0.2
 
