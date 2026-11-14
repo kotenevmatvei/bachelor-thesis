@@ -8,6 +8,25 @@ PERFECT_ORDER = 50
 MAX_MID_WIDTH = 100
 
 
+def get_densities(run_name, n_realizations, n_last_rows=20):
+    data_filename = f"runs/{run_name}/data/cnts_{run_name}.txt"
+
+    with open(data_filename, "rb") as f:
+        lines = f.readlines()
+
+    last_counts_rows = [
+        np.fromstring(line, sep=" ", dtype=np.float64) for line in lines
+    ][-3 * n_last_rows :]
+
+    # normalize and drop first element (timestep index)
+    last_densities = [
+        counts[1:] / (n_realizations * BIN_WIDTH) for counts in last_counts_rows
+    ]
+    df = pd.DataFrame.from_records(last_densities)
+
+    return df
+
+
 def peak_width_analytical(c, low_level=0.1):
     h = low_level + 1 / (c * low_level)
     En = h * (1 + 4 * c * low_level**2)
@@ -84,7 +103,7 @@ def get_level_widths(density):
     if len(indices) != 4:
         raise ValueError(f"Interfaces must be 4, got {len(indices)}")
 
-    low_p = np.mean(np.concatenate([density[:indices[0]], density[indices[-1]:]]))
+    low_p = np.mean(np.concatenate([density[: indices[0]], density[indices[-1] :]]))
     print(f"Low density: l = {low_p}")
 
     high_width = (indices[2] - indices[1]) * BIN_WIDTH
@@ -145,7 +164,12 @@ def main():
 
     plt.plot(c_vals, peak_widths, "-o", label="simulation")
     w_analytical = [peak_width_analytical(c) for c in c_vals]
-    plt.plot(c_vals, w_analytical, "-o", label="theory",)
+    plt.plot(
+        c_vals,
+        w_analytical,
+        "-o",
+        label="theory",
+    )
     plt.title("Peak width vs coupling strength $c$")
     plt.xlabel("Coupling strength $c$")
     plt.ylabel("Peak width W")
@@ -181,5 +205,5 @@ def main():
     plt.clf()
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+# main()
