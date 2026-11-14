@@ -70,19 +70,10 @@ recompile
 
 ## cosmetics
 
+--------------------------------------------------------------------
 
 
----
-id: bachelor_thesis
-aliases:
-  - bachelor_thesis
-  - Bachelorarbeit
-tags: []
----
-
-# bachelor_thesis
-
-## Time till next meetup with Lindner
+# Time till next meetup with Lindner
 
 * meetup with Lindnder on              3.09
 * free days with today and weekends:   13
@@ -182,24 +173,24 @@ tags: []
 
 
 
-## Sprint 2
+# Sprint 2
 - next meeting with Lindner: 15.10.2026
 - total days till then: 35
 
 
-### Analysis
+## Analysis
 - [ ] stability analysis of the demixed state
     - [ ] normal with p_h and p_l - sheeesh that is more difficult than expected, but gotta try
           another ansatz.
     - [ ] tripple with p_h, p_l and p_m (p_m assumed by all species simultaneously)
 - [ ] done calculations for other periodic boundaries and cyclic dependency - for now not so relevant
 
-### Simulation Features
+## Simulation Features
 
-### Bugs
+## Bugs
 - [ ] init uniform first bin almost empty - for now not so relevant
 
-### Simulation Runs
+## Simulation Runs
 - [x] figure out large N_realizations and small delta_t so that the visuals are well visible
 - [x] q=2, c=6, dt=10-8, N_r=10+6, init-demixed, r_s = 0 - did not stabilize in something reasonable :(
 - [x] q=2, c=6, dt=10-8, N_r=10+6, init-uniform, r_s = 0 - did not leave the homohegeneous state ;(
@@ -222,7 +213,7 @@ tags: []
 - [x] other boundaries conditons -> nothing super interesting so far, for cyclic + periodic - strange
       "skewed uniform" state.
 
-### Visualization
+## Visualization
 - [x] plot theoretical predictions
 - [ ] compute rolling average of the densities to compare the speed of decrease/increase of fluctuations
 - [ ] other plots from the paper (heat map etc.) - identify!
@@ -230,11 +221,11 @@ tags: []
     - [ ] heat map + slices (fig 2)
     - [ ] sharpness of the interface depending on dt (fig 3)
 
-### Numerics
+## Numerics
 
-### LaTeX
+## LaTeX
 
-### Structure
+## Structure
 - [ ] write nr in scientific notation
 - [~] point the plotting script to a run folder to rerun visualization (need to copy over the config) - unnecessary
 - [x] do not build for every run on the server
@@ -245,8 +236,8 @@ tags: []
 
 
 
-## Presentation on 29.10.26
-### runs
+# Presentation on 29.10.26
+## runs
 - [x] sym q2 c3-9 dt0.00001 nr100000
 - [x] sym q2 c3-12 dt0.0001 nr10000
 - [x] sym q2 c6 dt0.0001 nr1000-1000000
@@ -274,9 +265,47 @@ tags: []
     - [x] normierung
     - [x] cosmetics: axes, legend, title, ticks and labels etc.
 
-# data analysis
-- [ ] calculate l
-- [ ] average ovservables, not densities
-- [ ] write to csv?
-- [ ] anayze h,m and w prediction for all peaks, compare (plot together), average
-- [ ] calculate and plot uncertancies 
+- [x] calculate l
+- [x] better interface detection (histogram of the histogram?)
+- [x] plot calculated interfaces
+- [x] average ovservables, not densities
+- [~] write to csv?
+- [x] anayze and w prediction for all peaks, compare (plot together)
+    - [ ] h, m
+    - [ ], average
+- [ ] calculate and plot uncertancies - need more simulation runs with the same parameters to have
+      stochastically independent experiments!
+
+
+# after presentation
+-----------------------------------------
+## data analysis
+- [ ] plot m and h predictions for three peaks and all c's
+
+## simultaion
+- [ ] implement (fix) periodic conditions
+- [ ] introduce runname to be able to run the same configurations multiple times (for uncertainties)?
+- [ ] start the runs to double the uncertainties
+- [ ] start the runs to quantify the slices (see what has already been run first tho)
+
+## calculations
+- [ ] formula for peak width w via cubic roots instead of trig functions
+- [ ] look for a forgotten constraint that eliminates the indetermination of the
+      the final 3-levels solution
+- [ ] calculate for periodic boundaries
+    - [ ] 3-levels solutions
+    - [ ] 2-levels solutions
+    - [ ] stability of the stationary state
+
+## writing
+- [ ] write the sections with all essential, solid calculations
+
+
+
+
+
+
+
+
+
+
