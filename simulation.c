@@ -204,11 +204,8 @@ double ref_boundary(double coordinate, double lower_bound, double upper_bound) {
 }
 
 double per_boundary(double coordinate, double lower_bound, double upper_bound) {
-    if (coordinate > upper_bound)
+    if ((coordinate > upper_bound) || (coordinate < lower_bound))
         return lower_bound + coordinate - upper_bound;
-
-    if (coordinate < lower_bound)
-        return upper_bound - coordinate + lower_bound;
 
     return coordinate;
 }
