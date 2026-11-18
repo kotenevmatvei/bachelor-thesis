@@ -167,6 +167,8 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     FILE *log_file;
 
     int i_mb_checkpoint = 1;
+    // because unless we load a checkpoint, one iteration is already saved before the 
+    // loop when we distribute coordinates according to init distributions
     int first_iter_offset = 1;
 
     // see if we can load a preexisting checkpoint:
@@ -269,6 +271,10 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
            time_loop_start - first_iter_offset, time_loop_end);
     fflush(stdout);
     time_t start_iloop = time(NULL);
+
+    printf("\nTime boundaries:\n");
+    printf("time_loop_start = %d\n", time_loop_start);
+    printf("time_loop_end = %d\n", time_loop_end);
     for (int i = time_loop_start; i <= time_loop_end; i++) {
         // first compute all histograms for the current timestep so that every
         // particle sort sees the same density
