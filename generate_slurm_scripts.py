@@ -230,12 +230,12 @@ def slurm_c_sweep_for_bistability():
         12,
     ]
 
-    for init in ["dem", "un"]:
-        for boundary in ["per", "ref"]:
+    for boundary in ["per", "ref"]:
+        for init in ["dem", "un"]:
             for c_val in c_list:
                 for iter in range(1, 11):
                     run_name = (
-                        f"pow_sym_ref_init-{init}_q2_c{c_val}_dt0.0001_nr100000_"
+                        f"pow_sym_{boundary}_init-{init}_q2_c{c_val}_dt0.0001_nr100000_"
                         f"rs0_bins100_cnts-step1000"
                     )
                     content = f"""#!/bin/bash
