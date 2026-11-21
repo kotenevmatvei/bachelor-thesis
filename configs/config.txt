@@ -1,21 +1,21 @@
-run pow_sym_ref_init-dem_q3_c1_dt0.0001_nr10000_rs0_bins100_cnts-step10
+run test
 type pow
 dependency sym
-boundary ref
+boundary per
 init_density dem
 delta_t 0.0001
 start 0
 lower_bound -1
 upper_bound 1
 d 1
-n_t 1000000
+n_t 100000
 n_realizations 10000
 n_bins 100
-c 1
-q 3
+c 5.3
+q 2
 rs 0
-cnts_timestep 10
-crds_snapshot 100
+cnts_timestep 100
+crds_snapshot 10000
 alpha 3
 p_0 0.2
 
@@ -26,3 +26,8 @@ type: log or pow
 dependency: sym or cy
 boundary: ref or per
 init_density: un or dem
+
+
+dependency_id = 1
+boundary_id = 0
+type_id = 1
