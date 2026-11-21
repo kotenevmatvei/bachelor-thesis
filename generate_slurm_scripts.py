@@ -236,7 +236,7 @@ def slurm_c_sweep_for_bistability():
                 for iter in range(1, 11):
                     run_name = (
                         f"pow_sym_{boundary}_init-{init}_q2_c{c_val}_dt0.0001_nr100000_"
-                        f"rs0_bins100_cnts-step1000"
+                        f"rs0_bins100_cnts-step1000_iter{iter}"
                     )
                     content = f"""#!/bin/bash
 
@@ -306,7 +306,7 @@ def generate_dt_sweep_to_test_bistability_slurm():
 
     for init in ["dem", "un"]:
         for dt_val in dt_list:
-            run_name = f"pow_sym_ref_init-{init}_q2_c7_dt{dt_val}_nr10000_rs0_bins100_cnts-step1000"
+            run_name = (f"pow_sym_ref_init-{init}_q2_c7_dt{dt_val}_nr10000_rs0_bins100_cnts-step1000")
             content = f"""#!/bin/bash
 
 #SBATCH --nodes=1
