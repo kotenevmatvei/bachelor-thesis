@@ -6,6 +6,9 @@ compile_commands.json
 data
 tmp_frames
 animations
+dt-slide-sym-ref
+nr-slide-sym-ref
+c-slide-sym-ref
 __pycache__
 *.mp4
 
