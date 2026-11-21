@@ -1,5 +1,7 @@
 import os
 
+from generate_configs import configs_nr_sweep_for_bistability
+
 
 def generate_c_sweep():
     q3_c = [
@@ -255,81 +257,40 @@ bash server_run.sh "configs/{run_name}.txt"
                     print(run_name)
 
 
-def generate_c_sweep_to_test_bistability_cyclic_periodic():
-    c_list = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7, 9]
-
-    for init in ["dem", "un"]:
-        for c_val in c_list:
-            run_name = f"pow_cy_per_init-{init}_q2_c{c_val}_dt1e-05_nr100000_rs0_bins100_cnts-step1000"
-            content = f"""#!/bin/bash
-
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
-#SBATCH --time=48:00:00
-
-#SBATCH --output=slurm/R-%x.%j.out
-#SBATCH --error=slurm/R-%x.%j.err
-
-bash server_run.sh "configs/{run_name}.txt"
-"""
-            with open(f"slurm/{run_name}.slurm", "w") as f:
-                f.write(content)
-            print(run_name)
-
-
-def generate_q2_c7():
-
-    for init in ["dem", "un"]:
-        run_name = (
-            f"pow_sym_ref_init-{init}_q2_c7_dt1e-08_nr1000000_rs0_bins100_cnts-step1000"
-        )
-        content = f"""#!/bin/bash
-
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=4
-#SBATCH --time=48:00:00
-
-#SBATCH --output=slurm/R-%x.%j.out
-#SBATCH --error=slurm/R-%x.%j.err
-
-bash server_run.sh "configs/{run_name}.txt"
-"""
-        with open(f"slurm/{run_name}.slurm", "w") as f:
-            f.write(content)
-        print(run_name)
-
-
-def generate_dt_sweep_to_test_bistability_slurm():
+def slurm_dt_sweep_for_bistability():
     dt_list = [1e-8, 1e-7, 1e-6, 1e-5, 0.0001, 0.001, 0.01, 0.1]
 
     for init in ["dem", "un"]:
         for dt_val in dt_list:
-            run_name = (f"pow_sym_ref_init-{init}_q2_c7_dt{dt_val}_nr10000_rs0_bins100_cnts-step1000")
-            content = f"""#!/bin/bash
+            for iter in range(1, 11):
+                run_name = (
+                    f"pow_sym_per_init-{init}_q2_c7_dt{dt_val}_nr10000_rs0_"
+                    f"bins100_cnts-step1000_iter{iter}"
+                )
+                content = f"""#!/bin/bash
 
 #SBATCH --nodes=1
+#SBATCH --partition=dfque
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --time=48:00:00
+#SBATCH --time=7-00:00:00
 
 #SBATCH --output=slurm/R-%x.%j.out
 #SBATCH --error=slurm/R-%x.%j.err
 
 bash server_run.sh "configs/{run_name}.txt"
 """
-            with open(f"slurm/{run_name}.slurm", "w") as f:
-                f.write(content)
-            print(run_name)
+                with open(f"slurm/{run_name}.slurm", "w") as f:
+                    f.write(content)
+                print(run_name)
 
 
 def generate_nr_sweep_to_test_bistability_slurm():
-    nr_list = [100, 1000, 10000, 100000, 100000, 100000]
+    nr_list = [100, 1000, 10000, 100000, 100000, 100000, 1000000]
 
     for init in ["dem", "un"]:
         for nr_val in nr_list:
-            run_name = f"pow_sym_ref_init-{init}_q2_c6_dt0.0001_nr{nr_val}_rs0_bins100_cnts-step1000"
+            run_name = f"pow_sym_ref_init-{init}_q2_c7_dt0.00001_nr{nr_val}_rs0_bins100_cnts-step1000"
             content = f"""#!/bin/bash
 
 #SBATCH --nodes=1
@@ -348,4 +309,4 @@ bash server_run.sh "configs/{run_name}.txt"
 
 
 if __name__ == "__main__":
-    slurm_c_sweep_for_bistability()
+    configs_nr_sweep_for_bistability()
