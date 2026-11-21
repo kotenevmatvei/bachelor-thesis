@@ -198,46 +198,76 @@ p_0 0.6
             f.write(content)
 
 
-def generate_c_sweep_for_bistability():
-    # c_list = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7, 9, 10, 11, 12]
-    c_list = [4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 11, 12]
-    # init-demixed
+def configs_c_sweep_for_bistability():
+    c_list = [
+        3,
+        4,
+        4.1,
+        4.2,
+        4.3,
+        4.4,
+        4.5,
+        4.6,
+        4.7,
+        4.8,
+        4.9,
+        5,
+        5.2,
+        5.3,
+        5.33,
+        5.5,
+        5.6,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12,
+        11,
+        12,
+    ]
     for init in ["dem", "un"]:
-        for c_val in c_list:
-            run_name = f"pow_sym_ref_init-{init}_q2_c{c_val}_dt0.0001_nr100000_rs0_bins100_cnts-step1000"
+        for boundary in ["per", "ref"]:
+            for c_val in c_list:
+                for iter in range(1, 10):
+                    run_name = (
+                        f"pow_sym_{boundary}_init-{init}_q2_c{c_val}_dt0.0001_"
+                        f"nr100000_rs0_bins100_cnts-step1000_iter{iter}"
+                    )
 
-            content = f"""run {run_name}
-type pow
-dependency sym
-boundary ref
-init_density {init}
-delta_t 0.0001
-start 0
-lower_bound -1
-upper_bound 1
-d 1
-n_t 10000000
-n_realizations 100000
-n_bins 100
-c {c_val}
-q 2
-rs 0
-cnts_timestep 1000
-crds_snapshot 10000
-alpha 3
-p_0 0.2
+                    content = f"""run {run_name}
+        type pow
+        dependency sym
+        boundary {boundary}
+        init_density {init}
+        delta_t 0.0001
+        start 0
+        lower_bound -1
+        upper_bound 1
+        d 1
+        n_t 10000000
+        n_realizations 100000
+        n_bins 100
+        c {c_val}
+        q 2
+        rs 0
+        cnts_timestep 1000
+        crds_snapshot 10000
+        alpha 3
+        p_0 0.2
 
 
-comments:
+        comments:
 
-type: log or pow
-dependency: sym or cy
-boundary: ref or per
-init_density: un or dem
-"""
-            with open(f"configs/{run_name}.txt", "w") as f:
-                f.write(content)
-            print(run_name)
+        type: log or pow
+        dependency: sym or cy
+        boundary: ref or per
+        init_density: un or dem
+        """
+                    with open(f"configs/{run_name}.txt", "w") as f:
+                        f.write(content)
+                    print(run_name)
+
 
 def generate_c_sweep_for_bistability_cyclic_periodic():
     c_list = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7, 9]
@@ -283,7 +313,9 @@ init_density: un or dem
 def generate_q2_c7():
     # init-demixed
     for init in ["dem", "un"]:
-        run_name = f"pow_sym_ref_init-{init}_q2_c7_dt1e-08_nr1000000_rs0_bins100_cnts-step1000"
+        run_name = (
+            f"pow_sym_ref_init-{init}_q2_c7_dt1e-08_nr1000000_rs0_bins100_cnts-step1000"
+        )
 
         content = f"""run {run_name}
 type pow
@@ -359,6 +391,7 @@ init_density: un or dem
                 f.write(content)
             print(run_name)
 
+
 def generate_nr_sweep_for_bistability_configs():
     nr_list = [100, 1000, 10000, 100000, 100000, 100000]
     # init-demixed
@@ -401,4 +434,4 @@ init_density: un or dem
 
 
 if __name__ == "__main__":
-    generate_c_sweep_for_bistability()
+    configs_c_sweep_for_bistability()

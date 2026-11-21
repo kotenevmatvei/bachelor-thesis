@@ -1,5 +1,6 @@
 import os
 
+
 def generate_c_sweep():
     q3_c = [
         1,
@@ -200,14 +201,44 @@ bash server_run.sh "configs/{run_name}/alpha7_p0-0.6_rs{rs}.txt"
             f.write(content)
 
 
-def generate_c_sweep_to_test_bistability():
-    # c_list = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7, 9, 10, 11, 12]
-    c_list = [4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9, 11, 12]
+def slurm_c_sweep_for_bistability():
+    c_list = [
+        3,
+        4,
+        4.1,
+        4.2,
+        4.3,
+        4.4,
+        4.5,
+        4.6,
+        4.7,
+        4.8,
+        4.9,
+        5,
+        5.2,
+        5.3,
+        5.33,
+        5.5,
+        5.6,
+        6,
+        7,
+        9,
+        10,
+        11,
+        12,
+        11,
+        12,
+    ]
 
     for init in ["dem", "un"]:
-        for c_val in c_list:
-            run_name = f"pow_sym_ref_init-{init}_q2_c{c_val}_dt0.0001_nr100000_rs0_bins100_cnts-step1000"
-            content = f"""#!/bin/bash
+        for boundary in ["per", "ref"]:
+            for c_val in c_list:
+                for iter in range(1, 11):
+                    run_name = (
+                        f"pow_sym_ref_init-{init}_q2_c{c_val}_dt0.0001_nr100000_"
+                        f"rs0_bins100_cnts-step1000"
+                    )
+                    content = f"""#!/bin/bash
 
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -219,9 +250,10 @@ def generate_c_sweep_to_test_bistability():
 
 bash server_run.sh "configs/{run_name}.txt"
 """
-            with open(f"slurm/{run_name}.slurm", "w") as f:
-                f.write(content)
-            print(run_name)
+                    with open(f"slurm/{run_name}.slurm", "w") as f:
+                        f.write(content)
+                    print(run_name)
+
 
 def generate_c_sweep_to_test_bistability_cyclic_periodic():
     c_list = [3, 4, 5, 5.2, 5.3, 5.33, 5.5, 5.6, 6, 7, 9]
@@ -249,7 +281,9 @@ bash server_run.sh "configs/{run_name}.txt"
 def generate_q2_c7():
 
     for init in ["dem", "un"]:
-        run_name = f"pow_sym_ref_init-{init}_q2_c7_dt1e-08_nr1000000_rs0_bins100_cnts-step1000"
+        run_name = (
+            f"pow_sym_ref_init-{init}_q2_c7_dt1e-08_nr1000000_rs0_bins100_cnts-step1000"
+        )
         content = f"""#!/bin/bash
 
 #SBATCH --nodes=1
@@ -265,6 +299,7 @@ bash server_run.sh "configs/{run_name}.txt"
         with open(f"slurm/{run_name}.slurm", "w") as f:
             f.write(content)
         print(run_name)
+
 
 def generate_dt_sweep_to_test_bistability_slurm():
     dt_list = [1e-8, 1e-7, 1e-6, 1e-5, 0.0001, 0.001, 0.01, 0.1]
@@ -288,6 +323,7 @@ bash server_run.sh "configs/{run_name}.txt"
                 f.write(content)
             print(run_name)
 
+
 def generate_nr_sweep_to_test_bistability_slurm():
     nr_list = [100, 1000, 10000, 100000, 100000, 100000]
 
@@ -310,5 +346,6 @@ bash server_run.sh "configs/{run_name}.txt"
                 f.write(content)
             print(run_name)
 
+
 if __name__ == "__main__":
-    generate_c_sweep_to_test_bistability()
+    slurm_c_sweep_for_bistability()
