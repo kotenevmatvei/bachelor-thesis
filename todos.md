@@ -281,7 +281,7 @@ recompile
 -----------------------------------------
 ## data analysis
 - [ ] plot m and h predictions for three peaks and all c's
-- [ ] mathematica peak-width function plot with c as a parameter and l the argument
+- [x] mathematica peak-width function plot with c as a parameter and l the argument
 
 ## simultaion
 - [x] implement (fix) periodic conditions
