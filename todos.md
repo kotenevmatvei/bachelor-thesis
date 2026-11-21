@@ -281,20 +281,28 @@ recompile
 -----------------------------------------
 ## data analysis
 - [ ] plot m and h predictions for three peaks and all c's
+- [ ] mathematica peak-width function plot with c as a parameter and l the argument
 
 ## simultaion
-- [ ] implement (fix) periodic conditions
-- [ ] introduce runname to be able to run the same configurations multiple times (for uncertainties)?
+- [x] implement (fix) periodic conditions
+- [~] introduce runname to be able to run the same configurations multiple times (for uncertainties)?
 - [ ] start the runs to double the uncertainties
 - [ ] start the runs to quantify the slices (see what has already been run first tho)
+    *for all below multiple independent runs with the same parameters to calculate the uncertainties and check l convergence*
+    - [ ] fix c, rs, and nr - slide dt (sym_ref_init-dem_q2_c6_dt0.01_nr10000 done - RUN periodic)
+    - [ ] fix nr, rs, and dt - slide c (done, RUN PERIODIC)
+    - [ ] fix c, rs, and dt - slide nr (*sym_ref*q2_c6_dt0.0001_nr100000_* done, try with higher c to see more demixing?, RUN PERIODIC)
+    - [ ] fix c, nr and dt - slide rs (RUN PERIODIC not far from c-slide)
+
 
 ## calculations
 - [ ] formula for peak width w via cubic roots instead of trig functions
 - [ ] look for a forgotten constraint that eliminates the indetermination of the
       the final 3-levels solution
+      - [ ] see if finite sensing radius helps!
 - [ ] calculate for periodic boundaries
-    - [ ] 3-levels solutions
-    - [ ] 2-levels solutions
+    - [x] 3-levels solutions - same!
+    - [x] 2-levels solutions - same!
     - [ ] stability of the stationary state
 
 ## writing
