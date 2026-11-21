@@ -204,8 +204,11 @@ double ref_boundary(double coordinate, double lower_bound, double upper_bound) {
 }
 
 double per_boundary(double coordinate, double lower_bound, double upper_bound) {
-    if ((coordinate > upper_bound) || (coordinate < lower_bound))
+    if (coordinate > upper_bound)
         return lower_bound + coordinate - upper_bound;
+
+    if (coordinate < lower_bound)
+        return upper_bound + coordinate - lower_bound;
 
     return coordinate;
 }
@@ -222,7 +225,7 @@ double sticky_top_refl_bottom_boundary(double coordinate, double lower_bound,
 }
 
 double double_pow_diffuse(double coordinate, double D, double c, int q, double delta_t,
-                            double density, gsl_rng *r) {
+                          double density, gsl_rng *r) {
 
     double eta = gsl_ran_gaussian(r, 1);
     double new_coordinate =
@@ -231,8 +234,8 @@ double double_pow_diffuse(double coordinate, double D, double c, int q, double d
 }
 
 double sym_tripple_pow_diffuse(double coordinate, double D, double c, int q,
-                                       double delta_t, double density1, double density2,
-                                       gsl_rng *r) {
+                               double delta_t, double density1, double density2,
+                               gsl_rng *r) {
 
     const double eta = gsl_ran_gaussian(r, 1);
     const double competitor_density = density1 + density2;
@@ -245,17 +248,16 @@ double sym_tripple_pow_diffuse(double coordinate, double D, double c, int q,
 }
 
 double double_log_diffuse(double coordinate, double D, double p_0, double alpha,
-                               double delta_t, double density, gsl_rng *r) {
+                          double delta_t, double density, gsl_rng *r) {
     const double eta = gsl_ran_gaussian(r, 1);
     double new_coordinate =
         coordinate + eta * sqrt(2 * D * delta_t / (1 + exp(-alpha * (density - p_0))));
     return new_coordinate;
 }
 
-double sym_tripple_log_diffuse(const double coordinate, const double D,
-                                          double p_0, double alpha, const double delta_t,
-                                          const double density1, const double density2,
-                                          gsl_rng *r) {
+double sym_tripple_log_diffuse(const double coordinate, const double D, double p_0,
+                               double alpha, const double delta_t, const double density1,
+                               const double density2, gsl_rng *r) {
     const double eta = gsl_ran_gaussian(r, 1);
     const double competitor_density = density1 + density2;
     const double D_eff = D / (1 + exp(-alpha * (competitor_density - p_0)));
@@ -264,7 +266,7 @@ double sym_tripple_log_diffuse(const double coordinate, const double D,
 }
 
 void distribute_crds_uniformly(double *array, int array_len, double lower_bound,
-                                      double upper_bound) {
+                               double upper_bound) {
     double range = upper_bound - lower_bound;
     double step = range / array_len;
     for (int i = 0; i < array_len; i++)
@@ -272,7 +274,7 @@ void distribute_crds_uniformly(double *array, int array_len, double lower_bound,
 }
 
 void distribute_crds_in_one_third(double *array, int array_len, double lower_bound,
-                                         double upper_bound, int n_third) {
+                                  double upper_bound, int n_third) {
     const double range = upper_bound - lower_bound;
     const double third_len = range / 3;
     const double step = third_len / array_len;
@@ -281,8 +283,8 @@ void distribute_crds_in_one_third(double *array, int array_len, double lower_bou
     }
 }
 
-int load_checkpoint(char *filename, double *A_crds, double *B_crds,
-                    double *C_crds, int n_realizations, int *i) {
+int load_checkpoint(char *filename, double *A_crds, double *B_crds, double *C_crds,
+                    int n_realizations, int *i) {
 
     printf("Loading the found checkpoint!\n");
     FILE *file = fopen(filename, "r");
@@ -321,8 +323,7 @@ int load_checkpoint(char *filename, double *A_crds, double *B_crds,
 // }
 
 int check_for_existing_checkpoint(char *crds_filename) {
-    printf("Here is the crds_filename we are looking for: %s\n",
-           crds_filename);
+    printf("Here is the crds_filename we are looking for: %s\n", crds_filename);
 
     if (access(crds_filename, F_OK) == 0) {
         printf("Found it!\n");

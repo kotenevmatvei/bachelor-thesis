@@ -253,7 +253,7 @@ void diffuse_and_save_histograms(DiffusionConfig config) {
     // density of the <key>-particle-sort depends) int
 
     int sym_dependencies_map[3][2] = {{1, 2}, {2, 0}, {0, 1}};
-    int cy_dependencies_map[3] = {2, 0, 1};
+    int cy_dependencies_map[3] = {1, 2, 0};
 
     printf("Compiler chill, i am using both maps...\n");
     printf("sdm[0][0] = %d\n", sym_dependencies_map[0][0]);
