@@ -231,7 +231,7 @@ def configs_c_sweep_for_bistability():
             for c_val in c_list:
                 for iter in range(1, 11):
                     run_name = (
-                        f"pow_sym_{boundary}_init-{init}_q2_c{c_val}_dt0.0001_"
+                        f"pow_sym_{boundary}_init-{init}_q2_c{c_val}_dt1e-05_"
                         f"nr100000_rs0_bins100_cnts-step1000_iter{iter}"
                     )
 
@@ -240,7 +240,7 @@ type pow
 dependency sym
 boundary {boundary}
 init_density {init}
-delta_t 0.0001
+delta_t 0.00001
 start 0
 lower_bound -1
 upper_bound 1
@@ -359,4 +359,4 @@ init_density: un or dem
 
 
 if __name__ == "__main__":
-    configs_nr_sweep_for_bistability()
+    configs_c_sweep_for_bistability()

@@ -234,7 +234,7 @@ def slurm_c_sweep_for_bistability():
             for c_val in c_list:
                 for iter in range(1, 11):
                     run_name = (
-                        f"pow_sym_{boundary}_init-{init}_q2_c{c_val}_dt0.0001_nr100000_"
+                        f"pow_sym_{boundary}_init-{init}_q2_c{c_val}_dt1e-05_nr100000_"
                         f"rs0_bins100_cnts-step1000_iter{iter}"
                     )
                     content = f"""#!/bin/bash
@@ -306,4 +306,4 @@ bash server_run.sh "configs/{run_name}.txt"
 
 
 if __name__ == "__main__":
-    slurm_nr_sweep_for_bistability()
+    slurm_c_sweep_for_bistability()
