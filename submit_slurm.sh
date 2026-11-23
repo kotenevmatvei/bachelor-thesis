@@ -1528,7 +1528,7 @@ pow_sym_per_init-un_q2_c7_dt0.00001_nr1000000_rs0_bins100_cnts-step1000_iter10
 #     sbatch slurm/$run.slurm
 # done
 
-for run in $runs_q2_c4_12; do
+for run in $c_slide_per_dem; do
     sbatch slurm/$run.slurm
 done
 
