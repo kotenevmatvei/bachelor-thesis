@@ -58,6 +58,7 @@ def render_frame(
     n_realizations,
     theory_prediction_high,
     theory_prediction_low,
+    runs_folder,
 ):
     fig, ax = plt.subplots(figsize=(8, 6), dpi=100)
     ax.set_xlim(-1, 1)
@@ -87,7 +88,7 @@ def render_frame(
     ax.plot(centers, [theory_prediction_low] * len(centers))
     ax.text(x=0, y=2.5, s=f"timestep {timestep}")
 
-    filename = f"runs/{run}/tmp_frames/frame_{i:05d}.png"
+    filename = f"{runs_folder}/{run}/tmp_frames/frame_{i:05d}.png"
     fig.savefig(filename)
     plt.close(fig)
 
@@ -148,6 +149,7 @@ def ffmpeg_direct_hist(
     theory_prediction_high,
     theory_prediction_low,
     n_frames,
+    runs_folder,
 ):
     config_name = build_config_name(
         type_,
@@ -171,7 +173,7 @@ def ffmpeg_direct_hist(
     name = f"cnts_{config_name}"
 
     print(f"name: {name}")
-    data_filename = f"runs/{run}/data/{name}.txt"
+    data_filename = f"{runs_folder}/{run}/data/{name}.txt"
 
     with open(data_filename, "rb") as f:
         lines = f.readlines()
@@ -200,8 +202,8 @@ def ffmpeg_direct_hist(
 
     total_frames = len(A_cnts_list)
 
-    shutil.rmtree(f"runs/{run}/tmp_frames", ignore_errors=True)
-    os.makedirs(f"runs/{run}/tmp_frames")
+    shutil.rmtree(f"{runs_folder}/{run}/tmp_frames", ignore_errors=True)
+    os.makedirs(f"{runs_folder}/{run}/tmp_frames")
 
     worker_func = functools.partial(
         render_frame,
@@ -214,6 +216,7 @@ def ffmpeg_direct_hist(
         n_realizations=n_realizations,
         theory_prediction_high=theory_prediction_high,
         theory_prediction_low=theory_prediction_low,
+        runs_folder=runs_folder,
     )
 
     render_start = time.time()
@@ -231,13 +234,13 @@ def ffmpeg_direct_hist(
 
     print("Stitching video...")
     # animation_filename = f"runs/{run}/animations/{name}_iteration{suffix}.mp4"
-    animation_filename = f"runs/{run}/animations/{name}.mp4"
+    animation_filename = f"{runs_folder}/{run}/animations/{name}.mp4"
     mp4_path = animation_filename
     ffmpeg_command = [
         "ffmpeg",
         "-y",
         "-i",
-        f"runs/{run}/tmp_frames/frame_%05d.png",
+        f"{runs_folder}/{run}/tmp_frames/frame_%05d.png",
         "-c:v",
         "libx264",
         "-pix_fmt",
@@ -249,7 +252,7 @@ def ffmpeg_direct_hist(
         result = subprocess.run(
             ffmpeg_command, capture_output=True, text=True, check=True
         )
-        shutil.rmtree(f"runs/{run}/tmp_frames", ignore_errors=True)
+        shutil.rmtree(f"{runs_folder}/{run}/tmp_frames", ignore_errors=True)
         print("Animation done!")
 
     except subprocess.CalledProcessError as e:
@@ -277,6 +280,13 @@ def main():
         help="Theoretical prediction for the asymptotic low density distribution",
     )
     parser.add_argument(
+        "-rf",
+        "--runs-folder",
+        type=str,
+        default="runs",
+        help="The directory in which the run data resides",
+    )
+    parser.add_argument(
         "-n_frames",
         "--number_of_frames",
         type=int,
@@ -285,6 +295,7 @@ def main():
     )
     args = parser.parse_args()
     config_name = args.config_name
+    runs_folder = args.runs_folder
     config = parse_config(config_name)
 
     type_ = config["type"]
@@ -332,6 +343,7 @@ def main():
         theory_prediction_high=args.theory_prediction_high,
         theory_prediction_low=args.theory_prediction_low,
         n_frames=args.number_of_frames,
+        runs_folder=runs_folder,
     )
 
 
