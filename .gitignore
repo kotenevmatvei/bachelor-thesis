@@ -6,11 +6,11 @@ compile_commands.json
 data
 tmp_frames
 animations
+sprint-1/*
 dt-slide-sym-ref
 nr-slide-sym-ref
 c-slide-sym-ref
 __pycache__
-*.mp4
 
 runs/sprint-1
 runs/*/data
@@ -22,6 +22,8 @@ runs/*/*.mp4
 slurm/sprint-1
 slurm/*.out
 slurm/*.err
-*.zip
 
+
+*.zip
 *.avi
+*.mp4
