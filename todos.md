@@ -297,9 +297,9 @@ recompile
 
 ## calculations
 - [ ] formula for peak width w via cubic roots instead of trig functions
-- [ ] look for a forgotten constraint that eliminates the indetermination of the
+- [x] look for a forgotten constraint that eliminates the indetermination of the
       the final 3-levels solution
-      - [ ] see if finite sensing radius helps!
+- [ ] see if finite sensing radius helps with undetermination of the solution
 - [ ] calculate for periodic boundaries
     - [x] 3-levels solutions - same!
     - [x] 2-levels solutions - same!
@@ -308,6 +308,48 @@ recompile
 ## writing
 - [ ] write the sections with all essential, solid calculations
 
+
+========================================================================
+
+# Thesis submission date: 15.01.2027
+
+days left: 16
+
+## Final goals:
+
+- [ ] text
+    - [ ] introduction
+    - [ ] 2-species recap ? -> 1 day
+    - [ ] stability analysis -> 1 day
+        - [ ] theory -> 1 day
+        - [ ] simulation results -> 1 day
+    - [ ] 2 levels stationary states 
+        - [ ] theory -> 1 day
+        - [ ] simulation results -> 1 day
+    - [ ] 3 levels stationary states 
+        - [ ] theory -> 1 day
+        - [ ] simulation results -> 1 day
+    - [ ] conclusion -> 1 days
+
+- [ ] all parameters' sweeps simulated (for periodic boundary conditions)
+    - [ ] c -> 4 days
+    - [ ] nr -> 4 days
+    - [ ] dt -> 4 days
+
+- [ ] all calculations done
+    - [ ] cubic roots formula for peak width -> 0.5 day
+    - [ ] constant density check the simulations calculate the stability -> 1 day
+    - [ ] cahn-hilliard attempt with constant density assumption -> 1 day
+        - [x] 2-levels stationary solution - CHECK -> 0.5 day
+        - [ ] 3-levels stationary solution -> 1 day
+
+- [ ] plot m and h predictions for three peaks and all c's
+
+## Questions
+- [ ] how detailed must the calculations in the thesis be?
+- [ ] simulating finite sensing radius at the boundaries?
+- [ ] does linear stability of constant total density imply actual constant density?
+- [ ] 
 
 
 
