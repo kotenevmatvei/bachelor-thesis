@@ -1,8 +1,5 @@
 import os
 
-from generate_configs import configs_nr_sweep_for_bistability
-
-
 def generate_c_sweep():
     q3_c = [
         1,
@@ -270,7 +267,7 @@ def slurm_dt_sweep_for_bistability():
                 content = f"""#!/bin/bash
 
 #SBATCH --nodes=1
-#SBATCH --partition=dfque
+#SBATCH --partition=defq
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=7-00:00:00
@@ -285,7 +282,7 @@ bash server_run.sh "configs/{run_name}.txt"
                 print(run_name)
 
 
-def generate_nr_sweep_to_test_bistability_slurm():
+def slurm_nr_sweep_for_bistability():
     nr_list = [100, 1000, 10000, 100000, 100000, 100000, 1000000]
 
     for init in ["dem", "un"]:
@@ -309,4 +306,4 @@ bash server_run.sh "configs/{run_name}.txt"
 
 
 if __name__ == "__main__":
-    configs_nr_sweep_for_bistability()
+    slurm_nr_sweep_for_bistability()
