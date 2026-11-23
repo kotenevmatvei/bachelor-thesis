@@ -96,5 +96,3 @@ def parse_config(config_name: str):
             raise ValueError(f"Unknown key: {key}")
 
     return config
-
-parse_config_essentials_from_name("pow_sym_ref_init-un_q2_c9_dt1e-05_nr100000_rs0_bins100_cnts-step1000.txt")
