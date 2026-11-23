@@ -321,7 +321,7 @@ days left: 16
     - [ ] introduction
     - [ ] 2-species recap ? -> 1 day
     - [ ] stability analysis -> 1 day
-        - [ ] theory -> 1 day
+        - [x] theory -> 1 day
         - [ ] simulation results -> 1 day
     - [ ] 2 levels stationary states 
         - [ ] theory -> 1 day
@@ -337,7 +337,13 @@ days left: 16
     - [ ] dt -> 4 days
 
 - [ ] all calculations done
+    - [ ] VALIDATE THE CALCULTAIONS!!!
+        - [ ] stability
+        - [ ] 2-levels stationary solution
+        - [ ] 3-levels stationary solution
     - [ ] cubic roots formula for peak width -> 0.5 day
+    - [ ] is the largest eigenvalue ALWAYS the largest in the stability analysis
+          (negative sinc for some modes!)
     - [ ] constant density check the simulations calculate the stability -> 1 day
     - [ ] cahn-hilliard attempt with constant density assumption -> 1 day
         - [x] 2-levels stationary solution - CHECK -> 0.5 day
