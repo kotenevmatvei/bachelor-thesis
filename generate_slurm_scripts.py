@@ -232,7 +232,7 @@ def slurm_c_sweep_for_bistability():
     for boundary in ["per", "ref"]:
         for init in ["dem", "un"]:
             for c_val in c_list:
-                for iter in range(1, 11):
+                for iter in range(1, 6):
                     run_name = (
                         f"pow_sym_{boundary}_init-{init}_q2_c{c_val}_dt1e-05_nr100000_"
                         f"rs0_bins100_cnts-step1000_iter{iter}"
@@ -259,7 +259,7 @@ def slurm_dt_sweep_for_bistability():
 
     for init in ["dem", "un"]:
         for dt_val in dt_list:
-            for iter in range(1, 11):
+            for iter in range(1, 6):
                 run_name = (
                     f"pow_sym_per_init-{init}_q2_c7_dt{dt_val}_nr10000_rs0_"
                     f"bins100_cnts-step1000_iter{iter}"
@@ -287,8 +287,9 @@ def slurm_nr_sweep_for_bistability():
 
     for init in ["dem", "un"]:
         for nr_val in nr_list:
-            run_name = f"pow_sym_ref_init-{init}_q2_c7_dt0.00001_nr{nr_val}_rs0_bins100_cnts-step1000"
-            content = f"""#!/bin/bash
+            for iter in range(1, 6):
+                run_name = f"pow_sym_ref_init-{init}_q2_c7_dt0.00001_nr{nr_val}_rs0_bins100_cnts-step1000"
+                content = f"""#!/bin/bash
 
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -300,9 +301,9 @@ def slurm_nr_sweep_for_bistability():
 
 bash server_run.sh "configs/{run_name}.txt"
 """
-            with open(f"slurm/{run_name}.slurm", "w") as f:
-                f.write(content)
-            print(run_name)
+                with open(f"slurm/{run_name}.slurm", "w") as f:
+                    f.write(content)
+                print(run_name)
 
 
 if __name__ == "__main__":

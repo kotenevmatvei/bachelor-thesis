@@ -318,7 +318,7 @@ def configs_nr_sweep_for_bistability():
     # init-demixed
     for init in ["dem", "un"]:
         for nr_val in nr_list:
-            for iter in range(1, 11):
+            for iter in range(1, 6):
                 run_name = (
                     f"pow_sym_per_init-{init}_q2_c7_dt0.00001_nr{nr_val}_"
                     f"rs0_bins100_cnts-step1000_iter{iter}"
